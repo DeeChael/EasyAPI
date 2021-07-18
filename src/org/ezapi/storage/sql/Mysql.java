@@ -2,6 +2,7 @@ package org.ezapi.storage.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.lang.IllegalClassException;
 import org.ezapi.storage.StorageContext;
 
 import java.sql.Connection;
@@ -139,12 +140,14 @@ public class Mysql implements Sql {
 
     @Override
     public void close() throws SQLException {
-        this.connection.close();
-        this.statement.close();
-        this.hikariDataSource.close();
-        this.connection = null;
-        this.statement = null;
-        closed = true;
+        if (!closed) {
+            this.connection.close();
+            this.statement.close();
+            this.hikariDataSource.close();
+            this.connection = null;
+            this.statement = null;
+            closed = true;
+        }
     }
 
     @Override
@@ -163,8 +166,7 @@ public class Mysql implements Sql {
             try {
                 return Class.forName("com.mysql.cj.jdbc.MysqlDataSource").getName();
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                return null;
+                throw new IllegalClassException("Cannot find the MysqlDataSource Class");
             }
         }
     }

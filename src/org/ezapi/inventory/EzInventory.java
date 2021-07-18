@@ -64,7 +64,7 @@ public class EzInventory implements Listener {
             if (items.containsKey(i)) {
                 DrawSetting drawSetting = new DrawSetting();
                 items.get(i).onDraw(player, drawSetting);
-                inventory.setItem(i, drawSetting.render(player, plugin));
+                inventory.setItem(i, drawSetting.render(player));
                 cache.get(player).put(i, items.get(i));
             }
         }
@@ -76,7 +76,7 @@ public class EzInventory implements Listener {
                     if (input != null) {
                         DrawSetting drawSetting = new DrawSetting();
                         input.onDraw(player, drawSetting);
-                        inventory.setItem(i, drawSetting.render(player, plugin));
+                        inventory.setItem(i, drawSetting.render(player));
                         cache.get(player).put(i, input);
                     }
                 }

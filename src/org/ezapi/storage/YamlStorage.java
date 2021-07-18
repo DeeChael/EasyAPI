@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class YamlStorage extends FileStorage implements Storage{
+public final class YamlStorage extends FileStorage implements Storage {
 
     private FileConfiguration fileConfiguration;
 
@@ -51,6 +51,12 @@ public final class YamlStorage extends FileStorage implements Storage{
             return fileConfiguration.getString(key.replace(".", "_"));
         }
         return null;
+    }
+
+    @Override
+    public String get(String key, String defaultValue) {
+        String value = get(key);
+        return value != null ? value : defaultValue;
     }
 
     @Override

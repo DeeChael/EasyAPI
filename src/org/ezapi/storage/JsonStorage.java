@@ -1,9 +1,6 @@
 package org.ezapi.storage;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -21,7 +18,7 @@ public final class JsonStorage extends FileStorage implements Storage {
                 FileWriter fileWriter = new FileWriter(file);
                 fileWriter.write("{}");
                 fileWriter.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
         try {
@@ -66,9 +63,15 @@ public final class JsonStorage extends FileStorage implements Storage {
     @Override
     public String get(String key) {
         if (jsonObject.has(key) && jsonObject.get(key).isJsonPrimitive()) {
-            return jsonObject.get(key).getAsString();
+            jsonObject.get(key).getAsString();
         }
         return null;
+    }
+
+    @Override
+    public String get(String key, String defaultValue) {
+        String value = get(key);
+        return value != null ? value : defaultValue;
     }
 
     @Override
@@ -102,4 +105,16 @@ public final class JsonStorage extends FileStorage implements Storage {
         }
         return values;
     }
+
+    @Override
+    public void regenerate() {
+        super.regenerate();
+        try {
+            FileWriter fileWriter = new FileWriter(this.file);
+            fileWriter.write("{}");
+            fileWriter.close();
+        } catch (IOException ignored) {
+        }
+    }
+
 }

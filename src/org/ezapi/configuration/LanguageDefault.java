@@ -3,8 +3,10 @@ package org.ezapi.configuration;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.bukkit.plugin.Plugin;
-import org.ezapi.utils.ColorUtils;
+import org.ezapi.util.ColorUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 public final class LanguageDefault {
@@ -55,6 +57,14 @@ public final class LanguageDefault {
 
     public String getRegistryName() {
         return plugin.getName();
+    }
+
+    public List<String> keys() {
+        List<String> list = new ArrayList<>();
+        for (Entry<String,JsonElement> entry : jsonObject.entrySet()) {
+            list.add(entry.getKey());
+        }
+        return list;
     }
 
 }

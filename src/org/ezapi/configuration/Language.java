@@ -1,14 +1,17 @@
 package org.ezapi.configuration;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.ezapi.EasyAPI;
-import org.ezapi.utils.ColorUtils;
-import org.ezapi.utils.StringUtils;
+import org.ezapi.util.ColorUtils;
+import org.ezapi.util.StringUtils;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class Language {
@@ -17,14 +20,10 @@ public final class Language {
     private final File file;
     private JsonObject jsonObject = new JsonObject();
 
+    private final String languageCode;
+
     public Language(LanguageDefault languageDefault, String languageCode) throws IOException {
-        if (EasyAPI.PLUGIN_LANGUAGES.containsKey(languageDefault.getPlugin())) {
-            EasyAPI.PLUGIN_LANGUAGES.get(languageDefault.getPlugin()).put(languageCode.toLowerCase(), this);
-        } else {
-            Map<String, Language> map = new HashMap<>();
-            map.put(languageCode.toLowerCase(), this);
-            EasyAPI.PLUGIN_LANGUAGES.put(languageDefault.getPlugin(), map);
-        }
+        this.languageCode = languageCode;
         File folder = new File("language/" + languageDefault.getRegistryName());
         if (!folder.exists()) {
             folder.mkdirs();
@@ -46,6 +45,16 @@ public final class Language {
             jsonObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
         } catch (FileNotFoundException e) {
         }
+        for (String key : languageDefault.keys()) {
+            if (!has(key)) {
+                this.jsonObject.addProperty(key, languageDefault.getDefault(key));
+            }
+        }
+        save();
+    }
+
+    public String getLanguageCode() {
+        return languageCode;
     }
 
     public String get(String path) {
@@ -70,6 +79,14 @@ public final class Language {
             fileWriter.close();
         } catch (IOException ignored) {
         }
+    }
+
+    public List<String> keys() {
+        List<String> keys = new ArrayList<>();
+        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+            keys.add(entry.getKey());
+        }
+        return keys;
     }
 
     public boolean isFirstOpenAndFileNotExist() {

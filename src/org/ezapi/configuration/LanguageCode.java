@@ -1,6 +1,6 @@
 package org.ezapi.configuration;
 
-public class LanguageCode {
+public final class LanguageCode {
 
     public static final String AF_ZA = "af_za";
     public static final String AR_SA = "ar_sa";
@@ -123,6 +123,10 @@ public class LanguageCode {
     public static final String ZH_TW = "zh_tw";
 
     private static final String[] VALUES;
+
+    public static String[] values() {
+        return VALUES;
+    }
 
     static {
         VALUES = new String[] {

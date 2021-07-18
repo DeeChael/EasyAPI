@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public abstract class FileStorage {
 
-    private final File file;
+    protected final File file;
 
     private boolean isFirstTime = false;
 
@@ -26,6 +26,17 @@ public abstract class FileStorage {
 
     public File getFile() {
         return this.file;
+    }
+
+    public void regenerate() {
+        if (this.file.exists()) {
+            if (this.file.delete()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException ignored) {
+                }
+            }
+        }
     }
 
     public boolean isFirstTime() {

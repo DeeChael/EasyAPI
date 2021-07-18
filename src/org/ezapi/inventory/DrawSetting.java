@@ -72,14 +72,14 @@ public final class DrawSetting {
         this.unbreakable = unbreakable;
     }
 
-    public ItemStack render(Player player, Plugin plugin) {
+    public ItemStack render(Player player) {
         ItemStack itemStack = new ItemStack(type);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.setDisplayName(displayName.getMessage(player, plugin));
+            itemMeta.setDisplayName(displayName.getText(player));
             List<String> list = new ArrayList<>();
             for (ChatMessage chatMessage : lore) {
-                list.add(chatMessage.getMessage(player, plugin));
+                list.add(chatMessage.getText(player));
             }
             itemMeta.setLore(list);
             if (enchanted) {

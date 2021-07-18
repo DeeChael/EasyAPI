@@ -1,0 +1,75 @@
+package org.ezapi.command.argument;
+
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import org.bukkit.Material;
+import org.ezapi.util.ReflectionUtils;
+
+import java.lang.reflect.InvocationTargetException;
+
+public final class ArgumentBlock implements Argument {
+
+    private ArgumentBlock() {}
+
+    public static ArgumentBlock instance() {
+        return new ArgumentBlock();
+    }
+
+    public static ArgumentType<Object> argumentType() {
+        return instance().argument();
+    }
+
+    @Override
+    public ArgumentType<Object> argument() {
+        return get();
+    }
+
+    @Override
+    public Object get(CommandContext<Object> commandContext, String name) {
+        try {
+            Object a = ArgumentTile().getMethod("a", CommandContext.class, String.class).invoke(null, commandContext, name);
+            Object b = a.getClass().getMethod("a").invoke(a);
+            return b.getClass().getMethod("getBlock").invoke(b);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Material nmsBlockToMaterial(Object object) {
+        try {
+            return (Material) ReflectionUtils.getObcClass("util.CraftMagicNumbers").getMethod("getMaterial", Block()).invoke(null, object);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static ArgumentType<Object> get() {
+        try {
+            return (ArgumentType<Object>) ArgumentTile().getMethod("a").invoke(null);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static Class<?> ArgumentTile() {
+        if (ReflectionUtils.getVersion() < 9) return null;
+        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
+            return ReflectionUtils.getNmsClass("ArgumentTile");
+        } else {
+            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentTile");
+        }
+    }
+
+    private static Class<?> Block() {
+        if (ReflectionUtils.getVersion() < 9) return null;
+        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
+            return ReflectionUtils.getNmsClass("Block");
+        } else {
+            return ReflectionUtils.getClass("net.minecraft.world.level.block.Block");
+        }
+    }
+
+}
