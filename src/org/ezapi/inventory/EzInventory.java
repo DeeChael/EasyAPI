@@ -6,9 +6,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import org.ezapi.EasyAPI;
+import org.ezapi.chat.ChatMessage;
 import org.ezapi.function.NonReturnWithOne;
 
 import java.util.*;
@@ -24,7 +26,7 @@ public class EzInventory implements Listener {
 
     private boolean enableTitle = false;
 
-    private String title = "";
+    private ChatMessage title = new ChatMessage("", false);
 
     private final Map<Integer,Input> items = new HashMap<>();
 
@@ -43,7 +45,7 @@ public class EzInventory implements Listener {
         Bukkit.getPluginManager().registerEvents(this, EasyAPI.getInstance());
     }
 
-    public EzInventory(Plugin plugin, int lineAmount, String title) {
+    public EzInventory(Plugin plugin, int lineAmount, ChatMessage title) {
         if (lineAmount < 1) lineAmount = 1;
         if (lineAmount > 6) lineAmount = 6;
         this.enableTitle = true;
@@ -57,12 +59,12 @@ public class EzInventory implements Listener {
     public void openToPlayer(Player player) {
         EzHolder ezHolder = new EzHolder(id);
         Inventory inventory = Bukkit.createInventory(ezHolder, lines * 9);
-        if (enableTitle) inventory = Bukkit.createInventory(ezHolder, lines * 9, title);
+        if (enableTitle) inventory = Bukkit.createInventory(ezHolder, lines * 9, title.getText(player));
         ezHolder.setInventory(inventory);
         cache.put(player, new HashMap<>());
         for (int i = 0; i < 9 * lines; i ++) {
             if (items.containsKey(i)) {
-                DrawSetting drawSetting = new DrawSetting();
+                DrawSetting drawSetting = new DrawSetting(i);
                 items.get(i).onDraw(player, drawSetting);
                 inventory.setItem(i, drawSetting.render(player));
                 cache.get(player).put(i, items.get(i));
@@ -74,7 +76,7 @@ public class EzInventory implements Listener {
                 for (int i = 0; i < list.size(); i++) {
                     Input input = list.get(i);
                     if (input != null) {
-                        DrawSetting drawSetting = new DrawSetting();
+                        DrawSetting drawSetting = new DrawSetting(-1);
                         input.onDraw(player, drawSetting);
                         inventory.setItem(i, drawSetting.render(player));
                         cache.get(player).put(i, input);
@@ -131,8 +133,14 @@ public class EzInventory implements Listener {
     }
 
     public void drop() {
+        if (!this.cache.isEmpty()) {
+            for (Player player : cache.keySet()) {
+                player.closeInventory();
+            }
+        }
         InventoryClickEvent.getHandlerList().unregister(this);
         InventoryCloseEvent.getHandlerList().unregister(this);
+        PlayerQuitEvent.getHandlerList().unregister(this);
     }
 
     @EventHandler
@@ -166,6 +174,14 @@ public class EzInventory implements Listener {
                     this.onClose.apply(this);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        if (this.cache.containsKey(event.getPlayer())) {
+            this.cache.remove(event.getPlayer());
+            this.onClose.apply(this);
         }
     }
 

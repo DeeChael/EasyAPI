@@ -1,37 +1,18 @@
 package org.ezapi.storage.sql;
 
-import org.ezapi.storage.StorageContext;
+import org.ezapi.storage.Storable;
 
-import java.sql.SQLException;
-import java.util.List;
+public interface Sql extends Storable, Closable, Reloadable {
 
-public interface Sql {
-
-    void reload();
-
-    boolean has(String key);
-
-    StorageContext remove(String key);
-
-    void removeAll();
-
-    StorageContext get(String key);
-
-    void set(String key, StorageContext value);
-
-    List<String> keys();
-
-    List<StorageContext> values();
-
-    default void setAll(Sql sql) {
-        if (sql == null || sql.closed()) return;
-        for (String key : sql.keys()) {
-            this.set(key, sql.get(key));
+    @Override
+    default void setAll(Storable storable) {
+        if (storable == null) return;
+        if (storable instanceof Sql) {
+            if (((Sql) storable).closed()) return;
+        }
+        for (String key : storable.keys()) {
+            this.set(key, storable.get(key));
         }
     }
-
-    void close() throws SQLException;
-
-    boolean closed();
 
 }

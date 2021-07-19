@@ -1,14 +1,17 @@
 package org.ezapi.storage;
 
 import com.electronwill.nightconfig.core.file.FileConfig;
+import org.ezapi.storage.sql.Closable;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TomlStorage extends FileStorage implements Storage {
+public class TomlStorage extends FileStorage implements Storage, Closable {
 
     private final FileConfig fileConfig;
+
+    private boolean closed = false;
 
     public TomlStorage(File file) {
         super(file);
@@ -22,8 +25,8 @@ public class TomlStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String remove(String key) {
-        String value = fileConfig.remove(key);
+    public StorageContext remove(String key) {
+        StorageContext value = StorageContext.getByString(fileConfig.remove(key));
         fileConfig.save();
         return value;
     }
@@ -35,19 +38,19 @@ public class TomlStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String get(String key) {
-        return fileConfig.get(key);
+    public StorageContext get(String key) {
+        return StorageContext.getByString(fileConfig.get(key));
     }
 
     @Override
-    public String get(String key, String defaultValue) {
-        String value = get(key);
+    public StorageContext get(String key, StorageContext defaultValue) {
+        StorageContext value = get(key);
         return value != null ? value : defaultValue;
     }
 
     @Override
-    public void set(String key, String value) {
-        fileConfig.set(key, value);
+    public void set(String key, StorageContext value) {
+        fileConfig.set(key, value.toString());
         fileConfig.save();
     }
 
@@ -57,15 +60,23 @@ public class TomlStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public List<String> values() {
-        List<String> list = new ArrayList<>();
+    public List<StorageContext> values() {
+        List<StorageContext> list = new ArrayList<>();
         keys().forEach(key -> list.add(get(key)));
         return list;
     }
 
     public void close() {
-        this.fileConfig.save();
-        this.fileConfig.close();
+        if (!closed) {
+            this.fileConfig.save();
+            this.fileConfig.close();
+            closed = true;
+        }
+    }
+
+    @Override
+    public boolean closed() {
+        return closed;
     }
 
 }

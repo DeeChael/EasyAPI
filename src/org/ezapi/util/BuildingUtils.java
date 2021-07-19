@@ -223,6 +223,10 @@ public class BuildingUtils {
         ellipsoid(center, radius, radius, radius, block, filled);
     }
 
+    public static void drawALine(Location from, Location to, Material block) {
+        drawALine(from, to, 1, block, true);
+    }
+
     public static void drawALine(Location from, Location to, double radius, Material block, boolean filled) {
         if (from.getWorld() != to.getWorld()) return;
         if (!block.isBlock()) return;

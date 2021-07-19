@@ -25,7 +25,15 @@ public final class DrawSetting {
 
     private boolean unbreakable = false;
 
-    public DrawSetting() {}
+    private final int slot;
+
+    public DrawSetting(int slot) {
+        this.slot = slot;
+    }
+
+    public int getSlot() {
+        return slot;
+    }
 
     public Material getType() {
         return type;

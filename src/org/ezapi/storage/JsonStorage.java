@@ -1,6 +1,7 @@
 package org.ezapi.storage;
 
 import com.google.gson.*;
+import org.ezapi.util.JsonUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -34,16 +35,16 @@ public final class JsonStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String remove(String key) {
+    public StorageContext remove(String key) {
         if (jsonObject.has(key) && jsonObject.get(key).isJsonPrimitive()) {
-            String string = jsonObject.remove(key).getAsString();
+            StorageContext storageContext = StorageContext.getByString(new Gson().toJson(jsonObject.remove(key).getAsJsonObject()));
             try {
                 FileWriter fileWriter = new FileWriter(getFile());
                 fileWriter.write(new Gson().toJson(this.jsonObject));
                 fileWriter.close();
-                return string;
+                return storageContext;
             } catch (IOException ignored) {
-                return string;
+                return storageContext;
             }
         }
         return null;
@@ -61,22 +62,22 @@ public final class JsonStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String get(String key) {
+    public StorageContext get(String key) {
         if (jsonObject.has(key) && jsonObject.get(key).isJsonPrimitive()) {
-            jsonObject.get(key).getAsString();
+            return StorageContext.getByString(new Gson().toJson(jsonObject.get(key).getAsJsonObject()));
         }
         return null;
     }
 
     @Override
-    public String get(String key, String defaultValue) {
-        String value = get(key);
+    public StorageContext get(String key, StorageContext defaultValue) {
+        StorageContext value = get(key);
         return value != null ? value : defaultValue;
     }
 
     @Override
-    public void set(String key, String value) {
-        this.jsonObject.addProperty(key, value);
+    public void set(String key, StorageContext value) {
+        this.jsonObject.add(key, JsonUtils.getJsonObject(value.toString()));
         try {
             FileWriter fileWriter = new FileWriter(getFile());
             fileWriter.write(new Gson().toJson(this.jsonObject));
@@ -95,10 +96,10 @@ public final class JsonStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public List<String> values() {
-        List<String> values = new ArrayList<>();
+    public List<StorageContext> values() {
+        List<StorageContext> values = new ArrayList<>();
         for (Map.Entry<String, JsonElement> entry : this.jsonObject.entrySet()) {
-            String value = this.get(entry.getKey());
+            StorageContext value = this.get(entry.getKey());
             if (value != null) {
                 values.add(value);
             }

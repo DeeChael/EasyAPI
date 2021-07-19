@@ -12,10 +12,7 @@ import org.ezapi.configuration.LanguageCode;
 import org.ezapi.configuration.LanguageManager;
 import org.ezapi.util.ColorUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class ChatMessage {
 
@@ -30,6 +27,8 @@ public class ChatMessage {
     private List<ChatMessage> subs = new ArrayList<>();
 
     private ChatColor color = ChatColor.RESET;
+
+    private Map<String,String> replaces = new HashMap<>();
 
     public ChatMessage(String data, boolean flag) {
         this.data = data;
@@ -50,6 +49,10 @@ public class ChatMessage {
             base.addExtra(chatMessage.getMessage(locale));
         }
         return base;
+    }
+
+    public void setReplace(String stringToBeReplaced, String stringToReplace) {
+        replaces.put(stringToBeReplaced, stringToReplace);
     }
 
     public TextComponent getMessage() {
@@ -98,16 +101,28 @@ public class ChatMessage {
                 for (ChatMessage chatMessage : subs) {
                     text.append(chatMessage.getText(locale));
                 }
-                return ColorUtils.translate(text.toString());
+                String finalText = ColorUtils.translate(text.toString());
+                for (String key : replaces.keySet()) {
+                    finalText = finalText.replace(key, replaces.get(key));
+                }
+                return finalText;
             } else if (LanguageManager.INSTANCE.hasText("en_us", data)) {
                 StringBuilder text = new StringBuilder(LanguageManager.INSTANCE.getText("en_us", data));
                 for (ChatMessage chatMessage : subs) {
                     text.append(chatMessage.getText("en_us"));
                 }
-                return ColorUtils.translate(text.toString());
+                String finalText = ColorUtils.translate(text.toString());
+                for (String key : replaces.keySet()) {
+                    finalText = finalText.replace(key, replaces.get(key));
+                }
+                return finalText;
             }
         }
-        return ColorUtils.translate(data);
+        String finalText = ColorUtils.translate(data);
+        for (String key : replaces.keySet()) {
+            finalText = finalText.replace(key, replaces.get(key));
+        }
+        return finalText;
     }
 
     public String getText() {

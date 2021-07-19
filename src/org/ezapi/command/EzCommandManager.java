@@ -11,42 +11,71 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.server.ServerLoadEvent;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.ezapi.EasyAPI;
 import org.ezapi.util.PlayerUtils;
 import org.ezapi.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class EzCommandManager implements Listener {
 
     @EventHandler
     public void onLoad(ServerLoadEvent serverLoadEvent) {
-        Object comamndDispatcher = getBukkitCommandDispatcher();
+        Object commandDispatcher = getBukkitCommandDispatcher();
         Map<String,Command> knownCommands = getKnownCommands();
         if (knownCommands != null) {
             for (String prefix : REGISTERED.keySet()) {
-                CommandNode<Object> commandNode = REGISTERED.get(prefix).register().commandNode;
-                Command command = knownCommands.get(prefix.toLowerCase() + ":" + commandNode.getName().toLowerCase());
-                if (command.equals(knownCommands.get(commandNode.getName().toLowerCase()))) {
+                for (EzCommand ezCommand : REGISTERED.get(prefix)) {
+                    CommandNode<Object> commandNode = ezCommand.register().commandNode;
+                    Command command = knownCommands.get(prefix.toLowerCase() + ":" + commandNode.getName().toLowerCase());
+                    List<String> aliases = ezCommand.aliases;
+                    for (String string : aliases) {
+                        String key = prefix.toLowerCase() + ":" + string.toLowerCase();
+                        Command aliaCommand = knownCommands.get(key);
+                        if (aliaCommand.getPermission().equalsIgnoreCase("ez.api.command.check")) {
+                            LiteralCommandNode<?> literalCommandNode = clone(prefix, commandNode, CommandListenerWrapper());
+                            registerToCommandPatcher(commandDispatcher, (CommandNode<Object>) literalCommandNode);
+                            setDispatcher(aliaCommand, commandDispatcher);
+                            knownCommands.put(key, aliaCommand);
+                        }
+                        Command aliaCmd = knownCommands.get(string.toLowerCase());
+                        if (aliaCmd.getPermission().equals("ez.api.command.check")) {
+                            LiteralCommandNode<?> literalCommandNode = clone(commandNode, CommandListenerWrapper());
+                            registerToCommandPatcher(commandDispatcher, (CommandNode<Object>) literalCommandNode);
+                            setDispatcher(aliaCmd, commandDispatcher);
+                            knownCommands.put(string.toLowerCase(), aliaCmd);
+                        }
+                    }
                     Command cmd = knownCommands.get(commandNode.getName().toLowerCase());
-                    registerToCommandPatcher(comamndDispatcher, commandNode);
-                    setDispatcher(cmd, comamndDispatcher);
+                    if (cmd.getPermission().equalsIgnoreCase("ez.api.command.check")) {
+                        registerToCommandPatcher(commandDispatcher, commandNode);
+                        setDispatcher(cmd, commandDispatcher);
+                        knownCommands.put(commandNode.getName().toLowerCase(), cmd);
+                    }
+                    LiteralCommandNode<?> literalCommandNode = clone(prefix, commandNode, CommandListenerWrapper());
+                    registerToCommandPatcher(commandDispatcher, (CommandNode<Object>) literalCommandNode);
+                    setDispatcher(command, commandDispatcher);
+                    knownCommands.put(prefix.toLowerCase() + ":" + commandNode.getName().toLowerCase(), command);
                 }
-                LiteralCommandNode<?> literalCommandNode = clone(prefix, commandNode, CommandListenerWrapper());
-                registerToCommandPatcher(comamndDispatcher, (CommandNode<Object>) literalCommandNode);
-                setDispatcher(command, comamndDispatcher);
             }
+            setKnownCommands(knownCommands);
         }
     }
 
     public static final EzCommandManager INSTANCE = new EzCommandManager();
 
-    private EzCommandManager() {}
+    private EzCommandManager() {
+        Bukkit.getPluginManager().addPermission(new Permission("ez.api.command.check", PermissionDefault.TRUE));
+    }
 
-    private static final Map<String,EzCommand> REGISTERED = new HashMap<>();
+    private static final Map<String,List<EzCommand>> REGISTERED = new HashMap<>();
 
     public static EzCommandRegistered register(EzCommand ezCommand) {
         return register("ez-api", ezCommand);
@@ -55,9 +84,12 @@ public final class EzCommandManager implements Listener {
     public static EzCommandRegistered register(String prefix, EzCommand ezCommand) {
         EzCommandRegistered ezCommandRegistered = ezCommand.register();
         //EasyAPI.getBukkitCommandMap().register(prefix, new UnsupportCommand(ezCommandRegistered.commandNode.getName(), ezCommand.aliases.toArray(new String[0])));
-        REGISTERED.put(prefix.toLowerCase(), ezCommandRegistered.ezCommand);
+        if (!REGISTERED.containsKey(prefix)) REGISTERED.put(prefix, new ArrayList<>());
+        REGISTERED.get(prefix).add(ezCommandRegistered.ezCommand);
         Command command = createVanillaCommandWrapper(null, ezCommandRegistered.commandNode);
-        EasyAPI.getBukkitCommandMap().register(prefix, command);
+        command.setPermission("ez.api.command.check");
+        command.setAliases(ezCommand.aliases);
+        EasyAPI.getBukkitCommandMap().register(prefix.toLowerCase(), command);
         return ezCommandRegistered;
     }
 
@@ -75,7 +107,7 @@ public final class EzCommandManager implements Listener {
         return new LiteralCommandNode<T>(prefix.toLowerCase() + ":" + commandNode.getName().toLowerCase(), commandNode.getCommand(), commandNode.getRequirement(), commandNode.getRedirect(), commandNode.getRedirectModifier(), commandNode.isFork());
     }
 
-    private static <T> LiteralCommandNode<?> clone(CommandNode<T> commandNode, Class<T> clazz) {
+    private static <T> LiteralCommandNode<?> clone(CommandNode commandNode, Class<T> clazz) {
         return new LiteralCommandNode<T>(commandNode.getName().toLowerCase(), commandNode.getCommand(), commandNode.getRequirement(), commandNode.getRedirect(), commandNode.getRedirectModifier(), commandNode.isFork());
     }
 

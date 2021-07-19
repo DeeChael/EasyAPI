@@ -43,12 +43,12 @@ public final class EzPropertiesStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String remove(String key) {
+    public StorageContext remove(String key) {
         if (has(key)) {
             for (EzProperty ezProperty : context) {
                 if (ezProperty instanceof PropertyObject) {
                     if (((PropertyObject) ezProperty).getKey().equals(key)) {
-                        String value = ((PropertyObject) ezProperty).getValue();
+                        StorageContext value = StorageContext.getByString(((PropertyObject) ezProperty).getValue());
                         context.remove(ezProperty);
                         save();
                         return value;
@@ -66,12 +66,12 @@ public final class EzPropertiesStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String get(String key) {
+    public StorageContext get(String key) {
         if (has(key)) {
             for (EzProperty ezProperty : context) {
                 if (ezProperty instanceof PropertyObject) {
                     if (((PropertyObject) ezProperty).getKey().equals(key)) {
-                        return ((PropertyObject) ezProperty).getValue();
+                        return StorageContext.getByString(((PropertyObject) ezProperty).getValue());
                     }
                 }
             }
@@ -80,20 +80,20 @@ public final class EzPropertiesStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String get(String key, String defaultValue) {
-        String value = get(key);
+    public StorageContext get(String key, StorageContext defaultValue) {
+        StorageContext value = get(key);
         return value != null ? value : defaultValue;
     }
 
     @Override
-    public void set(String key, String value) {
+    public void set(String key, StorageContext value) {
         if (!has(key)) {
-            context.add(new PropertyObject(key, value));
+            context.add(new PropertyObject(key, value.toString()));
         } else {
             for (EzProperty ezProperty : context) {
                 if (ezProperty instanceof PropertyObject) {
                     if (((PropertyObject) ezProperty).getKey().equals(key)) {
-                        ((PropertyObject) ezProperty).setValue(value);
+                        ((PropertyObject) ezProperty).setValue(value.toString());
                     }
                 }
             }
@@ -117,11 +117,11 @@ public final class EzPropertiesStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public List<String> values() {
-        List<String> values = new ArrayList<>();
+    public List<StorageContext> values() {
+        List<StorageContext> values = new ArrayList<>();
         for (EzProperty ezProperty : context) {
             if (ezProperty instanceof PropertyObject) {
-                values.add(((PropertyObject) ezProperty).getValue());
+                values.add(StorageContext.getByString(((PropertyObject) ezProperty).getValue()));
             }
         }
         return values;

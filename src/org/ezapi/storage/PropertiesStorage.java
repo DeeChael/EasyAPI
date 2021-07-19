@@ -27,8 +27,8 @@ public final class PropertiesStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String remove(String key) {
-        return (String) properties.remove(key);
+    public StorageContext remove(String key) {
+        return StorageContext.getByString((String) properties.remove(key));
     }
 
     @Override
@@ -42,22 +42,22 @@ public final class PropertiesStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String get(String key) {
+    public StorageContext get(String key) {
         if (has(key)) {
-            return properties.getProperty(key);
+            return StorageContext.getByString(properties.getProperty(key));
         }
         return null;
     }
 
     @Override
-    public String get(String key, String defaultValue) {
-        String value = get(key);
+    public StorageContext get(String key, StorageContext defaultValue) {
+        StorageContext value = get(key);
         return value != null ? value : defaultValue;
     }
 
     @Override
-    public void set(String key, String value) {
-        properties.setProperty(key, value);
+    public void set(String key, StorageContext value) {
+        properties.setProperty(key, value.toString());
         try {
             properties.store(new FileWriter(this.file), "EasyAPI - set");
         } catch (IOException ignored) {
@@ -74,8 +74,8 @@ public final class PropertiesStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public List<String> values() {
-        List<String> values = new ArrayList<>();
+    public List<StorageContext> values() {
+        List<StorageContext> values = new ArrayList<>();
         for (String key : keys()) {
             values.add(get(key));
         }

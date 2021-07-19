@@ -6,9 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface NoSql {
-
-    void reload();
+public interface NoSql extends Closable, Reloadable {
 
     boolean has(String key);
 
@@ -51,8 +49,6 @@ public interface NoSql {
         }
     }
 
+    @Override
     void close();
-
-    boolean closed();
-
 }

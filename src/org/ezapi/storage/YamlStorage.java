@@ -23,9 +23,9 @@ public final class YamlStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String remove(String key) {
+    public StorageContext remove(String key) {
         if (fileConfiguration.contains(key.replace(".", "_"))) {
-            String value = fileConfiguration.getString(key.replace(".", "_"));
+            StorageContext value = StorageContext.getByString(fileConfiguration.getString(key.replace(".", "_")));
             fileConfiguration.set(key.replace(".", "_"), null);
             try {
                 fileConfiguration.save(getFile());
@@ -46,22 +46,22 @@ public final class YamlStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public String get(String key) {
+    public StorageContext get(String key) {
         if (fileConfiguration.contains(key.replace(".", "_"))) {
-            return fileConfiguration.getString(key.replace(".", "_"));
+            return StorageContext.getByString(fileConfiguration.getString(key.replace(".", "_")));
         }
         return null;
     }
 
     @Override
-    public String get(String key, String defaultValue) {
-        String value = get(key);
+    public StorageContext get(String key, StorageContext defaultValue) {
+        StorageContext value = get(key);
         return value != null ? value : defaultValue;
     }
 
     @Override
-    public void set(String key, String value) {
-        this.fileConfiguration.set(key.replace(".", "_"), value);
+    public void set(String key, StorageContext value) {
+        this.fileConfiguration.set(key.replace(".", "_"), value.toString());
         try {
             fileConfiguration.save(getFile());
         } catch (IOException ignored) {
@@ -74,11 +74,11 @@ public final class YamlStorage extends FileStorage implements Storage {
     }
 
     @Override
-    public List<String> values() {
-        List<String> values = new ArrayList<>();
+    public List<StorageContext> values() {
+        List<StorageContext> values = new ArrayList<>();
         for (String key : this.keys()) {
             if (fileConfiguration.isString(key)) {
-                values.add(fileConfiguration.getString(key));
+                values.add(StorageContext.getByString(fileConfiguration.getString(key)));
             }
         }
         return values;

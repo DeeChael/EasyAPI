@@ -22,7 +22,7 @@ public final class Language {
 
     private final String languageCode;
 
-    public Language(LanguageDefault languageDefault, String languageCode) throws IOException {
+    public Language(LanguageDefault languageDefault, String languageCode) {
         this.languageCode = languageCode;
         File folder = new File("language/" + languageDefault.getRegistryName());
         if (!folder.exists()) {
@@ -35,10 +35,13 @@ public final class Language {
         file = new File("language/" + languageDefault.getRegistryName() + "/" + languageCode.replace("/", "").replace("\\", "") + ".json");
         if (!file.exists()) {
             firstOpenAndFileNotExist = true;
-            if (file.createNewFile()) {
-                FileWriter fileWriter = new FileWriter(file);
-                fileWriter.write("{}");
-                fileWriter.close();
+            try {
+                if (file.createNewFile()) {
+                    FileWriter fileWriter = new FileWriter(file);
+                    fileWriter.write("{}");
+                    fileWriter.close();
+                }
+            } catch (IOException ignored) {
             }
         }
         try {

@@ -31,6 +31,12 @@ public final class EzArgument {
                 requiredArgumentBuilder.suggests(suggestionProvider);
             }
         }
+        if (argumentType.getClass().equals(ArgumentEntityType.ArgumentEntitySummon())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentEntityType.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
     }
 
     public EzArgument(ArgumentType<?> argumentType, String argumentName, int permission, String bukkitPermission, PermissionDefault permissionDefault) {

@@ -36,7 +36,7 @@ public final class JsonUtils {
         return false;
     }
 
-    public static boolean jsJsonArray(String string) {
+    public static boolean isJsonArray(String string) {
         try {
             JsonArray jsonArray = new JsonParser().parse(string).getAsJsonArray();
             return true;
@@ -45,7 +45,7 @@ public final class JsonUtils {
         return false;
     }
 
-    public static boolean jsJsonArray(Reader reader) {
+    public static boolean isJsonArray(Reader reader) {
         try {
             JsonArray jsonArray = new JsonParser().parse(reader).getAsJsonArray();
             return true;
@@ -54,7 +54,7 @@ public final class JsonUtils {
         return false;
     }
 
-    public static boolean jsJsonArray(JsonReader jsonReader) {
+    public static boolean isJsonArray(JsonReader jsonReader) {
         try {
             JsonArray jsonArray = new JsonParser().parse(jsonReader).getAsJsonArray();
             return true;
@@ -66,6 +66,11 @@ public final class JsonUtils {
     public static JsonObject getJsonObject(String string) {
         if (isJsonObject(string)) return new JsonParser().parse(string).getAsJsonObject();
         return new JsonObject();
+    }
+
+    public static JsonArray getJsonArray(String string) {
+        if (isJsonArray(string)) return new JsonParser().parse(string).getAsJsonArray();
+        return new JsonArray();
     }
 
 }
