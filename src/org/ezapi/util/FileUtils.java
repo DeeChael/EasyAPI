@@ -10,30 +10,7 @@ import java.util.Scanner;
 
 public final class FileUtils {
 
-    public static String getEncoding(File file) {
-        try {
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
-            int code = (bufferedInputStream.read() << 8) + bufferedInputStream.read();
-            String returnCode = "GBK";
-            switch (code) {
-                case 61371:
-                    returnCode = "UTF-8";
-                    break;
-                case 65534:
-                    returnCode = "Unicode";
-                    break;
-                case 65279:
-                    returnCode = "UTF-16BE";
-                    break;
-                case 23669:
-                    returnCode = "ANSI";
-                    break;
-            }
-            bufferedInputStream.close();
-            return returnCode;
-        } catch (IOException ignored) {
-            return System.getProperty("file.encoding");
-        }
+    public static void main(String[] args) {
     }
 
     public static String readText(File file) {
