@@ -426,7 +426,7 @@ public final class ItemUtils {
                 for (int i : ints) {
                     stringBuilder.append(i).append(",");
                 }
-                String string = stringBuilder.substring(0, stringBuilder.length()) + "]";
+                String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 nbtJsonObject.addProperty(key, "int_array$" + string);
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagLongArray())) {
                 long[] longs = (long[]) Reflection_Class.getData(nbtBase);
@@ -434,7 +434,7 @@ public final class ItemUtils {
                 for (long l : longs) {
                     stringBuilder.append(l).append(",");
                 }
-                String string = stringBuilder.substring(0, stringBuilder.length()) + "]";
+                String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 nbtJsonObject.addProperty(key, "long_array$" + string);
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagByteArray())) {
                 byte[] by = (byte[]) Reflection_Class.getData(nbtBase);
@@ -442,7 +442,7 @@ public final class ItemUtils {
                 for (byte b : by) {
                     stringBuilder.append(b).append(",");
                 }
-                String string = stringBuilder.substring(0, stringBuilder.length()) + "]";
+                String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 nbtJsonObject.addProperty(key, "byte_array$" + string);
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagCompound())) {
                 nbtJsonObject.add(key, parseNBTTagCompound(nbtBase));
@@ -479,7 +479,7 @@ public final class ItemUtils {
                 for (int i : ints) {
                     stringBuilder.append(i).append(",");
                 }
-                String string = stringBuilder.substring(0, stringBuilder.length()) + "]";
+                String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 jsonArray.add("int_array$" + string);
             } else if (base.getClass().equals(Reflection_Class.NBTTagLongArray())) {
                 long[] longs = (long[]) Reflection_Class.getData(base);
@@ -487,7 +487,7 @@ public final class ItemUtils {
                 for (long l : longs) {
                     stringBuilder.append(l).append(",");
                 }
-                String string = stringBuilder.substring(0, stringBuilder.length()) + "]";
+                String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 jsonArray.add("long_array$" + string);
             } else if (base.getClass().equals(Reflection_Class.NBTTagByteArray())) {
                 byte[] by = (byte[]) Reflection_Class.getData(base);
@@ -495,7 +495,7 @@ public final class ItemUtils {
                 for (byte b : by) {
                     stringBuilder.append(b).append(",");
                 }
-                String string = stringBuilder.substring(0, stringBuilder.length()) + "]";
+                String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 jsonArray.add("byte_array$" + string);
             } else if (base.getClass().equals(Reflection_Class.NBTTagCompound())) {
                 jsonArray.add(parseNBTTagCompound(base));

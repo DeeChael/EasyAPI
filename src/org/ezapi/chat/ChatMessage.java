@@ -82,9 +82,17 @@ public class ChatMessage {
     private String getSelfText(String locale) {
         if (flag) {
             if (LanguageManager.INSTANCE.hasText(locale, data)) {
-                return ColorUtils.translate(LanguageManager.INSTANCE.getText(locale, data));
+                String finalText = ColorUtils.translate(LanguageManager.INSTANCE.getText(locale, data));
+                for (String key : replaces.keySet()) {
+                    finalText = finalText.replace(key, replaces.get(key));
+                }
+                return finalText;
             } else if (LanguageManager.INSTANCE.hasText("en_us", data)) {
-                return ColorUtils.translate(LanguageManager.INSTANCE.getText("en_us", data));
+                String finalText = ColorUtils.translate(LanguageManager.INSTANCE.getText("en_us", data));
+                for (String key : replaces.keySet()) {
+                    finalText = finalText.replace(key, replaces.get(key));
+                }
+                return finalText;
             }
         }
         return ColorUtils.translate(data);

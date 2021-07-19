@@ -36,8 +36,8 @@ public final class ArgumentEnchantment implements Argument {
 
     public static Enchantment nmsEnchantmentToBukkitEnchantment(Object nmsEnchantment) {
         try {
-            return (Enchantment) ReflectionUtils.getObcClass("enchantments.CraftEnchantment").getMethod("getRaw", Enchantment()).invoke(null, nmsEnchantment);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            return (Enchantment) ReflectionUtils.getObcClass("enchantments.CraftEnchantment").getConstructor(Enchantment()).newInstance(nmsEnchantment);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
             e.printStackTrace();
         }
         return null;

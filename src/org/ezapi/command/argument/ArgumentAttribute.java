@@ -38,7 +38,7 @@ public final class ArgumentAttribute implements Argument {
 
     public static Attribute nmsAttributeBaseToBukkitAttribute(Object nmsAttribute) {
         try {
-            return (Attribute) ReflectionUtils.getObcClass("attribute.CraftAttributeMap").getMethod("fromMinecraft", String.class).invoke(null, nmsAttribute.getClass().getMethod("getName").invoke(nmsAttribute).toString());
+            return (Attribute) ReflectionUtils.getObcClass("attribute.CraftAttributeMap").getMethod("fromMinecraft", String.class).invoke(null, nmsAttribute.getClass().getMethod("getKey").invoke(nmsAttribute).toString());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
