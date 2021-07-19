@@ -32,7 +32,7 @@ public final class PlayerUtils {
     }
 
     public static void sendMessage(Player player, ChatMessage chatMessage) {
-        player.spigot().sendMessage(chatMessage.getMessage());
+        player.spigot().sendMessage(chatMessage.getMessage(player));
         /*
         Object packetPlayOutChat = createPacketPlayOutChat(null, ChatMessageType().valueOf("SYSTEM"));
         EzClass ezClass = PacketPlayOutChat();
