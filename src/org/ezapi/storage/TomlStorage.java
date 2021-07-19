@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TomlStorage extends FileStorage implements Storage, Closable {
+public final class TomlStorage extends FileStorage implements Storage, Closable {
 
     private final FileConfig fileConfig;
 

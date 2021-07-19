@@ -14,7 +14,7 @@ import org.ezapi.util.ColorUtils;
 
 import java.util.*;
 
-public class ChatMessage {
+public final class ChatMessage {
 
     private final String data;
 

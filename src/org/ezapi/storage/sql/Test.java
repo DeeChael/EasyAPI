@@ -2,9 +2,9 @@ package org.ezapi.storage.sql;
 
 import java.sql.SQLException;
 
-class Test {
+final class Test {
 
-    public static void main(String[] args) throws SQLException {
+    static void main(String[] args) throws SQLException {
         /*
         Mysql mysql = new Mysql("127.0.0.1", 3306, "minecraft", "ezapi", "root", "xxxxxxxxxxxx");
         SqlContext sqlContext = new SqlContext();
@@ -16,7 +16,7 @@ class Test {
         mysql.close();
         */
         /*
-        MongoDB mongoDB = new MongoDB("127.0.0.1", 27017, "root", "DeeChael2333", "admin", "test");
+        MongoDB mongoDB = new MongoDB("127.0.0.1", 27017, "root", "xxxxxxxxxxxx", "admin", "test");
         StorageContext storageContext = new StorageContext();
         StorageContext friendA = new StorageContext();
         friendA.setString("name", "Gerry5126");

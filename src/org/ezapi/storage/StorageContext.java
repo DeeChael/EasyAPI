@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class StorageContext {
+public final class StorageContext {
 
     private final JsonObject jsonObject;
 

@@ -14,7 +14,7 @@ import org.ezapi.storage.StorageContext;
 import java.sql.SQLException;
 import java.util.*;
 
-public class MongoDB implements NoSql {
+public final class MongoDB implements NoSql {
 
     private final MongoClient mongoClient;
 

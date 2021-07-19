@@ -12,7 +12,7 @@ import org.ezapi.util.item.ItemUtils;
 
 import java.util.Map;
 
-public class InventoryUtils {
+public final class InventoryUtils {
 
     public static void toInventory(String jsonObjectString, Player player) {
         if (JsonUtils.isJsonObject(jsonObjectString)) {

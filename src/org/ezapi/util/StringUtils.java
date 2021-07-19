@@ -18,10 +18,6 @@ public final class StringUtils {
         return new String[] {string.substring(0, position), string.substring(position + 1)};
     }
 
-    public static void main(String[] args) {
-        System.out.println(Arrays.toString(divide("aaaaaaaaaaax7=9xbbbbbbbbbbb=xxxaaaaaaaaa", '=')));
-    }
-
     public static int count(String a, String b) {
         if (notIn(a, b)) return 0;
         return (a.length() - (a.replace(b, "").length())) / b.length();

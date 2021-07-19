@@ -29,7 +29,12 @@ public final class LanguageManager {
 
     public void register(Language language) {
         REGISTERED_LANGUAGE.add(language);
-        reload();
+        if (!LANGUAGES.containsKey(language.getLanguageCode())) LANGUAGES.put(language.getLanguageCode(), new HashMap<>());
+        for (String key : language.keys()) {
+            if (!LANGUAGES.get(language.getLanguageCode()).containsKey(key)) {
+                LANGUAGES.get(language.getLanguageCode()).put(key, language.get(key));
+            }
+        }
     }
 
     public void unregister(Language language) {
@@ -43,6 +48,7 @@ public final class LanguageManager {
             LANGUAGES.put(languageCode, new HashMap<>());
         }
         for (Language language : REGISTERED_LANGUAGE) {
+            language.reload();
             if (!LANGUAGES.containsKey(language.getLanguageCode())) LANGUAGES.put(language.getLanguageCode(), new HashMap<>());
             for (String key : language.keys()) {
                 if (!LANGUAGES.get(language.getLanguageCode()).containsKey(key)) {

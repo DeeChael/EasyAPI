@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 
-public class LocationUtils {
+public final class LocationUtils {
 
     public static Location add(Location original, int x, int y, int z) {
         return new Location(original.getWorld(), original.getX() + x, original.getY() + y, original.getZ() + z);

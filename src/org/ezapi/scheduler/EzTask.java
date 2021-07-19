@@ -2,7 +2,7 @@ package org.ezapi.scheduler;
 
 import org.bukkit.scheduler.BukkitTask;
 
-public class EzTask {
+public final class EzTask {
 
     private final BukkitTask bukkitTask;
 

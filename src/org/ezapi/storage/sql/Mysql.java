@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Mysql implements Sql {
+public final class Mysql implements Sql {
 
     private final HikariConfig hikariConfig = new HikariConfig();
 

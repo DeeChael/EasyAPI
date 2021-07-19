@@ -1,6 +1,6 @@
 package org.ezapi.util;
 
-public class MathUtils {
+public final class MathUtils {
 
     public static double square(double a) {
         return a * a;

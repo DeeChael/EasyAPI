@@ -16,7 +16,7 @@ import org.ezapi.function.NonReturnWithOne;
 import java.util.*;
 import java.util.function.Function;
 
-public class EzInventory implements Listener {
+public final class EzInventory implements Listener {
 
     private Plugin plugin;
 

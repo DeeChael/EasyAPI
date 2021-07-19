@@ -46,7 +46,7 @@ public final class Language {
         }
         try {
             jsonObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException ignored) {
         }
         for (String key : languageDefault.keys()) {
             if (!has(key)) {
@@ -54,6 +54,13 @@ public final class Language {
             }
         }
         save();
+    }
+
+    public void reload() {
+        try {
+            jsonObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+        } catch (FileNotFoundException ignored) {
+        }
     }
 
     public String getLanguageCode() {

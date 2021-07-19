@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-public class BuildingUtils {
+public final class BuildingUtils {
 
     public static void polygon(List<Location2D> locations, int y, int height, double radius, Material block) {
         if (locations.size() < 2) return;

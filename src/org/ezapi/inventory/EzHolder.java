@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-public class EzHolder implements InventoryHolder {
+public final class EzHolder implements InventoryHolder {
 
     private Inventory inventory = Bukkit.createInventory(null, 54);
 

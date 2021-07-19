@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Sqlite extends FileStorage implements Sql {
+public final class Sqlite extends FileStorage implements Sql {
 
     private final String url;
 

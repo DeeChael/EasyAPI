@@ -1,6 +1,6 @@
 package org.ezapi.returns;
 
-public class QuintupleReturn<F,S,T,FO,FI> {
+public final class QuintupleReturn<F,S,T,FO,FI> {
 
     private F first;
 

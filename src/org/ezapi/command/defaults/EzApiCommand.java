@@ -21,13 +21,13 @@ import org.ezapi.util.BuildingUtils;
 import org.ezapi.util.LocationUtils;
 import org.ezapi.util.PlayerUtils;
 
-public final class EzApiCommand {
+final class EzApiCommand {
 
     private EzCommand ezCommand;
 
     private boolean registered = false;
 
-    public EzApiCommand() {
+    private EzApiCommand() {
         this.ezCommand = new EzCommand("ez-api", 4, "ez-api.command.ez-api", PermissionDefault.OP);
         ezCommand.then(new EzCommand("reload", 4, "ez-api.command.ez-api.reload", PermissionDefault.OP)
                 .executes(((sender, argument) -> {

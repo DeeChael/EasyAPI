@@ -1,6 +1,6 @@
 package org.ezapi.returns;
 
-public class QuadrupleReturn<F,S,T,FO> {
+public final class QuadrupleReturn<F,S,T,FO> {
 
     private F first;
 

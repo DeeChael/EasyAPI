@@ -1,4 +1,4 @@
 package org.ezapi.storage;
 
-public class Json5Storage {
+public final class Json5Storage {
 }

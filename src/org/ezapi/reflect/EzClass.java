@@ -5,7 +5,7 @@ import org.ezapi.util.ReflectionUtils;
 
 import java.lang.reflect.*;
 
-public class EzClass {
+public final class EzClass {
 
     private final Class<?> clazz;
 
