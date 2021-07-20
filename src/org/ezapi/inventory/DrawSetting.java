@@ -25,10 +25,19 @@ public final class DrawSetting {
 
     private boolean unbreakable = false;
 
+    private boolean clone = false;
+
+    private ItemStack cloneItem = new ItemStack(Material.AIR);
+
     private final int slot;
 
     public DrawSetting(int slot) {
         this.slot = slot;
+    }
+
+    public void clone(ItemStack itemStack) {
+        this.clone = true;
+        cloneItem = itemStack;
     }
 
     public int getSlot() {
@@ -81,6 +90,7 @@ public final class DrawSetting {
     }
 
     public ItemStack render(Player player) {
+        if (clone) return cloneItem;
         ItemStack itemStack = new ItemStack(type);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
