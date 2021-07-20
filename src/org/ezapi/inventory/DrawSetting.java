@@ -37,7 +37,7 @@ public final class DrawSetting {
 
     public void clone(ItemStack itemStack) {
         this.clone = true;
-        cloneItem = itemStack;
+        cloneItem = itemStack.clone();
     }
 
     public int getSlot() {
