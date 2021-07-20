@@ -24,6 +24,7 @@ public final class EzEnum {
     }
 
     public EzEnum(Class<?> clazz) {
+        if (clazz == null) throw new IllegalArgumentException("Class not found");
         if (!clazz.isEnum()) throw new IllegalClassException("Argument class is not a enum");
         this.clazz = clazz;
     }

@@ -4,6 +4,7 @@ import org.apache.commons.lang.IllegalClassException;
 import org.ezapi.util.ReflectionUtils;
 
 import java.lang.reflect.*;
+import java.util.Arrays;
 
 public final class EzClass {
 
@@ -123,11 +124,12 @@ public final class EzClass {
             Method method = clazz.getDeclaredMethod(methodName, classes);
             if (Modifier.isStatic(method.getModifiers())) throw new IllegalAccessException("Method \"" + methodName + "\" is a static method");
             method.setAccessible(true);
+            Object object = method.invoke(this.object, arguments);
             if (method.getReturnType().equals(void.class)) return null;
-            return method.invoke(this.object, arguments);
+            return object;
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException("Method \"" + methodName + "\" not found");
-        } catch (InvocationTargetException | IllegalAccessException ignored) {
+        } catch (InvocationTargetException | IllegalAccessException e) {
             return null;
         }
     }
@@ -137,11 +139,12 @@ public final class EzClass {
             Method method = clazz.getDeclaredMethod(methodName, classes);
             if (!Modifier.isStatic(method.getModifiers())) throw new IllegalAccessException("Method \"" + methodName + "\" is not a static method");
             method.setAccessible(true);
+            Object object = method.invoke(null, arguments);
             if (method.getReturnType().equals(void.class)) return null;
-            return method.invoke(null, arguments);
+            return object;
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException("Method \"" + methodName + "\" not found");
-        } catch (InvocationTargetException | IllegalAccessException ignored) {
+        } catch (InvocationTargetException | IllegalAccessException e) {
             return null;
         }
     }
@@ -188,6 +191,10 @@ public final class EzClass {
     public String toString() {
         if (!created) throw new IllegalStateException("Haven't create a new instance");
         return object.toString();
+    }
+
+    public Object[] createArray(int size) {
+        return (Object[]) Array.newInstance(clazz, size);
     }
 
     @Override

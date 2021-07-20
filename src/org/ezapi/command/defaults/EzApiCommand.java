@@ -21,13 +21,13 @@ import org.ezapi.util.BuildingUtils;
 import org.ezapi.util.LocationUtils;
 import org.ezapi.util.PlayerUtils;
 
-final class EzApiCommand {
+public final class EzApiCommand {
 
     private EzCommand ezCommand;
 
     private boolean registered = false;
 
-    private EzApiCommand() {
+    public EzApiCommand() {
         this.ezCommand = new EzCommand("ez-api", 4, "ez-api.command.ez-api", PermissionDefault.OP);
         ezCommand.then(new EzCommand("reload", 4, "ez-api.command.ez-api.reload", PermissionDefault.OP)
                 .executes(((sender, argument) -> {
@@ -53,11 +53,7 @@ final class EzApiCommand {
                         .executes(((sender, argument) -> {
                             int i = 0;
                             if (sender.player() != null) {
-                                Player player = sender.player();
-                                ChatMessage chatMessage = new ChatMessage("Testing...", false);
-                                chatMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "我是傻逼"));
-                                chatMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to show print some special message")));
-                                PlayerUtils.sendMessage(player, chatMessage);
+                                PlayerUtils.title(new ChatMessage("Testing...", false), 10, 70, 20, sender.player());
                                 i++;
                             }
                             return i;
