@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ezapi.command.EzCommandManager;
-import org.ezapi.command.defaults.EzApiCommand;
 import org.ezapi.configuration.LanguageManager;
 import org.ezapi.util.ReflectionUtils;
 
@@ -42,13 +41,20 @@ public final class EasyAPI extends JavaPlugin {
         if (files != null) {
             if (files.length > 0) {
                 for (File file : files) {
-                    EzClassLoader.load(file);
+                    if (file.getName().endsWith(".jar")) {
+                        EzClassLoader.load(file);
+                    }
                 }
             }
         }
+        try {
+            Class.forName("com.zaxxer.hikari.HikariConfig");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         */
         Bukkit.getPluginManager().registerEvents(EzCommandManager.INSTANCE, this);
-        new EzApiCommand().register();
+        //new EzApiCommand().register();
         reload();
     }
 

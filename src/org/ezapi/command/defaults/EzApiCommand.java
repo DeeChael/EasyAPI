@@ -21,13 +21,13 @@ import org.ezapi.util.BuildingUtils;
 import org.ezapi.util.LocationUtils;
 import org.ezapi.util.PlayerUtils;
 
-public final class EzApiCommand {
+final class EzApiCommand {
 
     private EzCommand ezCommand;
 
     private boolean registered = false;
 
-    public EzApiCommand() {
+    private EzApiCommand() {
         this.ezCommand = new EzCommand("ez-api", 4, "ez-api.command.ez-api", PermissionDefault.OP);
         ezCommand.then(new EzCommand("reload", 4, "ez-api.command.ez-api.reload", PermissionDefault.OP)
                 .executes(((sender, argument) -> {
@@ -36,28 +36,25 @@ public final class EzApiCommand {
                 }))
         );
         ezCommand.then(new EzCommand("test", 4, "ez-api.command.ez-api.test", PermissionDefault.OP)
-                .then(new EzCommand("api1")
+                .then(new EzCommand("api")
                         .executes(((sender, argument) -> {
                             int i = 0;
                             if (sender.player() != null) {
-                                ChatMessage chatMessage = new ChatMessage("Testing...", false);
-                                chatMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "我是傻逼"));
-                                chatMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to show print some special message")));
-                                sender.sendMessage(chatMessage);
+                                PlayerUtils.skin(sender.player(), "Notch");
                                 i++;
                             }
                             return i;
                         }))
-                )
-                .then(new EzCommand("api2")
-                        .executes(((sender, argument) -> {
-                            int i = 0;
-                            if (sender.player() != null) {
-                                PlayerUtils.title(new ChatMessage("Testing...", false), 10, 70, 20, sender.player());
-                                i++;
-                            }
-                            return i;
-                        }))
+                        .then(new EzArgument(BaseArguments.string(), "name")
+                                .executes(((sender, argument) -> {
+                                    int i = 0;
+                                    if (sender.player() != null) {
+                                        PlayerUtils.skin(sender.player(), argument.getAsString("name"));
+                                        i++;
+                                    }
+                                    return i;
+                                }))
+                        )
                 )
                 .then(new EzCommand("give")
                         .then(new EzArgument(ArgumentPlayer.argumentType(), "targets")

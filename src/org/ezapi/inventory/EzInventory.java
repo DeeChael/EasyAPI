@@ -91,6 +91,18 @@ public final class EzInventory implements Listener {
         items.put(slot, input);
     }
 
+    public boolean has(int slot) {
+        return items.containsKey(slot);
+    }
+
+    public Input get(int slot) {
+        return items.get(slot);
+    }
+
+    public Input remove(int slot) {
+        return items.remove(slot);
+    }
+
     public void setDynamicInput(Function<Player, List<Input>> function) {
         this.dynamicInput = function;
     }
