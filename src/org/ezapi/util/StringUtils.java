@@ -13,6 +13,21 @@ public final class StringUtils {
 
     public static final String NULL = null;
 
+    public static String noLineUUIDtoLined(String uuid) {
+        if (uuid.length() != 32) return "00000000-0000-0000-0000-000000000000";
+        String[] strings = new String[5];
+        strings[0] = uuid.substring(0, 8);
+        strings[1] = uuid.substring(8, 12);
+        strings[2] = uuid.substring(12, 16);
+        strings[3] = uuid.substring(16, 20);
+        strings[4] = uuid.substring(20, 32);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String string : strings) {
+            stringBuilder.append(string).append("-");
+        }
+        return stringBuilder.substring(0, stringBuilder.length() - 1);
+    }
+
     public static String[] divide(String string, char c) {
         int position = string.indexOf(String.valueOf(c));
         return new String[] {string.substring(0, position), string.substring(position + 1)};

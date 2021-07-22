@@ -46,7 +46,11 @@ public final class PlayerDataManager {
                 }
             }
             configuration = YamlConfiguration.loadConfiguration(file);
-            configuration.set("name", player.getName().toLowerCase());
+            configuration.set("name", player.getName());
+            try {
+                configuration.save(this.file);
+            } catch (IOException ignored) {
+            }
         }
 
         @Override

@@ -23,6 +23,49 @@ import java.util.*;
 
 public final class PlayerUtils {
 
+    public static boolean hasOnlineAccount(Player player) {
+        try {
+            URL getIdUrl = new URL("https://api.mojang.com/users/profiles/minecraft/" + player.getName().toLowerCase());
+            HttpURLConnection getIdUrlConnection = (HttpURLConnection) getIdUrl.openConnection();
+            return getIdUrlConnection.getResponseCode() == HttpURLConnection.HTTP_OK;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public static void resetSkin(Player player) {
+        if (hasOnlineAccount(player)) {
+            skin(player, player.getName());
+        } else {
+            EzClass craftPlayerClass = new EzClass(ReflectionUtils.getObcClass("entity.CraftPlayer"));
+            craftPlayerClass.setInstance(player);
+            GameProfile gameProfile = (GameProfile) craftPlayerClass.invokeMethod("getProfile", new Class[0], new Object[0]);
+            if (gameProfile.getProperties().containsKey("textures")) {
+                gameProfile.getProperties().removeAll("textures");
+            }
+        }
+    }
+
+    public static void syncSkin(Player player) {
+        if (hasOnlineAccount(player)) {
+            skin(player, player.getName());
+        }
+    }
+
+    public static UUID getOnlineUniqueId(Player player) {
+        if (hasOnlineAccount(player)) {
+            try {
+                URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + player.getName().toLowerCase());
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    return UUID.fromString(StringUtils.noLineUUIDtoLined(new JsonParser().parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject().get("id").getAsString()));
+                }
+            } catch (IOException ignored) {
+            }
+        }
+        return player.getUniqueId();
+    }
+
     public static void skin(Player player, String skinOwner) {
         EzClass craftPlayerClass = new EzClass(ReflectionUtils.getObcClass("entity.CraftPlayer"));
         craftPlayerClass.setInstance(player);
@@ -74,29 +117,29 @@ public final class PlayerUtils {
         }
     }
 
-    public static void reset(Player player) {
-        reset(new Player[] {player});
+    public static void resetTitle(Player player) {
+        resetTitle(new Player[] {player});
     }
 
-    public static void reset(Player... players) {
-        reset(Arrays.asList(players));
+    public static void resetTitle(Player... players) {
+        resetTitle(Arrays.asList(players));
     }
 
-    public static void reset(List<Player> players) {
+    public static void resetTitle(List<Player> players) {
         for (Player player : players) {
             sendPacket(player, createResetPacket());
         }
     }
 
-    public static void clear(Player player) {
-        clear(new Player[] {player});
+    public static void clearTitle(Player player) {
+        clearTitle(new Player[] {player});
     }
 
-    public static void clear(Player... players) {
-        clear(Arrays.asList(players));
+    public static void clearTitle(Player... players) {
+        clearTitle(Arrays.asList(players));
     }
 
-    public static void clear(List<Player> players) {
+    public static void clearTitle(List<Player> players) {
         for (Player player : players) {
             sendPacket(player, createClearPacket());
         }
