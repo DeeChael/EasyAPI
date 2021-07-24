@@ -11,6 +11,7 @@ import org.ezapi.reflect.EzClass;
 import org.ezapi.util.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public final class ArgumentEntityType implements Argument {
@@ -51,6 +52,12 @@ public final class ArgumentEntityType implements Argument {
             Object nmsEntity = EntityTypes().getMethod("a", nmsWorld().getInstanceClass()).invoke(nmsEntityTypes, getNmsWorld(Bukkit.getWorlds().get(0)));
             Entity entity = (Entity) nmsEntity.getClass().getMethod("getBukkitEntity").invoke(nmsEntity);
             EntityType entityType = entity.getType();
+            if (EntityLiving().getInstanceClass().isInstance(nmsEntity)) {
+                EzClass EntityLiving = EntityLiving();
+                EntityLiving.setInstance(nmsEntity);
+                EntityLiving.setField("drops", new ArrayList<>());
+                EntityLiving.setField("expToDrop", 0);
+            }
             nmsEntity.getClass().getMethod("die").invoke(nmsEntity);
             return entityType;
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -66,6 +73,10 @@ public final class ArgumentEntityType implements Argument {
 
     private static EzClass nmsWorld() {
         return ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzClass(ReflectionUtils.getNmsClass("World")) : new EzClass("net.minecraft.world.level.World");
+    }
+
+    private static EzClass EntityLiving() {
+        return ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzClass(ReflectionUtils.getNmsClass("EntityLiving")) : new EzClass("net.minecraft.world.entity.EntityLiving");
     }
 
     private static Object getNmsWorld(World world) {

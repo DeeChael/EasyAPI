@@ -1,8 +1,10 @@
 package org.ezapi.command;
 
+import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.context.CommandContext;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
@@ -16,6 +18,7 @@ import org.ezapi.command.argument.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 public final class EzArgumentHelper {
 
@@ -135,6 +138,26 @@ public final class EzArgumentHelper {
 
     public EntityType getAsEntityType(String argumentName) {
         return ArgumentEntityType.nmsEntityTypesToBukkitEntityType(ArgumentEntityType.instance().get(commandContext, argumentName));
+    }
+
+    public Particle getAsParticle(String argumentName) {
+        return ArgumentParticle.nmsParticleToBukkitParticle(ArgumentParticle.instance().get(commandContext, argumentName));
+    }
+
+    public ChatColor getAsChatColor_Bungee(String argumentName) {
+        return ChatColor.getByChar(ArgumentChatColor.getColorChar(ArgumentChatColor.instance().get(commandContext, argumentName)));
+    }
+
+    public org.bukkit.ChatColor getAsChatColor_Bukkit(String argumentName) {
+        return org.bukkit.ChatColor.getByChar(ArgumentChatColor.getColorChar(ArgumentChatColor.instance().get(commandContext, argumentName)));
+    }
+
+    public UUID getAsUUID(String argumentName) {
+        return ArgumentUUID.instance().get(commandContext, argumentName);
+    }
+
+    public JsonObject getAsNBTTag(String argumentName) {
+        return ArgumentNBTTag.instance().get(commandContext, argumentName);
     }
 
 }

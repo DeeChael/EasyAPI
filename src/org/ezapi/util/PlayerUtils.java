@@ -9,6 +9,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.ezapi.EasyAPI;
+import org.ezapi.block.BlockBreakAnimation;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
@@ -22,6 +23,14 @@ import java.net.URL;
 import java.util.*;
 
 public final class PlayerUtils {
+
+    public static void setMaterialCooldown(Player player, Material material, int ticks) {
+        sendPacket(player, PacketUtils.createPacketPlayOutSetCooldown(material, ticks));
+    }
+
+    public static void setBlockBreakStage(Player player, Location location, BlockBreakAnimation stage) {
+        sendPacket(player, PacketUtils.createPacketPlayOutBlockBreakAnimation(null, location, stage));
+    }
 
     public static boolean hasOnlineAccount(Player player) {
         try {
@@ -87,11 +96,11 @@ public final class PlayerUtils {
                     gameProfile.getProperties().put("textures", new Property("textures", value, signature));
                     Object remove = createPacketPlayOutPlayerInfoRemovePlayer(player);
                     Object add = createPacketPlayOutPlayerInfoAddPlayer(player);
-                    Object respawn = createPacketPlayOutRespawn(player);
                     Object destroy = createPacketPlayOutEntityDestroy(player);
                     Object spawn = createPacketPlayOutNamedEntitySpawn(player);
                     for (Player target : Bukkit.getOnlinePlayers()) {
                         if (target.equals(player)) {
+                            Object respawn = PacketUtils.createPacketPlayOutRespawn(player);
                             ItemStack[] contents = player.getInventory().getContents();
                             boolean isFlying = player.isFlying();
                             Location location = target.getLocation();
@@ -103,12 +112,14 @@ public final class PlayerUtils {
                             player.setFlying(isFlying);
                             continue;
                         }
+                        boolean isFlying = target.isFlying();
                         Location location = target.getLocation();
                         sendPacket(target, remove);
                         sendPacket(target, add);
                         sendPacket(target, destroy);
                         sendPacket(target, spawn);
                         target.teleport(location);
+                        target.setFlying(isFlying);
                     }
                 }
             }
@@ -506,115 +517,6 @@ public final class PlayerUtils {
         } else {
             return ReflectionUtils.getClass("net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy");
         }
-    }
-
-    private static Object createPacketPlayOutRespawn(Player player) {
-        EzClass packetPlayerOutRespawn = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.PacketPlayOutRespawn") : new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutRespawn"));
-        try {
-            Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
-            EzClass entityPlayerClass = ReflectionUtils.getVersion() >= 9 && ReflectionUtils.getVersion() <= 15 ? new EzClass(ReflectionUtils.getNmsClass("EntityPlayer")) : new EzClass("net.minecraft.server.level.EntityPlayer");
-            entityPlayerClass.setInstance(entityPlayer);
-            EzClass World = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.world.level.World") : new EzClass(ReflectionUtils.getNmsClass("World"));
-            EzClass WorldServer = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.server.level.WorldServer") : new EzClass(ReflectionUtils.getNmsClass("WorldServer"));
-            WorldServer.setInstance(player.getWorld().getClass().getMethod("getHandle").invoke(player.getWorld()));
-            World.setInstance(WorldServer.getInstance());
-            if (ReflectionUtils.getVersion() == 9) {
-                EzClass GeneratorAccess = new EzClass(ReflectionUtils.getNmsClass("GeneratorAccess"));
-                GeneratorAccess.setInstance(World.getInstance());
-                EzEnum EnumDifficulty = new EzEnum(ReflectionUtils.getNmsClass("EnumDifficulty"));
-                EnumDifficulty.setInstance(GeneratorAccess.invokeMethod("getDifficulty", new Class[0], new Object[0]));
-                EzClass WorldType = new EzClass(ReflectionUtils.getNmsClass("WorldType"));
-                WorldType.setInstance(World.invokeMethod("R", new Class[0], new Object[0]));
-                EzEnum EnumGamemode = new EzEnum(ReflectionUtils.getNmsClass("EnumGamemode"));
-                EzClass PlayerInteractManager = new EzClass(ReflectionUtils.getNmsClass("PlayerInteractManager"));
-                PlayerInteractManager.setInstance(entityPlayerClass.getField("playerInteractManager"));
-                EnumGamemode.setInstance(PlayerInteractManager.invokeMethod("getGameMode", new Class[0], new Object[0]));
-                packetPlayerOutRespawn.setConstructor(int.class, EnumDifficulty.getInstanceEnum(), WorldType.getInstanceClass(), EnumGamemode.getInstanceEnum());
-                packetPlayerOutRespawn.newInstance(WorldServer.getField("dimension"), EnumDifficulty.getInstance(), WorldType.getInstance(), EnumGamemode.getInstance());
-            } else if (ReflectionUtils.getVersion() == 10) {
-                EzClass GeneratorAccess = new EzClass(ReflectionUtils.getNmsClass("GeneratorAccess"));
-                GeneratorAccess.setInstance(World.getInstance());
-                EzClass DimensionManager = new EzClass(ReflectionUtils.getNmsClass("DimensionManager"));
-                DimensionManager.setInstance(WorldServer.getField("dimension"));
-                EzEnum EnumDifficulty = new EzEnum(ReflectionUtils.getNmsClass("EnumDifficulty"));
-                EnumDifficulty.setInstance(GeneratorAccess.invokeMethod("getDifficulty", new Class[0], new Object[0]));
-                EzClass WorldType = new EzClass(ReflectionUtils.getNmsClass("WorldType"));
-                WorldType.setInstance(World.invokeMethod("S", new Class[0], new Object[0]));
-                EzEnum EnumGamemode = new EzEnum(ReflectionUtils.getNmsClass("EnumGamemode"));
-                EzClass PlayerInteractManager = new EzClass(ReflectionUtils.getNmsClass("PlayerInteractManager"));
-                PlayerInteractManager.setInstance(entityPlayerClass.getField("playerInteractManager"));
-                EnumGamemode.setInstance(PlayerInteractManager.invokeMethod("getGameMode", new Class[0], new Object[0]));
-                packetPlayerOutRespawn.setConstructor(DimensionManager.getInstanceClass(), EnumDifficulty.getInstanceEnum(), WorldType.getInstanceClass(), EnumGamemode.getInstanceEnum());
-                packetPlayerOutRespawn.newInstance(DimensionManager.getInstance(), EnumDifficulty.getInstance(), WorldType.getInstance(), EnumGamemode.getInstance());
-            } else if (ReflectionUtils.getVersion() == 11) {
-                EzClass DimensionManager = new EzClass(ReflectionUtils.getNmsClass("DimensionManager"));
-                DimensionManager.setInstance(WorldServer.getField("dimension"));
-                EzClass WorldType = new EzClass(ReflectionUtils.getNmsClass("WorldType"));
-                WorldType.setInstance(World.invokeMethod("P", new Class[0], new Object[0]));
-                EzEnum EnumGamemode = new EzEnum(ReflectionUtils.getNmsClass("EnumGamemode"));
-                EzClass PlayerInteractManager = new EzClass(ReflectionUtils.getNmsClass("PlayerInteractManager"));
-                PlayerInteractManager.setInstance(entityPlayerClass.getField("playerInteractManager"));
-                EnumGamemode.setInstance(PlayerInteractManager.invokeMethod("getGameMode", new Class[0], new Object[0]));
-                packetPlayerOutRespawn.setConstructor(DimensionManager.getInstanceClass(), WorldType.getInstanceClass(), EnumGamemode.getInstanceEnum());
-                packetPlayerOutRespawn.newInstance(DimensionManager.getInstance(), WorldType.getInstance(), EnumGamemode.getInstance());
-            } else if (ReflectionUtils.getVersion() == 12) {
-                EzClass DimensionManager = new EzClass(ReflectionUtils.getNmsClass("DimensionManager"));
-                DimensionManager.setInstance(WorldServer.getField("dimension"));
-                long seed = (long) WorldServer.invokeMethod("getSeed", new Class[0], new Object[0]);
-                EzClass WorldType = new EzClass(ReflectionUtils.getNmsClass("WorldType"));
-                WorldType.setInstance(World.invokeMethod("P", new Class[0], new Object[0]));
-                EzEnum EnumGamemode = new EzEnum(ReflectionUtils.getNmsClass("EnumGamemode"));
-                EzClass PlayerInteractManager = new EzClass(ReflectionUtils.getNmsClass("PlayerInteractManager"));
-                PlayerInteractManager.setInstance(entityPlayerClass.getField("playerInteractManager"));
-                EnumGamemode.setInstance(PlayerInteractManager.invokeMethod("getGameMode", new Class[0], new Object[0]));
-                packetPlayerOutRespawn.setConstructor(DimensionManager.getInstanceClass(), long.class, WorldType.getInstanceClass(), EnumGamemode.getInstanceEnum());
-                packetPlayerOutRespawn.newInstance(DimensionManager.getInstance(), seed, WorldType.getInstance(), EnumGamemode.getInstance());
-            } else if (ReflectionUtils.getVersion() == 13) {
-                EzClass ResourceKey = new EzClass(ReflectionUtils.getNmsClass("ResourceKey"));
-                Object dimension = World.invokeMethod("getTypeKey", new Class[0], new Object[0]);
-                Object world = World.invokeMethod("getDimensionKey", new Class[0], new Object[0]);
-                EzEnum EnumGamemode = new EzEnum(ReflectionUtils.getNmsClass("EnumGamemode"));
-                EzClass PlayerInteractManager = new EzClass(ReflectionUtils.getNmsClass("PlayerInteractManager"));
-                PlayerInteractManager.setInstance(entityPlayerClass.getField("playerInteractManager"));
-                EnumGamemode.setInstance(PlayerInteractManager.invokeMethod("getGameMode", new Class[0], new Object[0]));
-                long seed = (long) WorldServer.invokeMethod("getSeed", new Class[0], new Object[0]);
-                boolean debug = (boolean) World.invokeMethod("isDebugWorld", new Class[0], new Object[0]);
-                boolean flat = (boolean) WorldServer.invokeMethod("isFlatWorld", new Class[0], new Object[0]);
-                packetPlayerOutRespawn.setConstructor(ResourceKey.getInstanceClass(), ResourceKey.getInstanceClass(), long.class, EnumGamemode.getInstanceEnum(), EnumGamemode.getInstanceEnum(), boolean.class, boolean.class, boolean.class);
-                packetPlayerOutRespawn.newInstance(dimension, world, seed, EnumGamemode.getInstance(), EnumGamemode.getInstance(), debug, flat, true);
-            } else if (ReflectionUtils.getVersion() == 14 || ReflectionUtils.getVersion() == 15) {
-                EzClass DimensionManager = new EzClass(ReflectionUtils.getNmsClass("DimensionManager"));
-                DimensionManager.setInstance(World.invokeMethod("getDimensionManager", new Class[0], new Object[0]));
-                EzClass ResourceKey = new EzClass(ReflectionUtils.getNmsClass("ResourceKey"));
-                ResourceKey.setInstance(World.invokeMethod("getDimensionKey", new Class[0], new Object[0]));
-                EzEnum EnumGamemode = new EzEnum(ReflectionUtils.getNmsClass("EnumGamemode"));
-                EzClass PlayerInteractManager = new EzClass(ReflectionUtils.getNmsClass("PlayerInteractManager"));
-                PlayerInteractManager.setInstance(entityPlayerClass.getField("playerInteractManager"));
-                EnumGamemode.setInstance(PlayerInteractManager.invokeMethod("getGameMode", new Class[0], new Object[0]));
-                long seed = (long) WorldServer.invokeMethod("getSeed", new Class[0], new Object[0]);
-                boolean debug = (boolean) World.invokeMethod("isDebugWorld", new Class[0], new Object[0]);
-                boolean flat = (boolean) WorldServer.invokeMethod("isFlatWorld", new Class[0], new Object[0]);
-                packetPlayerOutRespawn.setConstructor(DimensionManager.getInstanceClass(), ResourceKey.getInstanceClass(), long.class, EnumGamemode.getInstanceEnum(), EnumGamemode.getInstanceEnum(), boolean.class, boolean.class, boolean.class);
-                packetPlayerOutRespawn.newInstance(DimensionManager.getInstance(), ResourceKey.getInstance(), seed, EnumGamemode.getInstance(), EnumGamemode.getInstance(), debug, flat, true);
-            } else if (ReflectionUtils.getVersion() == 16) {
-                EzClass DimensionManager = new EzClass("net.minecraft.world.level.dimension.DimensionManager");
-                DimensionManager.setInstance(World.invokeMethod("getDimensionManager", new Class[0], new Object[0]));
-                EzClass ResourceKey = new EzClass(ReflectionUtils.getNmsClass("ResourceKey"));
-                ResourceKey.setInstance(World.invokeMethod("getDimensionKey", new Class[0], new Object[0]));
-                EzEnum EnumGamemode = new EzEnum("net.minecraft.world.level.EnumGamemode");
-                EzClass PlayerInteractManager = new EzClass("net.minecraft.server.level.PlayerInteractManager");
-                PlayerInteractManager.setInstance(entityPlayerClass.getField("d"));
-                EnumGamemode.setInstance(PlayerInteractManager.invokeMethod("getGameMode", new Class[0], new Object[0]));
-                long seed = (long) WorldServer.invokeMethod("getSeed", new Class[0], new Object[0]);
-                boolean debug = (boolean) WorldServer.invokeMethod("isDebugWorld", new Class[0], new Object[0]);
-                boolean flat = (boolean) WorldServer.invokeMethod("isFlatWorld", new Class[0], new Object[0]);
-                packetPlayerOutRespawn.setConstructor(DimensionManager.getInstanceClass(), ResourceKey.getInstanceClass(), long.class, EnumGamemode.getInstanceEnum(), EnumGamemode.getInstanceEnum(), boolean.class, boolean.class, boolean.class);
-                packetPlayerOutRespawn.newInstance(DimensionManager.getInstance(), ResourceKey.getInstance(), seed, EnumGamemode.getInstance(), EnumGamemode.getInstance(), debug, flat, true);
-            }
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            EasyAPI.getInstance().getLogger().severe(e.toString());
-        }
-        return packetPlayerOutRespawn.getInstance();
     }
 
     private static Object createTimesPacket(int fadeIn, int stay, int fadeOut) {

@@ -1,18 +1,50 @@
 package org.ezapi.util;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.ezapi.EasyAPI;
+import org.ezapi.block.BlockBreakAnimation;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.UUID;
 
 public final class PacketUtils {
+
+    public static Object createPacketPlayOutSetCooldown(Material material, int ticks) {
+        EzClass CraftMagicNumbers = new EzClass(ReflectionUtils.getObcClass("util.CraftMagicNumbers"));
+        EzClass Item = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.world.item.Item") : new EzClass(ReflectionUtils.getNmsClass("Item"));
+        Item.setInstance(CraftMagicNumbers.invokeMethod("getItem", new Class[] { Material.class }, new Object[] { material }));
+        EzClass PacketPlayOutSetCooldown = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.PacketPlayOutSetCooldown") : new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutSetCooldown"));
+        PacketPlayOutSetCooldown.setConstructor(Item.getInstanceClass(), int.class);
+        PacketPlayOutSetCooldown.newInstance(Item.getInstance(), ticks);
+        return PacketPlayOutSetCooldown.getInstance();
+    }
+
+    public static Object createPacketPlayOutBlockBreakAnimation(@Nullable Player digger, Location blockPosition, BlockBreakAnimation stage) {
+        int diggerId = -1;
+        if (digger != null) {
+            try {
+                Object nmsEntity = digger.getClass().getMethod("getHandle").invoke(digger);
+                diggerId = (int) nmsEntity.getClass().getMethod("getId").invoke(nmsEntity);
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ignored) {
+            }
+        }
+        EzClass BlockPosition = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.core.BlockPosition") : new EzClass(ReflectionUtils.getNmsClass("BlockPosition"));
+        BlockPosition.setConstructor(double.class, double.class, double.class);
+        BlockPosition.newInstance(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ());
+        EzClass PacketPlayOutBlockBreakAnimation = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.PacketPlayOutBlockBreakAnimation") : new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutBlockBreakAnimation"));
+        PacketPlayOutBlockBreakAnimation.setConstructor(int.class, BlockPosition.getInstanceClass(), int.class);
+        PacketPlayOutBlockBreakAnimation.newInstance(diggerId, BlockPosition.getInstance(), stage.getStage());
+        return PacketPlayOutBlockBreakAnimation.getInstance();
+    }
 
     private static final UUID CHAT_UUID = new UUID(0L, 0L);
 
@@ -53,7 +85,7 @@ public final class PacketUtils {
         return PacketPlayOutChat.getInstance();
     }
 
-    private static Object createPacketPlayOutEntityDestroy(Entity entity) {
+    public static Object createPacketPlayOutEntityDestroy(Entity entity) {
         try {
             Class<?> PacketPlayOutEntityDestroy;
             if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
@@ -68,7 +100,7 @@ public final class PacketUtils {
         return null;
     }
 
-    private static Object createPacketPlayOutRespawn(Player player) {
+    public static Object createPacketPlayOutRespawn(Player player) {
         EzClass packetPlayerOutRespawn = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.PacketPlayOutRespawn") : new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutRespawn"));
         try {
             Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
