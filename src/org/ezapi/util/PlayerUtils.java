@@ -724,7 +724,7 @@ public final class PlayerUtils {
     private static final UUID uuid = new UUID(0L, 0L);
 
     private static EzEnum ChatMessageType() {
-        return ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzEnum(Objects.requireNonNull(ReflectionUtils.getNmsClass("ChatMessageType"))) : new EzEnum("net.minecraft.chat.ChatMessageType");
+        return ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzEnum(Objects.requireNonNull(ReflectionUtils.getNmsClass("ChatMessageType"))) : new EzEnum("net.minecraft.network.chat.ChatMessageType");
     }
 
     private static EzClass PacketPlayOutChat() {

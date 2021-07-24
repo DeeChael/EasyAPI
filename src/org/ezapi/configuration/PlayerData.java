@@ -46,6 +46,8 @@ public interface PlayerData {
 
     void set(String path, Object value);
 
+    void addDefault(String path, Object defaultValue);
+
     boolean contains(String path);
 
     Object remove(String path);

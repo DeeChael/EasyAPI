@@ -10,9 +10,6 @@ import java.util.Scanner;
 
 public final class FileUtils {
 
-    public static void main(String[] args) {
-    }
-
     public static String readText(File file) {
         try {
             Scanner scanner = new Scanner(file);

@@ -150,4 +150,89 @@ public final class ReflectionUtils {
         }
     }
 
+    public static int getLargeVersion() {
+        switch (getServerVersion()) {
+            case "v1_8_R1":
+            case "v1_8_R2":
+            case "v1_8_R3":
+                return 1;
+            case "v1_9_R1":
+            case "v1_9_R2":
+                return 2;
+            case "v1_10_R1":
+                return 3;
+            case "v1_11_R1":
+                return 4;
+            case "v1_12_R1":
+                return 5;
+            case "v1_13_R1":
+            case "v1_13_R2":
+                return 6;
+            case "v1_14_R1":
+                return 7;
+            case "v1_15_R1":
+                return 8;
+            case "v1_16_R1":
+            case "v1_16_R2":
+            case "v1_16_R3":
+                return 9;
+            case "v1_17_R1":
+                return 10;
+            case "v1_18_R1":
+                return 11;
+            default: return -1;
+        }
+    }
+
+    public static double getCoreVersion() {
+        switch (getLargeVersion()) {
+            case 1:
+                return 1.08;
+            case 2:
+                return 1.09;
+            case 3:
+                return 1.10;
+            case 4:
+                return 1.11;
+            case 5:
+                return 1.12;
+            case 6:
+                return 1.13;
+            case 7:
+                return 1.14;
+            case 8:
+                return 1.15;
+            case 9:
+                return 1.16;
+            case 10:
+                return 1.17;
+            case 11:
+                return 1.18;
+            default:
+                return -1;
+        }
+    }
+
+    public static int getLongVersion() {
+        switch (getServerVersion()) {
+            case "v1_8_R1": return 10801;
+            case "v1_8_R2": return 10802;
+            case "v1_8_R3": return 10803;
+            case "v1_9_R1": return 10901;
+            case "v1_9_R2": return 10902;
+            case "v1_10_R1": return 11001;
+            case "v1_11_R1": return 11101;
+            case "v1_12_R1": return 11201;
+            case "v1_13_R1": return 11301;
+            case "v1_13_R2": return 11302;
+            case "v1_14_R1": return 11401;
+            case "v1_15_R1": return 11501;
+            case "v1_16_R1": return 11601;
+            case "v1_16_R2": return 11602;
+            case "v1_16_R3": return 11603;
+            case "v1_17_R1": return 11701;
+            default: return -1;
+        }
+    }
+
 }

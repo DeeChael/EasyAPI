@@ -93,6 +93,11 @@ public final class PlayerDataManager {
         }
 
         @Override
+        public void addDefault(String path, Object defaultValue) {
+            if (!configuration.contains(path)) configuration.set(path, defaultValue);
+        }
+
+        @Override
         public boolean contains(String path) {
             return configuration.contains(path);
         }
