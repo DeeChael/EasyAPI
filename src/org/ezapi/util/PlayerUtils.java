@@ -197,6 +197,8 @@ public final class PlayerUtils {
         }
     }
 
+    /*
+
     public static void actionbar(ChatMessage title, int fadeIn, int stay, int fadeOut, Player player) {
         actionbar(title, fadeIn, stay, fadeOut, new Player[] {player});
     }
@@ -204,6 +206,8 @@ public final class PlayerUtils {
     public static void actionbar(ChatMessage title, int fadeIn, int stay, int fadeOut, Player... players) {
         actionbar(title, fadeIn, stay, fadeOut, Arrays.asList(players));
     }
+
+     */
 
     public static void actionbar(ChatMessage title, Player player) {
         actionbar(title, Collections.singletonList(player));
@@ -214,8 +218,12 @@ public final class PlayerUtils {
     }
 
     public static void actionbar(ChatMessage title, List<Player> players) {
-        actionbar(title, 10, 70, 20, players);
+        for (Player player : players) {
+            sendPacket(player, createActionbarPacket(title.getText(player)));
+        }
     }
+
+    /*
 
     public static void actionbar(ChatMessage title, int fadeIn, int stay, int fadeOut, List<Player> players) {
         Object timesPacket = createTimesPacket(fadeIn, stay, fadeOut);
@@ -225,6 +233,8 @@ public final class PlayerUtils {
             sendPacket(player, actionbarPacket);
         }
     }
+
+    */
 
     public static void subtitle(ChatMessage title, int fadeIn, int stay, int fadeOut, Player player) {
         subtitle(title, fadeIn, stay, fadeOut, new Player[] {player});
