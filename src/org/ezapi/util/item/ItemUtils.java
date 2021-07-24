@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
+import org.ezapi.reflect.EzClass;
 import org.ezapi.util.*;
 
 import java.lang.reflect.Constructor;
@@ -153,23 +154,25 @@ public final class ItemUtils {
         }
         ItemStack itemStack = new ItemStack(Material.valueOf(jsonObject.get("type").getAsString().toUpperCase()));
         itemStack.setAmount(jsonObject.get("amount").getAsInt());
-        Object nmsItemStack = null;
-        try {
-            nmsItemStack = Reflection_Class.asNMSCopy(itemStack);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
+        if (jsonObject.has("nbt")) {
+            Object nmsItemStack = null;
+            try {
+                nmsItemStack = Reflection_Class.asNMSCopy(itemStack);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            try {
+                Reflection_Class.setTag(nmsItemStack, toNBTTagCompound(jsonObject.getAsJsonObject("nbt")));
+            } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            try {
+                return Reflection_Class.asBukkitCopy(nmsItemStack);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
-        try {
-            Reflection_Class.setTag(nmsItemStack, toNBTTagCompound(jsonObject.getAsJsonObject("nbt")));
-        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        try {
-            return Reflection_Class.asBukkitCopy(nmsItemStack);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return new ItemStack(Material.AIR);
+        return itemStack;
     }
 
     public static String toJsonObjectString(ItemStack itemStack) {
@@ -408,21 +411,21 @@ public final class ItemUtils {
         for (String key : Reflection_Class.getKeys(nbtTagCompound)) {
             Object nbtBase = Reflection_Class.get(nbtTagCompound, key);
             if (nbtBase.getClass().equals(Reflection_Class.NBTTagString())) {
-                nbtJsonObject.addProperty(key, "string$" + Reflection_Class.getData(nbtBase));
+                nbtJsonObject.addProperty(key, "string$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asString").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagInt())) {
-                nbtJsonObject.addProperty(key, "int$" + Reflection_Class.getData(nbtBase));
+                nbtJsonObject.addProperty(key, "int$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asInt").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagLong())) {
-                nbtJsonObject.addProperty(key, "long$" + Reflection_Class.getData(nbtBase));
+                nbtJsonObject.addProperty(key, "long$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asLong").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagShort())) {
-                nbtJsonObject.addProperty(key, "short$" + Reflection_Class.getData(nbtBase));
+                nbtJsonObject.addProperty(key, "short$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asShort").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagByte())) {
-                nbtJsonObject.addProperty(key, "byte$" + Reflection_Class.getData(nbtBase));
+                nbtJsonObject.addProperty(key, "byte$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asByte").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagFloat())) {
-                nbtJsonObject.addProperty(key, "float$" + Reflection_Class.getData(nbtBase));
+                nbtJsonObject.addProperty(key, "float$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asFloat").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagDouble())) {
-                nbtJsonObject.addProperty(key, "double$" + Reflection_Class.getData(nbtBase));
+                nbtJsonObject.addProperty(key, "double$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asDouble").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagIntArray())) {
-                int[] ints = (int[]) Reflection_Class.getData(nbtBase);
+                int[] ints = (int[]) (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("getInts").invoke(nbtBase));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (int i : ints) {
                     stringBuilder.append(i).append(",");
@@ -430,7 +433,7 @@ public final class ItemUtils {
                 String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 nbtJsonObject.addProperty(key, "int_array$" + string);
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagLongArray())) {
-                long[] longs = (long[]) Reflection_Class.getData(nbtBase);
+                long[] longs = (long[]) (ReflectionUtils.getVersion() < 16 ? (ReflectionUtils.getVersion() < 11 ? nbtBase.getClass().getMethod("d").invoke(nbtBase) : nbtBase.getClass().getMethod("getLongs").invoke(nbtBase)) : nbtBase.getClass().getMethod("getLongs").invoke(nbtBase));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (long l : longs) {
                     stringBuilder.append(l).append(",");
@@ -438,7 +441,7 @@ public final class ItemUtils {
                 String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 nbtJsonObject.addProperty(key, "long_array$" + string);
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagByteArray())) {
-                byte[] by = (byte[]) Reflection_Class.getData(nbtBase);
+                byte[] by = (byte[]) (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("getBytes").invoke(nbtBase));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (byte b : by) {
                     stringBuilder.append(b).append(",");
@@ -461,21 +464,21 @@ public final class ItemUtils {
         JsonArray jsonArray = new JsonArray();
         for (Object base : nbtTagList) {
             if (base.getClass().equals(Reflection_Class.NBTTagString())) {
-                jsonArray.add("string$" + Reflection_Class.getData(base));
+                jsonArray.add("string$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asString").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagInt())) {
-                jsonArray.add("int$" + Reflection_Class.getData(base));
+                jsonArray.add("int$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asInt").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagLong())) {
-                jsonArray.add("long$" + Reflection_Class.getData(base));
+                jsonArray.add("long$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asLong").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagShort())) {
-                jsonArray.add("short$" + Reflection_Class.getData(base));
+                jsonArray.add("short$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asShort").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagByte())) {
-                jsonArray.add("byte$" + Reflection_Class.getData(base));
+                jsonArray.add("byte$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asByte").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagFloat())) {
-                jsonArray.add("float$" + Reflection_Class.getData(base));
+                jsonArray.add("float$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asFloat").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagDouble())) {
-                jsonArray.add("double$" + Reflection_Class.getData(base));
+                jsonArray.add("double$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asDouble").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagIntArray())) {
-                int[] ints = (int[]) Reflection_Class.getData(base);
+                int[] ints = (int[]) (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("getInts").invoke(base));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (int i : ints) {
                     stringBuilder.append(i).append(",");
@@ -483,7 +486,7 @@ public final class ItemUtils {
                 String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 jsonArray.add("int_array$" + string);
             } else if (base.getClass().equals(Reflection_Class.NBTTagLongArray())) {
-                long[] longs = (long[]) Reflection_Class.getData(base);
+                long[] longs = (long[]) (ReflectionUtils.getVersion() < 16 ? (ReflectionUtils.getVersion() < 11 ? base.getClass().getMethod("d").invoke(base) : base.getClass().getMethod("getLongs").invoke(base)) : base.getClass().getMethod("getLongs").invoke(base));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (long l : longs) {
                     stringBuilder.append(l).append(",");
@@ -491,7 +494,7 @@ public final class ItemUtils {
                 String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 jsonArray.add("long_array$" + string);
             } else if (base.getClass().equals(Reflection_Class.NBTTagByteArray())) {
-                byte[] by = (byte[]) Reflection_Class.getData(base);
+                byte[] by = (byte[]) (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("getBytes").invoke(base));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (byte b : by) {
                     stringBuilder.append(b).append(",");

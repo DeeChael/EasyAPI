@@ -29,7 +29,7 @@ public final class ArgumentAttribute implements Argument {
     @Override
     public Object get(CommandContext<Object> commandContext, String name) {
         try {
-            return ArgumentMinecraftKeyRegistered().getMethod("e", CommandContext.class, String.class).invoke(null, commandContext, name);
+            return ReflectionUtils.getVersion() >= 16 ? ArgumentMinecraftKeyRegistered().getMethod("f", CommandContext.class, String.class).invoke(null, commandContext, name) : ArgumentMinecraftKeyRegistered().getMethod("e", CommandContext.class, String.class).invoke(null, commandContext, name);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
