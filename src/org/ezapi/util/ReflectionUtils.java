@@ -106,6 +106,11 @@ public final class ReflectionUtils {
         return getClass("net.minecraft.server." + getServerVersion() + "." + name);
     }
 
+    public static Class<?> getNmsOrOld(String newName, String oldName) {
+        if (getVersion() >= 16) return getClass("net.minecraft." + newName);
+        return getNmsClass(oldName);
+    }
+
     /**
      * CraftBukkit still has obc version in 1.17+
      * @param name Class name, if the class is in a sub package, e.p. "org.bukkit.craftbukki.{version}.command.CommandExample", you can access by "command.CommandExample"

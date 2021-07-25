@@ -1,12 +1,19 @@
 package org.ezapi.util;
 
+import org.bukkit.plugin.Plugin;
 import org.ezapi.storage.JsonStorage;
 import org.ezapi.storage.PropertiesStorage;
 import org.ezapi.storage.Storage;
 import org.ezapi.storage.YamlStorage;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.jar.JarFile;
 
 public final class FileUtils {
 
@@ -44,6 +51,31 @@ public final class FileUtils {
             return new PropertiesStorage(file);
         }
         return null;
+    }
+
+    public static List<Class<?>> getClasses(Plugin plugin, String[] ignore) {
+        List<Class<?>> classes = new CopyOnWriteArrayList<>();
+        URL url = plugin.getClass().getProtectionDomain().getCodeSource().getLocation();
+        try {
+            File src;
+            try {
+                src = new File(url.toURI());
+            } catch (URISyntaxException e) {
+                src = new File(url.getPath());
+            }
+            new JarFile(src).stream().filter(entry -> entry.getName().endsWith(".class")).forEach(entry -> {
+                String className = entry.getName().replace('/', '.').substring(0, entry.getName().length() - 6);
+                try {
+                    if (Arrays.stream(ignore).noneMatch(className::startsWith)) {
+                        classes.add(Class.forName(className, false, plugin.getClass().getClassLoader()));
+                    }
+                } catch (Throwable ignored) {
+                }
+            });
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return classes;
     }
 
 }
