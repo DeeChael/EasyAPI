@@ -254,6 +254,7 @@ public final class EzNPC implements NPC {
 
     public void drop() {
         if (!dropped) {
+            removeAll();
             protocol.close();
             dropped = true;
         }

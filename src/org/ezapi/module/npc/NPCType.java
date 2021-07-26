@@ -1,7 +1,6 @@
 package org.ezapi.module.npc;
 
 import org.bukkit.Location;
-import org.ezapi.function.NonReturnWithOne;
 import org.ezapi.function.NonReturnWithTwo;
 import org.ezapi.module.npc.fake.FakeEntity;
 import org.ezapi.module.npc.fake.FakePlayer;
