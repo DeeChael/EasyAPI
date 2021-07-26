@@ -60,6 +60,11 @@ public final class ReflectionUtils {
         return null;
     }
 
+    public static Field getFieldOrOld(Class<?> clazz, String newName, String oldName) {
+        if (ReflectionUtils.getVersion() >= 16) return getField(clazz, newName);
+        return getField(clazz, oldName);
+    }
+
     public static Field getField(Class<?> clazz, String name) {
         try {
             Field field = clazz.getDeclaredField(name);

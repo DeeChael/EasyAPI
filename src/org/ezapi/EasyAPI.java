@@ -5,10 +5,8 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ezapi.command.EzCommandManager;
 import org.ezapi.configuration.LanguageManager;
-import org.ezapi.util.EzClassLoader;
 import org.ezapi.util.ReflectionUtils;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 public final class EasyAPI extends JavaPlugin {
@@ -58,6 +56,7 @@ public final class EasyAPI extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(EzCommandManager.INSTANCE, this);
         //new EzApiCommand().register();
         //new HologramCommand().register();
+        //new NPCCommand().register();
         reload();
     }
 

@@ -66,7 +66,7 @@ public final class EzClass {
     public Object getField(String fieldName) {
         if (!created) throw new IllegalStateException("Haven't create a new instance");
         try {
-            Field field = clazz.getDeclaredField(fieldName);
+            Field field = this.clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             return field.get(object);
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -100,7 +100,7 @@ public final class EzClass {
     public void setField(String fieldName, Object object) {
         if (!created) throw new IllegalStateException("Haven't create a new instance");
         try {
-            Field field = clazz.getDeclaredField(fieldName);
+            Field field = this.clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(this.object, object);
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -121,7 +121,7 @@ public final class EzClass {
     public Object invokeMethod(String methodName, Class<?>[] classes, Object[] arguments) {
         if (!created) throw new IllegalStateException("Haven't create a new instance");
         try {
-            Method method = clazz.getDeclaredMethod(methodName, classes);
+            Method method = this.clazz.getDeclaredMethod(methodName, classes);
             if (Modifier.isStatic(method.getModifiers())) throw new IllegalAccessException("Method \"" + methodName + "\" is a static method");
             method.setAccessible(true);
             Object object = method.invoke(this.object, arguments);
@@ -152,7 +152,7 @@ public final class EzClass {
     public Object getFieldByType(Class<?> type) {
         if (!created) throw new IllegalStateException("Haven't create a new instance");
         Object object = null;
-        for (Field field : this.clazz.getDeclaredFields()) {
+        for (Field field : this.clazz.getClass().getDeclaredFields()) {
             if (field.getType().equals(type)) {
                 field.setAccessible(true);
                 try {
@@ -165,7 +165,6 @@ public final class EzClass {
     }
 
     public Object getStaticFieldByType(Class<?> type) {
-        if (!created) throw new IllegalStateException("Haven't create a new instance");
         Object object = null;
         for (Field field : this.clazz.getDeclaredFields()) {
             if (field.getType().equals(type)) {

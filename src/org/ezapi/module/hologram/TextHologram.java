@@ -23,11 +23,11 @@ public final class TextHologram implements Hologram {
 
     private Location location;
 
-    public TextHologram(ChatMessage text, World World, Location location) {
+    public TextHologram(ChatMessage text, World world, Location location) {
         this.text = text;
         this.location = location.clone().add(0.0, -1.0, 0.0);
         try {
-            this.World.setInstance(World.getClass().getMethod("getHandle").invoke(World));
+            this.World.setInstance(world.getClass().getMethod("getHandle").invoke(world));
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -104,8 +104,9 @@ public final class TextHologram implements Hologram {
         if (viewers.containsKey(player)) {
             destroy(player);
             EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
-            Entity.setInstance(viewers.remove(player).getInstance());
+            Entity.setInstance(viewers.get(player).getInstance());
             Entity.invokeMethod("die", new Class[0], new Object[0]);
+            viewers.remove(player);
         }
     }
 
