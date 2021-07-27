@@ -2,6 +2,9 @@ package org.ezapi;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ezapi.command.EzCommandManager;
 import org.ezapi.configuration.LanguageManager;
@@ -9,11 +12,16 @@ import org.ezapi.util.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 
-public final class EasyAPI extends JavaPlugin {
+public final class EasyAPI extends JavaPlugin implements Listener {
 
     private static EasyAPI INSTANCE;
 
     private static CommandMap BUKKIT_COMMAND_MAP;
+
+    @EventHandler
+    public void onEvent(PlayerInteractEntityEvent event) {
+        event.getPlayer().sendMessage("Clicked");
+    }
 
     @Override
     public void onEnable() {
@@ -28,6 +36,7 @@ public final class EasyAPI extends JavaPlugin {
             e.printStackTrace();
         }
         INSTANCE = this;
+        Bukkit.getPluginManager().registerEvents(this, this);
         //Java 9 not support
         //Trying to find way to solve this problem
         /*

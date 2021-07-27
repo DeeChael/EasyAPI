@@ -1,5 +1,6 @@
 package org.ezapi.module.packet;
 
+import org.bukkit.entity.Player;
 import org.ezapi.module.packet.play.Packet;
 import org.ezapi.module.packet.play.PacketHandler;
 
@@ -15,41 +16,73 @@ final class EzPacketListenerManager {
 
     private EzPacketListenerManager() {}
 
-    private final static Map<PacketListener,List<Method>> methods = new HashMap<>();
+    //private final static Map<PacketListener, List<Class<Packet>>> registered = new HashMap<>();
+
+    private final static List<PacketListener> registered = new ArrayList<>();
 
     public static void register(PacketListener listener) {
-        if (!methods.containsKey(listener)) {
-            methods.put(listener, new ArrayList<>());
+        if (!registered.contains(listener)) {
+            registered.add(listener);
+        }
+        /*
+        if (!registered.containsKey(listener)) {
+            registered.put(listener, new ArrayList<>());
         }
         for (Method method : listener.getClass().getDeclaredMethods()) {
             if (!Modifier.isStatic(method.getModifiers())) {
                 if (method.getAnnotation(PacketHandler.class) != null) {
-                    if (method.getParameterTypes().length == 1 &&Packet.class.isAssignableFrom(method.getParameterTypes()[0])) {
-                        if (!methods.get(listener).contains(method)) {
-                            method.setAccessible(true);
-                            methods.get(listener).add(method);
+                    if (method.getParameterTypes().length == 1 && Packet.class.isAssignableFrom(method.getParameterTypes()[0])) {
+                        Class<Packet> packetClass = (Class<Packet>) method.getParameterTypes()[0];
+                        registered.get(listener).add(packetClass);
+                        try {
+                            Method m = packetClass.getDeclaredMethod("addListener", PacketListener.class, Method.class);
+                            m.setAccessible(true);
+                            m.invoke(null, listener, method);
+                        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored) {
                         }
                     }
                 }
             }
         }
+        */
     }
 
     public static void unregister(PacketListener listener) {
-        methods.remove(listener);
-    }
-
-    public static void dispatch(Packet packet) {
-        for (PacketListener packetListener : methods.keySet()) {
-            for (Method method : methods.get(packetListener)) {
-                if (method.getParameterTypes()[0].equals(packet.getClass())) {
-                    try {
-                        method.invoke(packetListener, packet);
-                    } catch (IllegalAccessException | InvocationTargetException ignored) {
-                    }
-                }
+        registered.remove(listener);
+        /*
+        if (!registered.containsKey(listener)) return;
+        for (Class<Packet> packetClass : registered.get(listener)) {
+            try {
+                Method method = packetClass.getMethod("removeListener", PacketListener.class);
+                method.setAccessible(true);
+                method.invoke(null, listener);
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored) {
             }
         }
+         */
     }
+
+    public static void dispatchPlayIn(Player player, Object packet) {
+        for (PacketListener listener : registered) {
+            listener.onPlayIn(player, packet);
+        }
+    }
+
+    public static void dispatchPlayOut(Player player, Object packet) {
+        for (PacketListener listener : registered) {
+            listener.onPlayOut(player, packet);
+        }
+    }
+
+    /*
+    public static void dispatch(Packet packet) {
+        try {
+            Method method = packet.getClass().getMethod("dispatch", packet.getClass());
+            method.setAccessible(true);
+            method.invoke(null, packet);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored) {
+        }
+    }
+     */
 
 }

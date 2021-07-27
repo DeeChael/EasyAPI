@@ -23,6 +23,8 @@ public final class TextHologram implements Hologram {
 
     private Location location;
 
+    private boolean dropped = false;
+
     public TextHologram(ChatMessage text, World world, Location location) {
         this.text = text;
         this.location = location.clone().add(0.0, -1.0, 0.0);
@@ -34,6 +36,7 @@ public final class TextHologram implements Hologram {
     }
 
     public void setLocation(Location location) {
+        if (isDropped()) return;
         this.location = location.clone().add(0.0, -1.0, 0.0);
         if (hasShown.size() > 0) {
             for (Player player : hasShown) {
@@ -43,6 +46,7 @@ public final class TextHologram implements Hologram {
     }
 
     public void addViewer(Player player) {
+        if (isDropped()) return;
         if (!viewers.containsKey(player)) {
             EzClass ChatMessage = ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzClass(Objects.requireNonNull(ReflectionUtils.getNmsClass("ChatMessage"))) : new EzClass("net.minecraft.network.chat.ChatMessage");
             ChatMessage.setConstructor(String.class);
@@ -65,6 +69,7 @@ public final class TextHologram implements Hologram {
     }
 
     public void refresh(Player player) {
+        if (isDropped()) return;
         if (viewers.containsKey(player)) {
             destroy(player);
             EzClass EntityLiving = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.EntityLiving", "EntityLiving"));
@@ -86,6 +91,7 @@ public final class TextHologram implements Hologram {
     }
 
     public void destroy(Player player) {
+        if (isDropped()) return;
         if (viewers.containsKey(player)) {
             if (hasShown.contains(player)) {
                 EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
@@ -101,6 +107,7 @@ public final class TextHologram implements Hologram {
     }
 
     public void removeViewer(Player player) {
+        if (isDropped()) return;
         if (viewers.containsKey(player)) {
             destroy(player);
             EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
@@ -111,13 +118,26 @@ public final class TextHologram implements Hologram {
     }
 
     public List<Player> getViewers() {
+        if (isDropped()) return new ArrayList<>();
         return new ArrayList<>(viewers.keySet());
     }
 
     public void removeAll() {
+        if (isDropped()) return;
         for (Player player : getViewers()) {
             removeViewer(player);
         }
+    }
+
+    public void drop() {
+        if (!dropped) {
+            removeAll();
+            dropped = true;
+        }
+    }
+
+    public boolean isDropped() {
+        return dropped;
     }
 
 }

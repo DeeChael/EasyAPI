@@ -8,9 +8,9 @@ import org.bukkit.scheduler.BukkitTask;
 import org.ezapi.EasyAPI;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.function.NonReturnWithTwo;
+import org.ezapi.module.packet.ClickType;
 import org.ezapi.module.packet.NMSPackets;
 import org.ezapi.module.packet.Protocol;
-import org.ezapi.module.packet.play.in.InteractEntity;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.PlayerUtils;
@@ -45,9 +45,9 @@ public final class EzNPC implements NPC {
 
     private boolean dropped = false;
 
-    private NonReturnWithTwo<Player, InteractEntity.ClickType> onClick = this::defaultOnClick;
+    private NonReturnWithTwo<Player, ClickType> onClick = this::defaultOnClick;
 
-    private void defaultOnClick(Player player, InteractEntity.ClickType clickType) {}
+    private void defaultOnClick(Player player, ClickType clickType) {}
 
     public EzNPC(NPCType<?> type, ChatMessage name, Location location) {
         this.type = type;
@@ -66,23 +66,38 @@ public final class EzNPC implements NPC {
                             EzClass PacketPlayInUseEntity = new EzClass(NMSPackets.PacketPlayInUseEntity.getInstanceClass());
                             PacketPlayInUseEntity.setInstance(packet);
                             int entityId = (int) PacketPlayInUseEntity.getField("a");
+                            EzEnum EnumHand = new EzEnum(ReflectionUtils.getNmsOrOld("world.EnumHand", "EnumHand"));
                             if (id == entityId) {
-                                InteractEntity.ClickType type = InteractEntity.ClickType.RIGHT;
+                                ClickType type = ClickType.UNKNOWN;
                                 if (ReflectionUtils.getVersion() >= 16) {
+                                    EnumHand.newInstance("a");
                                     EzClass EnumEntityUseAction = new EzClass(ReflectionUtils.getClass(NMSPackets.PacketPlayInUseEntity.getInstanceClass().getName() + "$EnumEntityUseAction"));
                                     EzClass b = new EzClass(ReflectionUtils.getClass(NMSPackets.PacketPlayInUseEntity.getInstanceClass().getName() + "$b"));
                                     EnumEntityUseAction.setInstance(PacketPlayInUseEntity.getField("b"));
                                     if (EnumEntityUseAction.invokeMethod("a", new Class[0], new Object[0]).equals(b.getStaticField("b"))) {
-                                        type = InteractEntity.ClickType.LEFT;
+                                        type = ClickType.LEFT;
+                                    } else if (EnumEntityUseAction.invokeMethod("a", new Class[0], new Object[0]).equals(b.getStaticField("a"))) {
+                                        EzClass d = new EzClass(PacketPlayInUseEntity.getInstanceClass().getName() + "$d");
+                                        d.setInstance(EnumEntityUseAction.getInstance());
+                                        if (EnumHand.getInstance().equals(d.getField("a"))) {
+                                            type = ClickType.RIGHT;
+                                        }
                                     }
                                 } else {
+                                    EnumHand.newInstance("MAIN_HAND");
                                     EzEnum EnumEntityUseAction = new EzEnum(ReflectionUtils.getClass(NMSPackets.PacketPlayInUseEntity.getInstanceClass().getName() + "$EnumEntityUseAction"));
                                     EnumEntityUseAction.setInstance(PacketPlayInUseEntity.getField("action"));
                                     if (EnumEntityUseAction.getInstance().equals(EnumEntityUseAction.valueOf("ATTACK"))) {
-                                        type = InteractEntity.ClickType.LEFT;
+                                        type = ClickType.LEFT;
+                                    } else if (EnumEntityUseAction.getInstance().equals(EnumEntityUseAction.valueOf("INTERACT"))) {
+                                        if (EnumHand.getInstance().equals(PacketPlayInUseEntity.getField("d"))) {
+                                            type = ClickType.RIGHT;
+                                        }
                                     }
                                 }
-                                onClick.apply(sender, type);
+                                if (type != ClickType.UNKNOWN) {
+                                    onClick.apply(sender, type);
+                                }
                             }
                         }
                     }
@@ -92,8 +107,9 @@ public final class EzNPC implements NPC {
         };
     }
 
-    public void setOnClick(NonReturnWithTwo<Player, InteractEntity.ClickType> onClick) {
+    public void setOnClick(NonReturnWithTwo<Player, ClickType> onClick) {
         if (isDropped()) return;
+        if (onClick == null) return;
         this.onClick = onClick;
     }
 
