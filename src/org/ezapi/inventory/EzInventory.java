@@ -79,7 +79,7 @@ public final class EzInventory implements Listener {
                     if (input != null) {
                         DrawSetting drawSetting = new DrawSetting(-1);
                         input.onDraw(player, drawSetting);
-                        for (int o = 0; i < inventory.getSize(); o++) {
+                        for (int o = 0; o < inventory.getSize(); o++) {
                             if (inventory.getItem(o) == null) {
                                 inventory.setItem(i, drawSetting.render(player));
                                 cache.get(player).put(i, input);
