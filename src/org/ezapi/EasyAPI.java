@@ -8,7 +8,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ezapi.command.EzCommandManager;
-import org.ezapi.command.defaults.NPCCommand;
 import org.ezapi.configuration.LanguageManager;
 import org.ezapi.module.packet.NMSPackets;
 import org.ezapi.module.packet.Protocol;
@@ -74,7 +73,7 @@ public final class EasyAPI extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(EzCommandManager.INSTANCE, this);
         //new EzApiCommand().register();
         //new HologramCommand().register();
-        new NPCCommand().register();
+        //new NPCCommand().register();
         reload();
         protocol = new Protocol(EasyAPI.getInstance()) {
             @Override
