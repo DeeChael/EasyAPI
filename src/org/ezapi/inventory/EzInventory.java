@@ -75,30 +75,20 @@ public final class EzInventory implements Listener {
             }
         }
         if (dynamicInput != null) {
-            List<Input> list = dynamicInput.apply(player);
-            if (list != null) {
-                for (Input input : list) {
-                    if (input != null) {
-                        DrawSetting drawSetting = new DrawSetting(-1);
-                        input.onDraw(player, drawSetting);
-                        ItemStack itemStack = drawSetting.render(player);
-                        /*
-                        JsonObject jsonObject = ItemUtils.toJsonObject(itemStack);
-                        if (!jsonObject.has("nbt")) {
-                            jsonObject.add("nbt", new JsonObject());
-                        }
-                        jsonObject.get("nbt").getAsJsonObject().addProperty("ezinv", "int$" + new Random().nextInt(100000));
-                        itemStack = ItemUtils.toItemStack(jsonObject);
-                        */
-                        for (int i = 0; i < 9 * lines; i++) {
-                            if (!items.containsKey(i)) {
-                                inventory.setItem(i, itemStack);
-                                cache.get(player).put(i, input);
-                                break;
-                            }
-                        }
-                    }
+            List<Input> list = new ArrayList<>(dynamicInput.apply(player));
+            List<Integer> empty = new ArrayList<>();
+            for (int i = 0; i < 9 * lines; i++) {
+                if (!items.containsKey(i)) {
+                    empty.add(i);
                 }
+            }
+            for (int i = 0; i < (Math.min(empty.size(), list.size())); i++) {
+                Input input = list.get(i);
+                DrawSetting drawSetting = new DrawSetting(-1);
+                input.onDraw(player, drawSetting);
+                ItemStack itemStack = drawSetting.render(player);
+                inventory.setItem(empty.get(i), itemStack);
+                cache.get(player).put(empty.get(i), input);
             }
         }
         player.openInventory(inventory);
