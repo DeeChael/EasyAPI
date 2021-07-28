@@ -15,7 +15,7 @@ import org.ezapi.util.ReflectionUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-public final class TextHologram implements Hologram, Listener {
+public final class TextHologram implements Hologram {
 
     private final EzClass World = new EzClass(ReflectionUtils.getNmsOrOld("world.level.World", "World"));
 
@@ -31,8 +31,6 @@ public final class TextHologram implements Hologram, Listener {
 
     private boolean dropped = false;
 
-    private NonReturnWithTwo<Player, PlayInUseEntityPacket.ClickType> onClick = this::defaultOnClick;
-
     private void defaultOnClick(Player player, PlayInUseEntityPacket.ClickType clickType) {}
 
     public TextHologram(ChatMessage text, World world, Location location) {
@@ -43,29 +41,6 @@ public final class TextHologram implements Hologram, Listener {
             this.World.setInstance(world.getClass().getMethod("getHandle").invoke(world));
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void setOnClick(NonReturnWithTwo<Player, PlayInUseEntityPacket.ClickType> onClick) {
-        if (isDropped()) return;
-        if (onClick == null) return;
-        this.onClick = onClick;
-    }
-
-    @EventHandler
-    public void onClick(PlayInUseEntityPacket packet) {
-        if (isDropped()) return;
-        if (viewers.containsKey(packet.getPlayer())) {
-            if (hasShown.contains(packet.getPlayer())) {
-                EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
-                Entity.setInstance(viewers.get(packet.getPlayer()).getInstance());
-                int id = (int) Entity.invokeMethod("getId", new Class[0], new Object[0]);
-                if (id == packet.getEntityId()) {
-                    if (packet.getClickType() != PlayInUseEntityPacket.ClickType.UNKNOWN) {
-                        onClick.apply(packet.getPlayer(), packet.getClickType());
-                    }
-                }
-            }
         }
     }
 

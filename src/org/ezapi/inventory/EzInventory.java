@@ -1,5 +1,6 @@
 package org.ezapi.inventory;
 
+import com.google.gson.JsonObject;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,10 +10,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.ezapi.EasyAPI;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.function.NonReturnWithOne;
+import org.ezapi.util.item.ItemUtils;
 
 import java.util.*;
 import java.util.function.Function;
@@ -74,20 +77,24 @@ public final class EzInventory implements Listener {
         if (dynamicInput != null) {
             List<Input> list = dynamicInput.apply(player);
             if (list != null) {
-                for (int i = 0; i < list.size(); i++) {
-                    Input input = list.get(i);
+                for (Input input : list) {
                     if (input != null) {
                         DrawSetting drawSetting = new DrawSetting(-1);
                         input.onDraw(player, drawSetting);
-                        for (int o = 0; o < inventory.getSize(); o++) {
-                            if (inventory.getItem(o) == null) {
-                                inventory.setItem(i, drawSetting.render(player));
+                        ItemStack itemStack = drawSetting.render(player);
+                        /*
+                        JsonObject jsonObject = ItemUtils.toJsonObject(itemStack);
+                        if (!jsonObject.has("nbt")) {
+                            jsonObject.add("nbt", new JsonObject());
+                        }
+                        jsonObject.get("nbt").getAsJsonObject().addProperty("ezinv", "int$" + new Random().nextInt(100000));
+                        itemStack = ItemUtils.toItemStack(jsonObject);
+                        */
+                        for (int i = 0; i < 9 * lines; i++) {
+                            if (!items.containsKey(i)) {
+                                inventory.setItem(i, itemStack);
                                 cache.get(player).put(i, input);
-                            } else {
-                                if (inventory.getItem(o).getType() == Material.AIR) {
-                                    inventory.setItem(i, drawSetting.render(player));
-                                    cache.get(player).put(i, input);
-                                }
+                                break;
                             }
                         }
                     }

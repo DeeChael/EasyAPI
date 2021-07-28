@@ -36,7 +36,7 @@ public final class JsonStorage extends FileStorage implements Storage {
 
     @Override
     public StorageContext remove(String key) {
-        if (jsonObject.has(key) && jsonObject.get(key).isJsonPrimitive()) {
+        if (jsonObject.has(key) && jsonObject.get(key).isJsonObject()) {
             StorageContext storageContext = StorageContext.getByString(new Gson().toJson(jsonObject.remove(key).getAsJsonObject()));
             try {
                 FileWriter fileWriter = new FileWriter(getFile());
@@ -63,7 +63,7 @@ public final class JsonStorage extends FileStorage implements Storage {
 
     @Override
     public StorageContext get(String key) {
-        if (jsonObject.has(key) && jsonObject.get(key).isJsonPrimitive()) {
+        if (jsonObject.has(key) && jsonObject.get(key).isJsonObject()) {
             return StorageContext.getByString(new Gson().toJson(jsonObject.get(key).getAsJsonObject()));
         }
         return null;
@@ -82,7 +82,8 @@ public final class JsonStorage extends FileStorage implements Storage {
             FileWriter fileWriter = new FileWriter(getFile());
             fileWriter.write(new Gson().toJson(this.jsonObject));
             fileWriter.close();
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace(System.out);
         }
     }
 

@@ -1,13 +1,9 @@
 package org.ezapi.module.packet.play.in;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
 import org.ezapi.module.packet.play.Packet;
 
-public final class PlayInUseEntityPacket extends PlayerEvent implements Packet {
-
-    private static final HandlerList handlers = new HandlerList();
+public final class PlayInUseEntityPacket implements Packet {
 
     private final Object nmsPacket;
 
@@ -16,9 +12,7 @@ public final class PlayInUseEntityPacket extends PlayerEvent implements Packet {
     private final ClickType clickType;
 
     public PlayInUseEntityPacket(Object nmsPacket, Player player, int id, ClickType clickType) {
-        super(player);
         this.nmsPacket = nmsPacket;
-        this.player = player;
         this.entityId = id;
         this.clickType = clickType;
     }
@@ -38,14 +32,6 @@ public final class PlayInUseEntityPacket extends PlayerEvent implements Packet {
 
     public enum ClickType {
         RIGHT, LEFT, UNKNOWN;
-    }
-
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
 }

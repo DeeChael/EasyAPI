@@ -26,8 +26,6 @@ public final class EasyAPI extends JavaPlugin {
 
     private static CommandMap BUKKIT_COMMAND_MAP;
 
-    private Protocol protocol;
-
     /*
     private final Map<Player, BukkitTask> started = new HashMap<>();
     */
@@ -75,47 +73,6 @@ public final class EasyAPI extends JavaPlugin {
         //new HologramCommand().register();
         //new NPCCommand().register();
         reload();
-        protocol = new Protocol(EasyAPI.getInstance()) {
-            @Override
-            public Object onPacketInAsync(Player sender, Channel channel, Object packet) {
-                if (packet.getClass().equals(NMSPackets.PacketPlayInUseEntity.getInstanceClass())) {
-                    EzClass PacketPlayInUseEntity = new EzClass(NMSPackets.PacketPlayInUseEntity.getInstanceClass());
-                    PacketPlayInUseEntity.setInstance(packet);
-                    int entityId = (int) PacketPlayInUseEntity.getField("a");
-                    EzEnum EnumHand = new EzEnum(ReflectionUtils.getNmsOrOld("world.EnumHand", "EnumHand"));
-                    ClickType type = ClickType.UNKNOWN;
-                    if (ReflectionUtils.getVersion() >= 16) {
-                        EnumHand.newInstance("a");
-                        EzClass EnumEntityUseAction = new EzClass(ReflectionUtils.getClass(NMSPackets.PacketPlayInUseEntity.getInstanceClass().getName() + "$EnumEntityUseAction"));
-                        EzClass b = new EzClass(ReflectionUtils.getClass(NMSPackets.PacketPlayInUseEntity.getInstanceClass().getName() + "$b"));
-                        EnumEntityUseAction.setInstance(PacketPlayInUseEntity.getField("b"));
-                        if (EnumEntityUseAction.invokeMethod("a", new Class[0], new Object[0]).equals(b.getStaticField("b"))) {
-                            type = PlayInUseEntityPacket.ClickType.LEFT;
-                        } else if (EnumEntityUseAction.invokeMethod("a", new Class[0], new Object[0]).equals(b.getStaticField("a"))) {
-                            EzClass d = new EzClass(PacketPlayInUseEntity.getInstanceClass().getName() + "$d");
-                            d.setInstance(EnumEntityUseAction.getInstance());
-                            if (EnumHand.getInstance().equals(d.getField("a"))) {
-                                type = PlayInUseEntityPacket.ClickType.RIGHT;
-                            }
-                        }
-                    } else {
-                        EnumHand.newInstance("MAIN_HAND");
-                        EzEnum EnumEntityUseAction = new EzEnum(ReflectionUtils.getClass(NMSPackets.PacketPlayInUseEntity.getInstanceClass().getName() + "$EnumEntityUseAction"));
-                        EnumEntityUseAction.setInstance(PacketPlayInUseEntity.getField("action"));
-                        if (EnumEntityUseAction.getInstance().equals(EnumEntityUseAction.valueOf("ATTACK"))) {
-                            type = PlayInUseEntityPacket.ClickType.LEFT;
-                        } else if (EnumEntityUseAction.getInstance().equals(EnumEntityUseAction.valueOf("INTERACT"))) {
-                            if (EnumHand.getInstance().equals(PacketPlayInUseEntity.getField("d"))) {
-                                type = PlayInUseEntityPacket.ClickType.RIGHT;
-                            }
-                        }
-                    }
-                    PlayInUseEntityPacket pkt = new PlayInUseEntityPacket(packet, sender, entityId, type);
-                    Bukkit.getPluginManager().callEvent(pkt);
-                }
-                return super.onPacketInAsync(sender, channel, packet);
-            }
-        };
         /*
         Break bedrock - Just for fun
         protocol = new Protocol(this) {
