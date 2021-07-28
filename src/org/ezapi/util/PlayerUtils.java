@@ -180,7 +180,7 @@ public final class PlayerUtils {
         Object timesPacket = createTimesPacket(fadeIn, stay, fadeOut);
         for (Player player : players) {
             Object titlePacket = createTitlePacket(title.getText(player));
-            Object subtitlePacket = createSubtitlePacket(title.getText(player));
+            Object subtitlePacket = createSubtitlePacket(subtitle.getText(player));
             sendPacket(player, timesPacket);
             sendPacket(player, titlePacket);
             sendPacket(player, subtitlePacket);
