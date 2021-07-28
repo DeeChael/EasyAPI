@@ -16,7 +16,9 @@ public final class PropertiesStorage extends FileStorage implements Storage {
         super(file);
         properties = new Properties();
         try {
-            properties.load(new FileReader(file));
+            FileReader fileReader = new FileReader(file);
+            properties.load(fileReader);
+            fileReader.close();
         } catch (IOException ignored) {
         }
     }

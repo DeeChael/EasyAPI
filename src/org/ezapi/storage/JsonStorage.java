@@ -23,8 +23,10 @@ public final class JsonStorage extends FileStorage implements Storage {
             }
         }
         try {
-            this.jsonObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
-        } catch (FileNotFoundException e) {
+            FileReader fileReader = new FileReader(file);
+            this.jsonObject = new JsonParser().parse(fileReader).getAsJsonObject();
+            fileReader.close();
+        } catch (IOException e) {
             this.jsonObject = new JsonObject();
         }
     }
