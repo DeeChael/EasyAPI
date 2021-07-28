@@ -19,6 +19,8 @@ public final class TextHologram implements Hologram, Listener {
 
     private final EzClass World = new EzClass(ReflectionUtils.getNmsOrOld("world.level.World", "World"));
 
+    private final World bukkitWorld;
+
     private ChatMessage text;
 
     private final Map<Player,EzClass> viewers = new HashMap<>();
@@ -35,6 +37,7 @@ public final class TextHologram implements Hologram, Listener {
 
     public TextHologram(ChatMessage text, World world, Location location) {
         this.text = text;
+        this.bukkitWorld = world;
         this.location = location.clone().add(0.0, -1.0, 0.0);
         try {
             this.World.setInstance(world.getClass().getMethod("getHandle").invoke(world));
@@ -66,6 +69,11 @@ public final class TextHologram implements Hologram, Listener {
         }
     }
 
+    @Override
+    public ChatMessage getText() {
+        return text;
+    }
+
     public void setText(ChatMessage text) {
         if (isDropped()) return;
         this.text = text;
@@ -74,6 +82,15 @@ public final class TextHologram implements Hologram, Listener {
                 refresh(player);
             }
         }
+    }
+
+    public World getWorld() {
+        return bukkitWorld;
+    }
+
+    @Override
+    public Location getLocation() {
+        return location;
     }
 
     public void setLocation(Location location) {
