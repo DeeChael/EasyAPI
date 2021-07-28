@@ -1,6 +1,7 @@
 package org.ezapi.inventory;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -78,8 +79,17 @@ public final class EzInventory implements Listener {
                     if (input != null) {
                         DrawSetting drawSetting = new DrawSetting(-1);
                         input.onDraw(player, drawSetting);
-                        inventory.setItem(i, drawSetting.render(player));
-                        cache.get(player).put(i, input);
+                        for (int o = 0; i < inventory.getSize(); o++) {
+                            if (inventory.getItem(o) == null) {
+                                inventory.setItem(i, drawSetting.render(player));
+                                cache.get(player).put(i, input);
+                            } else {
+                                if (inventory.getItem(o).getType() == Material.AIR) {
+                                    inventory.setItem(i, drawSetting.render(player));
+                                    cache.get(player).put(i, input);
+                                }
+                            }
+                        }
                     }
                 }
             }
