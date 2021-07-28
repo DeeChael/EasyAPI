@@ -1,18 +1,11 @@
 package org.ezapi.module.packet;
 
 import org.bukkit.entity.Player;
-import org.ezapi.module.packet.play.Packet;
-import org.ezapi.module.packet.play.PacketHandler;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-final class EzPacketListenerManager {
+public final class EzPacketListenerManager {
 
     private EzPacketListenerManager() {}
 

@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.ezapi.EasyAPI;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.function.NonReturnWithTwo;
-import org.ezapi.module.packet.ClickType;
+import org.ezapi.module.packet.play.in.PlayInUseEntityPacket.ClickType;
 import org.ezapi.module.packet.NMSPackets;
 import org.ezapi.module.packet.Protocol;
 import org.ezapi.reflect.EzClass;
@@ -23,9 +23,9 @@ import java.util.Map;
 
 public final class EzNPC implements NPC {
 
-    private final NPCType<?> type;
+    private NPCType<?> type;
 
-    private final ChatMessage name;
+    private ChatMessage name;
 
     private Location location;
 
@@ -113,6 +113,26 @@ public final class EzNPC implements NPC {
         this.onClick = onClick;
     }
 
+    public void setName(ChatMessage name) {
+        if (isDropped()) return;
+        this.name = name;
+        if (hasShown.size() > 0) {
+            for (Player player : hasShown) {
+                refresh(player);
+            }
+        }
+    }
+
+    public void setType(NPCType<?> type) {
+        if (isDropped()) return;
+        this.type = type;
+        reload();
+    }
+
+    public NPCType<?> getType() {
+        return type;
+    }
+
     public void setData(Object data) {
         if (isDropped()) return;
         this.data = data;
@@ -144,6 +164,16 @@ public final class EzNPC implements NPC {
             for (Player player : hasShown) {
                 refresh(player);
             }
+        }
+    }
+
+    private void reload() {
+        List<Player> players = new ArrayList<>(viewers.keySet());
+        for (Player player : players) {
+            removeViewer(player);
+            addViewer(player);
+            reloadData(player);
+            refresh(player);
         }
     }
 

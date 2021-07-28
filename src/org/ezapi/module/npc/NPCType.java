@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.ezapi.function.NonReturnWithTwo;
 import org.ezapi.module.npc.fake.FakeEntity;
 import org.ezapi.module.npc.fake.FakePlayer;
+import org.ezapi.module.npc.fake.FakeVillager;
 import org.ezapi.reflect.EzClass;
 
 import java.util.List;
@@ -12,22 +13,24 @@ import java.util.function.Function;
 
 public final class NPCType<T extends FakeEntity> {
 
-    public final static NPCType<FakePlayer> PLAYER = new NPCType<>(FakePlayer::create, FakePlayer::packet, FakePlayer::skin);
+    public final static NPCType<FakePlayer> PLAYER = new NPCType<>(new FakePlayer());
 
-    private final BiFunction<String, Location, EzClass> method;
+    public final static NPCType<FakeVillager> VILLAGER = new NPCType<>(new FakeVillager());
+
+    private final BiFunction<String, Location, EzClass> create;
 
     private final Function<Object, List<EzClass>> packet;
 
     private final NonReturnWithTwo<Object, Object> data;
 
-    private NPCType(BiFunction<String, Location,EzClass> method, Function<Object, List<EzClass>> packet, NonReturnWithTwo<Object, Object> data) {
-        this.method = method;
-        this.packet = packet;
-        this.data = data;
+    private NPCType(FakeEntity entity) {
+        this.create = entity::create;
+        this.packet = entity::packet;
+        this.data = entity::data;
     }
 
     public EzClass createNPCEntity(String name, Location location) {
-        return method.apply(name, location);
+        return create.apply(name, location);
     }
 
     public List<EzClass> createSpawnPacket(Object nmsEntity) {

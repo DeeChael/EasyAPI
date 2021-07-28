@@ -24,4 +24,29 @@ public enum BlockBreakAnimation {
         return stage;
     }
 
+    public static BlockBreakAnimation valueOf(int i) {
+        if (i >= 9) return DESTROY_9;
+        switch (i) {
+            case 0:
+                return DESTROY_0;
+            case 1:
+                return DESTROY_1;
+            case 2:
+                return DESTROY_2;
+            case 3:
+                return DESTROY_3;
+            case 4:
+                return DESTROY_4;
+            case 5:
+                return DESTROY_5;
+            case 6:
+                return DESTROY_6;
+            case 7:
+                return DESTROY_7;
+            case 8:
+                return DESTROY_8;
+        }
+        return CLEAR;
+    }
+
 }

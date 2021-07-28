@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-final class NPCCommand {
+public final class NPCCommand {
 
     private EzCommand ezCommand;
 
@@ -25,25 +25,45 @@ final class NPCCommand {
 
     private final Map<String, EzNPC> npcs = new HashMap<>();
 
-    private NPCCommand() {
+    public NPCCommand() {
         this.ezCommand = new EzCommand("npc");
         ezCommand.then(new EzCommand("create")
                 .then(new EzArgument(BaseArguments.string(), "name")
-                        .then(new EzArgument(ArgumentChat.argumentType(), "text")
-                                .executes(((sender, argument) -> {
-                                    String name = argument.getAsString("name");
-                                    if (!npcs.containsKey(name)) {
-                                        Location location = new Location(Bukkit.getWorlds().get(0), 0.0, 100.0, 0.0);
-                                        if (sender.isPlayer()) {
-                                            location = sender.player().getLocation();
-                                        }
-                                        String text = argument.getAsChatMessage("text");
-                                        EzNPC npc = new EzNPC(NPCType.PLAYER, new ChatMessage(text, false), location);
-                                        this.npcs.put(name, npc);
-                                        return 1;
-                                    }
-                                    return 0;
-                                }))
+                        .then(new EzCommand("player")
+                                .then(new EzArgument(ArgumentChat.argumentType(), "text")
+                                        .executes(((sender, argument) -> {
+                                            String name = argument.getAsString("name");
+                                            if (!npcs.containsKey(name)) {
+                                                Location location = new Location(Bukkit.getWorlds().get(0), 0.0, 100.0, 0.0);
+                                                if (sender.isPlayer()) {
+                                                    location = sender.player().getLocation();
+                                                }
+                                                String text = argument.getAsChatMessage("text");
+                                                EzNPC npc = new EzNPC(NPCType.PLAYER, new ChatMessage(text, false), location);
+                                                this.npcs.put(name, npc);
+                                                return 1;
+                                            }
+                                            return 0;
+                                        }))
+                                )
+                        )
+                        .then(new EzCommand("villager")
+                                .then(new EzArgument(ArgumentChat.argumentType(), "text")
+                                        .executes(((sender, argument) -> {
+                                            String name = argument.getAsString("name");
+                                            if (!npcs.containsKey(name)) {
+                                                Location location = new Location(Bukkit.getWorlds().get(0), 0.0, 100.0, 0.0);
+                                                if (sender.isPlayer()) {
+                                                    location = sender.player().getLocation();
+                                                }
+                                                String text = argument.getAsChatMessage("text");
+                                                EzNPC npc = new EzNPC(NPCType.VILLAGER, new ChatMessage(text, false), location);
+                                                this.npcs.put(name, npc);
+                                                return 1;
+                                            }
+                                            return 0;
+                                        }))
+                                )
                         )
                 )
         );
@@ -78,6 +98,38 @@ final class NPCCommand {
                                     if (npcs.containsKey(name)) {
                                         boolean look = argument.getAsBoolean("look");
                                         this.npcs.get(name).look(look);
+                                        return 1;
+                                    }
+                                    return 0;
+                                }))
+                        )
+                )
+        );
+        ezCommand.then(new EzCommand("type")
+                .then(new EzArgument(BaseArguments.string(), "name")
+                        .suggest((sender, suggestion) -> {
+                            npcs.keySet().forEach(suggestion::suggest);
+                            return suggestion.buildFuture();
+                        })
+                        .then(new EzCommand("player")
+                                .executes(((sender, argument) -> {
+                                    String name = argument.getAsString("name");
+                                    if (npcs.containsKey(name)) {
+                                        if (this.npcs.get(name).getType() != NPCType.PLAYER) {
+                                            this.npcs.get(name).setType(NPCType.PLAYER);
+                                        }
+                                        return 1;
+                                    }
+                                    return 0;
+                                }))
+                        )
+                        .then(new EzCommand("villager")
+                                .executes(((sender, argument) -> {
+                                    String name = argument.getAsString("name");
+                                    if (npcs.containsKey(name)) {
+                                        if (this.npcs.get(name).getType() != NPCType.VILLAGER) {
+                                            this.npcs.get(name).setType(NPCType.VILLAGER);
+                                        }
                                         return 1;
                                     }
                                     return 0;

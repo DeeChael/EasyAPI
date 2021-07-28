@@ -6,14 +6,12 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
-import org.ezapi.util.PacketUtils;
 import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.item.ItemUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,17 +21,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Ref;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public final class FakePlayer extends FakeEntity {
 
-    private FakePlayer(String name) {
+    public FakePlayer() {
         super(ReflectionUtils.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
     }
 
-    public static EzClass create(String name, Location location) {
+    @Override
+    public EzClass create(String name, Location location) {
         EzClass EntityPlayer = new EzClass(ReflectionUtils.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
         EzClass MinecraftServer = new EzClass(ReflectionUtils.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
         EzClass WorldServer = new EzClass(ReflectionUtils.getNmsOrOld("server.level.WorldServer", "WorldServer"));
@@ -55,14 +53,15 @@ public final class FakePlayer extends FakeEntity {
             EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
             Entity.setInstance(EntityPlayer.getInstance());
             Entity.invokeMethod("setLocation", new Class[] {double.class, double.class, double.class, float.class, float.class}, new Object[] {location.getX(), location.getY(), location.getZ(), 0.0f, 0.0f});
-            //Entity.invokeMethod("setNoGravity", new Class[] {boolean.class}, new Object[] {true});
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace(System.out);
             e.printStackTrace();
         }
         return EntityPlayer;
     }
 
-    public static List<EzClass> packet(Object entity) {
+    @Override
+    public List<EzClass> packet(Object entity) {
         EzClass PacketPlayerOutPlayerInfo = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutPlayerInfo", "PacketPlayOutPlayerInfo"));
         EzEnum EnumPlayerInfoAction = new EzEnum(PacketPlayerOutPlayerInfo.getInstanceClass().getName() + "$EnumPlayerInfoAction");
         if (ReflectionUtils.getVersion() >= 16) {
@@ -86,7 +85,8 @@ public final class FakePlayer extends FakeEntity {
         return list;
     }
 
-    public static void skin(Object entity, Object owner) {
+    @Override
+    public void data(Object entity, Object owner) {
         if (!(owner instanceof String)) return;
         try {
             EzClass EntityPlayer = new EzClass(ReflectionUtils.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));

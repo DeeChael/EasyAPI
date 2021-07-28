@@ -22,6 +22,22 @@ import java.util.Map.Entry;
 
 public final class ItemUtils {
 
+    public static ItemStack asBukkitCopy(Object nmsItemStack) {
+        try {
+            return Reflection_Class.asBukkitCopy(nmsItemStack);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored) {
+        }
+        return new ItemStack(Material.AIR);
+    }
+
+    public static Object asNMSCopy(ItemStack bukkitItemStack) {
+        try {
+            return Reflection_Class.asNMSCopy(bukkitItemStack);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored) {
+        }
+        return null;
+    }
+
     public static void spawnUnpickItem(ItemStack itemStack, Location location) {
         if (ReflectionUtils.getVersion() < 9) return;
         spawnUnpickItem(itemStack, location, Bukkit.getOnlinePlayers().toArray(new Player[0]));
