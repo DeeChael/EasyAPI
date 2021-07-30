@@ -46,7 +46,7 @@ public final class EzCommandManager implements Listener {
                             knownCommands.put(key, aliaCommand);
                         }
                         Command aliaCmd = knownCommands.get(string.toLowerCase());
-                        if (aliaCmd.getPermission().equals("ez.api.command.check")) {
+                        if (aliaCmd.getPermission().equalsIgnoreCase("ez.api.command.check")) {
                             LiteralCommandNode<?> literalCommandNode = clone(commandNode, CommandListenerWrapper());
                             registerToCommandPatcher(commandDispatcher, (CommandNode<Object>) literalCommandNode);
                             setDispatcher(aliaCmd, commandDispatcher);

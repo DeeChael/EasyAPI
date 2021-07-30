@@ -62,7 +62,6 @@ public final class EzNPC implements NPC {
                             EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
                             Entity.setInstance(viewers.get(sender).getInstance());
                             int id = (int) Entity.invokeMethod("getId", new Class[0], new Object[0]);
-
                             EzClass PacketPlayInUseEntity = new EzClass(NMSPackets.PacketPlayInUseEntity.getInstanceClass());
                             PacketPlayInUseEntity.setInstance(packet);
                             int entityId = (int) PacketPlayInUseEntity.getField("a");
