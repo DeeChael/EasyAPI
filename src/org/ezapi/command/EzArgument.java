@@ -22,6 +22,13 @@ public final class EzArgument {
 
     protected final RequiredArgumentBuilder<Object,?> requiredArgumentBuilder;
 
+    /**
+     * Command API argument</br>
+     * It's not static
+     *
+     * @param argumentType argument type
+     * @param argumentName argument name
+     */
     public EzArgument(ArgumentType<?> argumentType, String argumentName) {
         argumentName = argumentName.toLowerCase();
         requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
@@ -39,6 +46,16 @@ public final class EzArgument {
         }
     }
 
+    /**
+     * Command API argument</br>
+     * It's not static
+     *
+     * @param argumentType argument type
+     * @param argumentName argument name
+     * @param permission argument requires int permission over 0 less than 4
+     * @param bukkitPermission argument requires bukkit permission
+     * @param permissionDefault permission defaults owner
+     */
     public EzArgument(ArgumentType<?> argumentType, String argumentName, int permission, String bukkitPermission, PermissionDefault permissionDefault) {
         requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
         if (permission < 0) permission = 0;
@@ -60,30 +77,62 @@ public final class EzArgument {
         }
     }
 
+    /**
+     * Set next argument
+     * @param ezArgument argument
+     * @return self
+     */
     public EzArgument then(EzArgument ezArgument) {
         requiredArgumentBuilder.then(ezArgument.requiredArgumentBuilder);
         return this;
     }
 
+    /**
+     * Set next static argument
+     * @param ezCommand static argument
+     * @return self
+     */
     public EzArgument then(EzCommand ezCommand) {
         requiredArgumentBuilder.then(ezCommand.literalArgumentBuilder);
         return this;
     }
 
+    /**
+     * Set next static argument
+     * @param ezCommandRegistered static argument
+     * @return self
+     */
     public EzArgument then(EzCommandRegistered ezCommandRegistered) {
         requiredArgumentBuilder.then(ezCommandRegistered.commandNode);
         return this;
     }
 
+    /**
+     * Executes on arguments length equals this argument position in main command
+     *
+     * @param executes lambda with EzSender and EzArgumentHelper returns int
+     * @return self
+     */
     public EzArgument executes(BiFunction<EzSender,EzArgumentHelper,Integer> executes) {
         requiredArgumentBuilder.executes(commandContext -> executes.apply(new EzSender(commandContext.getSource()), new EzArgumentHelper(commandContext)));
         return this;
     }
 
+    /**
+     * Redirect to the other command
+     *
+     * @param ezCommandRegistered command to be redirected
+     */
     public void redirect(EzCommandRegistered ezCommandRegistered) {
         requiredArgumentBuilder.redirect(ezCommandRegistered.commandNode);
     }
 
+    /**
+     * Set tab complete suggestion
+     *
+     * @param biFunction lambda with EzSender and SuggestionsBuilder returns CompletableFuture
+     * @return
+     */
     public EzArgument suggest(BiFunction<EzSender, SuggestionsBuilder, CompletableFuture<Suggestions>> biFunction) {
         requiredArgumentBuilder.suggests(((commandContext, suggestionsBuilder) -> biFunction.apply(new EzSender(commandContext.getSource()), suggestionsBuilder)));
         return this;

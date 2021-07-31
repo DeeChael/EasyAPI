@@ -26,10 +26,23 @@ public final class EzCommand {
 
     protected List<String> aliases = new ArrayList<>();
 
+    /**
+     * Command API command
+     *
+     * @param commandName command name
+     */
     public EzCommand(String commandName) {
         this.literalArgumentBuilder = createCommand(commandName);
     }
 
+    /**
+     * Command API command
+     *
+     * @param commandName command name
+     * @param permission argument requires int permission over 0 less than 4
+     * @param bukkitPermission argument requires bukkit permission
+     * @param permissionDefault permission defaults owner
+     */
     public EzCommand(String commandName, int permission, String bukkitPermission, PermissionDefault permissionDefault) {
         commandName = commandName.toLowerCase();
         this.literalArgumentBuilder = createCommand(commandName);
@@ -40,40 +53,76 @@ public final class EzCommand {
         Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, permissionDefault));
     }
 
+    /**
+     * Set next argument
+     * @param ezArgument argument
+     * @return self
+     */
     public EzCommand then(EzArgument ezArgument) {
         if (registered) return this;
         literalArgumentBuilder.then(ezArgument.requiredArgumentBuilder);
         return this;
     }
 
+    /**
+     * Set next static argument
+     * @param ezCommand static argument
+     * @return self
+     */
     public EzCommand then(EzCommand ezCommand) {
         if (registered) return this;
         literalArgumentBuilder.then(ezCommand.literalArgumentBuilder);
         return this;
     }
 
+    /**
+     * Set next static argument
+     * @param ezCommandRegistered static argument
+     * @return self
+     */
     public EzCommand then(EzCommandRegistered ezCommandRegistered) {
         if (registered) return this;
         literalArgumentBuilder.then(ezCommandRegistered.commandNode);
         return this;
     }
 
+    /**
+     * Executes on arguments length equals this argument position in main command
+     *
+     * @param executes lambda with EzSender and EzArgumentHelper returns int
+     * @return self
+     */
     public EzCommand executes(BiFunction<EzSender,EzArgumentHelper,Integer> executes) {
         if (registered) return this;
         literalArgumentBuilder.executes(commandContext -> executes.apply(new EzSender(commandContext.getSource()), new EzArgumentHelper(commandContext)));
         return this;
     }
 
+    /**
+     * Redirect to the other command
+     *
+     * @param ezCommandRegistered command to be redirected
+     */
     public EzCommand redirect(EzCommandRegistered ezCommandRegistered) {
         if (registered) return this;
         literalArgumentBuilder.redirect(ezCommandRegistered.commandNode);
         return this;
     }
 
+    /**
+     * Add aliases to the command
+     *
+     * @param aliases aliases
+     */
     public void addAliases(String... aliases) {
         this.aliases.addAll(Arrays.asList(aliases));
     }
 
+    /**
+     * Get if this command is registered
+     *
+     * @return registered
+     */
     public boolean isRegistered() {
         return registered;
     }

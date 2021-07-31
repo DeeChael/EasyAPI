@@ -117,6 +117,10 @@ public final class EzNPC implements NPC {
         };
     }
 
+    /**
+     * Set click event
+     * @param onClick function
+     */
     public void setOnClick(NonReturnWithTwo<Player, ClickType> onClick) {
         if (isDropped()) return;
         if (onClick == null) return;

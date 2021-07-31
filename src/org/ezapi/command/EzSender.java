@@ -1,29 +1,31 @@
 package org.ezapi.command;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.minecraft.server.v1_16_R3.ChatMessageType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.ezapi.chat.ChatMessage;
-import org.ezapi.reflect.EzClass;
-import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.PlayerUtils;
 import org.ezapi.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
-import java.util.UUID;
 
 public final class EzSender {
 
     private final Object commandListenerWrapper;
 
+    /**
+     * You shouldn't create a sender
+     * @param commandListenerWrapper command sender
+     */
     public EzSender(Object commandListenerWrapper) {
         if (commandListenerWrapper.getClass() != CommandListenerWrapper()) throw new IllegalArgumentException("The argument did not CommandListenerWrapper");
         this.commandListenerWrapper = commandListenerWrapper;
     }
 
+    /**
+     * Get sender name
+     *
+     * @return sender's name
+     */
     public String getName() {
         try {
             return (String) CommandListenerWrapper().getMethod("getName").invoke(commandListenerWrapper);
@@ -33,6 +35,11 @@ public final class EzSender {
         return "EzSender";
     }
 
+    /**
+     * Get if sender is a player
+     *
+     * @return Is sender a player
+     */
     public boolean isPlayer() {
         try {
             CommandSender commandSender = ((CommandSender) CommandListenerWrapper().getMethod("getBukkitSender").invoke(commandListenerWrapper));
@@ -43,6 +50,11 @@ public final class EzSender {
         return false;
     }
 
+    /**
+     * Get player
+     *
+     * @return if sender is player return player or else null
+     */
     public Player player() {
         try {
             Object object = CommandListenerWrapper().getMethod("h").invoke(commandListenerWrapper);
@@ -53,6 +65,10 @@ public final class EzSender {
         return null;
     }
 
+    /**
+     * Send message to sender, console default locale is english (us)
+     * @param chatMessage message
+     */
     public void sendMessage(ChatMessage chatMessage) {
         try {
             if (isPlayer()) {

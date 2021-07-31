@@ -20,6 +20,12 @@ public final class Language {
 
     private final String languageCode;
 
+    /**
+     * Language API
+     *
+     * @param languageDefault defaults
+     * @param languageCode language code
+     */
     public Language(LanguageDefault languageDefault, String languageCode) {
         this.languageCode = languageCode;
         File folder = new File("language/" + languageDefault.getRegistryName());
@@ -55,6 +61,9 @@ public final class Language {
         save();
     }
 
+    /**
+     * Reload texts from language file
+     */
     public void reload() {
         try {
             jsonObject = new JsonParser().parse(new BufferedReader(new InputStreamReader(new FileInputStream(file),"Unicode"))).getAsJsonObject();
@@ -62,14 +71,32 @@ public final class Language {
         }
     }
 
+    /**
+     * Get language code</br>
+     * Find language code in org.ezapi.configuration.LanguageCode or "https://minecraft.fandom.com/wiki/Language"
+     *
+     * @return Language Code
+     */
     public String getLanguageCode() {
         return languageCode;
     }
 
+    /**
+     * Get text from path, not exists return "Null"
+     *
+     * @param path text path
+     * @return text
+     */
     public String get(String path) {
         return jsonObject.has(path) && jsonObject.get(path).isJsonPrimitive() ? ColorUtils.translate(StringUtils.r_reset(jsonObject.get(path).getAsString())) : "Null";
     }
 
+    /**
+     * Set default value, if exists will be ignored
+     *
+     * @param path text path
+     * @param value default value
+     */
     public void setDefault(String path, String value) {
         if (!jsonObject.has(path)) {
             value = ColorUtils.transfer(StringUtils.r(value));
@@ -77,10 +104,19 @@ public final class Language {
         }
     }
 
+    /**
+     * Check if path has text
+     *
+     * @param path text path
+     * @return exists
+     */
     public boolean has(String path) {
         return jsonObject.has(path);
     }
 
+    /**
+     * Save language file
+     */
     public void save() {
         try {
             PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"Unicode")));
@@ -90,6 +126,10 @@ public final class Language {
         }
     }
 
+    /**
+     * Get all exists paths
+     * @return paths
+     */
     public List<String> keys() {
         List<String> keys = new ArrayList<>();
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
@@ -98,6 +138,10 @@ public final class Language {
         return keys;
     }
 
+    /**
+     * If language file not exists before and it's first time to be opened
+     * @return Is first time opened
+     */
     public boolean isFirstOpenAndFileNotExist() {
         return firstOpenAndFileNotExist;
     }

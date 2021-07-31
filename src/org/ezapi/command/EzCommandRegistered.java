@@ -42,6 +42,15 @@ public final class EzCommandRegistered {
     }
     */
 
+    /**
+     * Get original command
+     *
+     * @return original command
+     */
+    public EzCommand getCommand() {
+        return ezCommand;
+    }
+
     private static CommandDispatcher<Object> getMojangCommandDispatcher() {
         try {
             return (CommandDispatcher<Object>) nmsCommandDispatcher().getMethod("a").invoke(getNmsCommandDispatcher());

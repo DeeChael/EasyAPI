@@ -10,10 +10,14 @@ import java.util.List;
 
 public final class EzProperties {
 
-    private File file;
+    private final File file;
 
     private final List<EzProperty> context = new ArrayList<>();
 
+    /**
+     * EzProperties, has able to add commit
+     * @param file properties file
+     */
     public EzProperties(File file) {
         this.file = file;
         if (!(file.exists() || file.isFile())) {
@@ -50,10 +54,20 @@ public final class EzProperties {
         }
     }
 
+    /**
+     * Get if properties contains key
+     * @param key key
+     * @return contains key
+     */
     public boolean has(String key) {
         return keys().contains(key);
     }
 
+    /**
+     * Remove a key
+     * @param key key
+     * @return if not exists returns null or else value
+     */
     public String remove(String key) {
         if (has(key)) {
             for (EzProperty ezProperty : context) {
@@ -70,15 +84,25 @@ public final class EzProperties {
         return null;
     }
 
+    /**
+     * Remove all recorded data
+     */
     public void removeAll() {
         context.clear();
         regenerate();
     }
 
+    /**
+     * Get properties file
+     * @return properties file
+     */
     public File getFile() {
         return this.file;
     }
 
+    /**
+     * Regenerate file, won't remove all
+     */
     public void regenerate() {
         if (this.file.exists()) {
             if (this.file.delete()) {
@@ -90,6 +114,11 @@ public final class EzProperties {
         }
     }
 
+    /**
+     * Get value by key
+     * @param key key
+     * @return if not exists returns null or else value
+     */
     public String get(String key) {
         if (has(key)) {
             for (EzProperty ezProperty : context) {
@@ -103,11 +132,22 @@ public final class EzProperties {
         return null;
     }
 
+    /**
+     * Get value by key, if not exists returns default value
+     * @param key key
+     * @param defaultValue default value
+     * @return if not exists returns default value or else value
+     */
     public String get(String key, String defaultValue) {
         String value = get(key);
         return value != null ? value : defaultValue;
     }
 
+    /**
+     * Set the value of the key
+     * @param key key
+     * @param value value
+     */
     public void set(String key, String value) {
         if (!has(key)) {
             context.add(new PropertyObject(key, value));
@@ -123,10 +163,18 @@ public final class EzProperties {
         save();
     }
 
+    /**
+     * Add commit
+     * @param annotation commit
+     */
     public void addAnnotation(String annotation) {
         context.add(new PropertyAnnotation(annotation));
     }
 
+    /**
+     * Get all keys
+     * @return keys
+     */
     public List<String> keys() {
         List<String> keys = new ArrayList<>();
         for (EzProperty ezProperty : context) {
@@ -137,6 +185,10 @@ public final class EzProperties {
         return keys;
     }
 
+    /**
+     * Get all values
+     * @return values
+     */
     public List<String> values() {
         List<String> values = new ArrayList<>();
         for (EzProperty ezProperty : context) {
@@ -147,7 +199,10 @@ public final class EzProperties {
         return values;
     }
 
-    private void save() {
+    /**
+     * Write the properties content to the properties file
+     */
+    public void save() {
         StringBuilder text = new StringBuilder();
         for (EzProperty ezProperty : context) {
             text.append(ezProperty).append("\n");

@@ -77,10 +77,22 @@ public final class EzCommandManager implements Listener {
 
     private static final Map<String,List<EzCommand>> REGISTERED = new HashMap<>();
 
+    /**
+     * Register command with default prefix "ez-api"
+     *
+     * @param ezCommand command
+     * @return registered command
+     */
     public static EzCommandRegistered register(EzCommand ezCommand) {
         return register("ez-api", ezCommand);
     }
 
+    /**
+     * Register command with prefix
+     * @param prefix prefix
+     * @param ezCommand command
+     * @return registered command
+     */
     public static EzCommandRegistered register(String prefix, EzCommand ezCommand) {
         EzCommandRegistered ezCommandRegistered = ezCommand.register();
         //EasyAPI.getBukkitCommandMap().register(prefix, new UnsupportCommand(ezCommandRegistered.commandNode.getName(), ezCommand.aliases.toArray(new String[0])));

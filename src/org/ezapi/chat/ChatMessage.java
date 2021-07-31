@@ -30,15 +30,34 @@ public final class ChatMessage {
 
     private Map<String,String> replaces = new HashMap<>();
 
+    /**
+     * Should be used with Language API</br>
+     * Send to player by PlayerUtils.sendMessage(org.bukkit.entity.Player, org.ezapi.chat.ChatMessage);
+     *
+     * @param data data, if flag is true will find text in language texts, not exists or false will set text to data
+     * @param flag find in language texts
+     */
     public ChatMessage(String data, boolean flag) {
         this.data = data;
         this.flag = flag;
     }
 
+    /**
+     * Get message with player's locale
+     *
+     * @param player target
+     * @return message
+     */
     public TextComponent getMessage(Player player) {
         return getMessage(player.getLocale());
     }
 
+    /**
+     * Get message with locale
+     *
+     * @param locale target
+     * @return message
+     */
     public TextComponent getMessage(String locale) {
         TextComponent base = new TextComponent();
         TextComponent self = new TextComponent(getSelfText(locale));
@@ -51,34 +70,82 @@ public final class ChatMessage {
         return base;
     }
 
+    /**
+     * Add placeholder
+     *
+     * @param stringToBeReplaced string to be replaced
+     * @param stringToReplace string to replace
+     */
     public void setReplace(String stringToBeReplaced, String stringToReplace) {
         replaces.put(stringToBeReplaced, stringToReplace);
     }
 
+    /**
+     * Get message with locale "en_us"
+     *
+     * @return message
+     */
     public TextComponent getMessage() {
         return getMessage("en_us");
     }
 
+    /**
+     * Set event on clicked</br>
+     * Player only
+     *
+     * @param clickEvent event on click
+     */
     public void setClickEvent(ClickEvent clickEvent) {
         this.clickEvent = clickEvent;
     }
 
+    /**
+     * Set what should be shown when player move their cursor on the text
+     *
+     * @param hoverEvent what should be shown
+     */
     public void setHoverEvent(HoverEvent hoverEvent) {
         this.hoverEvent = hoverEvent;
     }
 
+    /**
+     * Set the color of the text
+     *
+     * @param color color
+     */
     public void setColor(ChatColor color) {
         this.color = color;
     }
 
+    /**
+     * Add text</br>
+     * Example:</br>
+     * ChatMessage a = new ChatMessage("aaaa", false);</br>
+     * ChatMessage b = new ChatMessage("bbbb", false);</br>
+     * a.sub(b);</br>
+     * System.out.println(a.getText());</br>
+     * It will print "aaaabbbb";
+     *
+     * @param chatMessage
+     */
     public void sub(ChatMessage chatMessage) {
         subs.add(chatMessage);
     }
 
+    /**
+     * Get data
+     * @return data
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     * Get text only self without subs
+     *
+     * @param locale locale
+     * @return self text
+     */
     private String getSelfText(String locale) {
         if (flag) {
             if (LanguageManager.INSTANCE.hasText(locale, data)) {
@@ -98,10 +165,22 @@ public final class ChatMessage {
         return ColorUtils.translate(data);
     }
 
+    /**
+     * Get text with player's locale
+     *
+     * @param player target
+     * @return text
+     */
     public String getText(Player player) {
         return getText(player.getLocale());
     }
 
+    /**
+     * Get text with locale
+     *
+     * @param locale locale
+     * @return text
+     */
     public String getText(String locale) {
         if (flag) {
             if (LanguageManager.INSTANCE.hasText(locale, data)) {
@@ -133,6 +212,11 @@ public final class ChatMessage {
         return finalText;
     }
 
+    /**
+     * Get text with locale "en_us"
+     *
+     * @return text
+     */
     public String getText() {
         return getText("en_us");
     }

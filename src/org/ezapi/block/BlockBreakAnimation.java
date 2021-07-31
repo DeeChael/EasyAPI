@@ -1,5 +1,8 @@
 package org.ezapi.block;
 
+/**
+ * Block break stage, be used for PacketPlayOutBlockBreakAnimation
+ */
 public enum BlockBreakAnimation {
 
     CLEAR(-1),
@@ -20,10 +23,22 @@ public enum BlockBreakAnimation {
         this.stage = stage;
     }
 
+    /**
+     * Get block break stage in nms
+     * @return break stage
+     */
     public int getStage() {
         return stage;
     }
 
+    /**
+     * Get block break stage by nms integer stage</br>
+     * over 9 will be return DESTROY_9</br>
+     * less then 0 will return CLEAR
+     *
+     * @param i nms break stage
+     * @return break stage
+     */
     public static BlockBreakAnimation valueOf(int i) {
         if (i >= 9) return DESTROY_9;
         switch (i) {

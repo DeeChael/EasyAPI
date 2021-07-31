@@ -10,6 +10,11 @@ import java.util.List;
 
 public final class UnsupportCommand extends Command {
 
+    /**
+     * You shouldn't create a new Unsupport command
+     * @param name command name
+     * @param aliases aliases
+     */
     public UnsupportCommand(String name, String... aliases) {
         super(name);
         this.setAliases(Arrays.asList(aliases));

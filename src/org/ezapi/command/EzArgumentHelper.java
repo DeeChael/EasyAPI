@@ -20,38 +20,96 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Argument helper is used to get argument in command
+ */
 public final class EzArgumentHelper {
 
     private final CommandContext<Object> commandContext;
 
+    /**
+     * You shouldn't create a new argument helper by yourself
+     * @param commandContext command sender
+     */
     protected EzArgumentHelper(CommandContext<Object> commandContext) {
         this.commandContext = commandContext;
     }
 
+    /**
+     * ArgumentType: BaseArguments.string() [word(), greedyString()]<br>
+     * Get argument as string type</br>
+     * It doesn't allow space be contains in the string
+     *
+     * @param argumentName argument name
+     * @return string
+     */
     public String getAsString(String argumentName) {
         return StringArgumentType.getString(commandContext, argumentName);
     }
 
+    /**
+     * ArgumentType: BaseArguments.integer()<br>
+     * Get argument as integer type
+     *
+     * @param argumentName argument name
+     * @return integer
+     */
     public Integer getAsInteger(String argumentName) {
         return IntegerArgumentType.getInteger(commandContext, argumentName);
     }
 
+    /**
+     * ArgumentType: BaseArguments.bool()<br>
+     * Get argument as boolean type
+     *
+     * @param argumentName argument name
+     * @return boolean
+     */
     public Boolean getAsBoolean(String argumentName) {
         return BoolArgumentType.getBool(commandContext, argumentName);
     }
 
+    /**
+     * ArgumentType: BaseArguments.doubleArg()<br>
+     * Get argument as double type
+     *
+     * @param argumentName argument name
+     * @return double
+     */
     public Double getAsDouble(String argumentName) {
         return DoubleArgumentType.getDouble(commandContext, argumentName);
     }
 
+    /**
+     * ArgumentType: BaseArguments.longArg()<br>
+     * Get argument as long type
+     *
+     * @param argumentName argument name
+     * @return long
+     */
     public Long getAsLong(String argumentName) {
         return LongArgumentType.getLong(commandContext, argumentName);
     }
 
+    /**
+     * ArgumentType: BaseArguments.floatArg()<br>
+     * Get argument as float type
+     *
+     * @param argumentName argument name
+     * @return float
+     */
     public Float getAsFloat(String argumentName) {
         return FloatArgumentType.getFloat(commandContext, argumentName);
     }
 
+    /**
+     * ArgumentType: ArgumentPlayer</br>
+     * Multi player selector</br>
+     * Get argument as player targets
+     *
+     * @param argumentName argument name
+     * @return player targets
+     */
     public List<Player> getAsPlayers(String argumentName) {
         List<Player> list = new ArrayList<>();
         Collection<Object> collection = (Collection<Object>) ArgumentPlayer.instance().get(commandContext, argumentName);
@@ -64,6 +122,14 @@ public final class EzArgumentHelper {
         return list;
     }
 
+    /**
+     * ArgumentType: ArgumentLocation</br>
+     * Get argument as location</br>
+     * X, y, z is double number
+     *
+     * @param argumentName argument name
+     * @return location
+     */
     public Location getAsLocation(String argumentName) {
         EzSender ezSender = new EzSender(commandContext.getSource());
         if (ezSender.isPlayer()) {
@@ -74,18 +140,49 @@ public final class EzArgumentHelper {
 
     }
 
+    /**
+     * ArgumentType: ArgumentWorld</br>
+     * Get argument as world</br>
+     * Three default world: world, world_nether, world_the_end are overworld, the_nether, the_end
+     *
+     * @param argumentName argument name
+     * @return world
+     */
     public World getAsWorld(String argumentName) {
         return ArgumentWorld.worldServerToBukkitWorld(ArgumentWorld.instance().get(commandContext, argumentName));
     }
 
+    /**
+     * ArgumentType: ArgumentEnchantment</br>
+     * Get argument as enchantment type
+     *
+     * @param argumentName argument name
+     * @return enchantment type
+     */
     public Enchantment getAsEnchantment(String argumentName) {
         return ArgumentEnchantment.nmsEnchantmentToBukkitEnchantment(ArgumentEnchantment.instance().get(commandContext, argumentName));
     }
 
+    /**
+     * ArgumentType: ArgumentChat</br>
+     * Get argument as chat message string</br>
+     * Allow space, so the arguments after this will not be detected to their real type
+     *
+     * @param argumentName argument name
+     * @return chat message string
+     */
     public String getAsChatMessage(String argumentName) {
         return ArgumentChat.chatToString(ArgumentChat.instance().get(commandContext, argumentName));
     }
 
+    /**
+     * ArgumentType: ArgumentBlockLocation</br>
+     * Get argument as block location</br>
+     * X, y, z is integer number
+     *
+     * @param argumentName argument name
+     * @return location
+     */
     public Location getAsBlockLocation(String argumentName) {
         EzSender ezSender = new EzSender(commandContext.getSource());
         if (ezSender.isPlayer()) {
@@ -95,14 +192,38 @@ public final class EzArgumentHelper {
         }
     }
 
+    /**
+     * ArgumentType: ArgumentItemStack</br>
+     * Get argument as a item stack</br>
+     * Support NBT, so named ItemStack not Material
+     *
+     * @param argumentName argument name
+     * @param amount item stack amount
+     * @return item stack
+     */
     public ItemStack getAsItemStack(String argumentName, int amount) {
         return ArgumentItemStack.nmsItemStackToBukkitItemStack(ArgumentItemStack.instance().get(commandContext, argumentName), amount);
     }
 
+    /**
+     * ArgumentType: ArgumentItemStack</br>
+     * Get as a block material
+     *
+     * @param argumentName argument name
+     * @return block material
+     */
     public Material getAsBlock(String argumentName) {
         return ArgumentBlock.nmsBlockToMaterial(ArgumentBlock.instance().get(commandContext, argumentName));
     }
 
+    /**
+     * ArgumentType: ArgumentEntities</br>
+     * Multi entity selector</br>
+     * Get argument as entity targets
+     *
+     * @param argumentName argument name
+     * @return entity targets
+     */
     public List<Entity> getAsEntities(String argumentName) {
         List<Entity> list = new ArrayList<>();
         Collection<Object> collection = (Collection<Object>) ArgumentPlayer.instance().get(commandContext, argumentName);
@@ -116,10 +237,26 @@ public final class EzArgumentHelper {
         return list;
     }
 
+    /**
+     * ArgumentType: ArgumentEntity</br>
+     * Single entity selector</br>
+     * Get argument as a entity target
+     *
+     * @param argumentName argument name
+     * @return entity target
+     */
     public Entity getAsEntity(String argumentName) {
         return ArgumentEntities.nmsEntityToBukkitEntity(ArgumentEntity.instance().get(commandContext, argumentName));
     }
 
+    /**
+     * ArgumentType: ArgumentOfflinePlayer</br>
+     * Multi offline player selector</br>
+     * Get argument as offline player targets
+     *
+     * @param argumentName argument name
+     * @return offline player targets
+     */
     public List<OfflinePlayer> getAsOfflinePlayer(String argumentName) {
         List<OfflinePlayer> list = new ArrayList<>();
         for (GameProfile gameProfile : ArgumentOfflinePlayer.instance().get(commandContext, argumentName)) {
@@ -128,34 +265,90 @@ public final class EzArgumentHelper {
         return list;
     }
 
+    /**
+     * ArgumentType: ArgumentAttribute</br>
+     * Get argument as an attribute type
+     *
+     * @param argumentName argument name
+     * @return attribute type
+     */
     public Attribute getAsAttribute(String argumentName) {
         return ArgumentAttribute.nmsAttributeBaseToBukkitAttribute(ArgumentAttribute.instance().get(commandContext, argumentName));
     }
 
+    /**
+     * ArgumentType: ArgumentPotionEffectType</br>
+     * Get argument type as a potion effect type
+     *
+     * @param argumentName argument name
+     * @return potion effect type
+     */
     public PotionEffectType getAsPotionEffectType(String argumentName) {
         return ArgumentPotionEffectType.mobEffectListToPotionEffectType(ArgumentPotionEffectType.instance().get(commandContext, argumentName));
     }
 
+    /**
+     * ArgumentType: ArgumentEntityType</br>
+     * Get argument type as an entity type
+     *
+     * @param argumentName argument name
+     * @return entity name
+     */
     public EntityType getAsEntityType(String argumentName) {
         return ArgumentEntityType.nmsEntityTypesToBukkitEntityType(ArgumentEntityType.instance().get(commandContext, argumentName));
     }
 
+    /**
+     * ArgumentType: ArgumentParticle</br>
+     * Get argument as a particle type
+     *
+     * @param argumentName argument name
+     * @return particle type
+     */
     public Particle getAsParticle(String argumentName) {
         return ArgumentParticle.nmsParticleToBukkitParticle(ArgumentParticle.instance().get(commandContext, argumentName));
     }
 
+    /**
+     * ArgumentType: ArgumentChatColor</br>
+     * Get argument as a bungee chat color
+     *
+     * @param argumentName argument name
+     * @return bungee chat color
+     */
     public ChatColor getAsChatColor_Bungee(String argumentName) {
         return ChatColor.getByChar(ArgumentChatColor.getColorChar(ArgumentChatColor.instance().get(commandContext, argumentName)));
     }
 
+    /**
+     * ArgumentType: ArgumentChatColor</br>
+     * Get argument as a bukkit chat color
+     *
+     * @param argumentName argument name
+     * @return bukkit chat color
+     */
     public org.bukkit.ChatColor getAsChatColor_Bukkit(String argumentName) {
         return org.bukkit.ChatColor.getByChar(ArgumentChatColor.getColorChar(ArgumentChatColor.instance().get(commandContext, argumentName)));
     }
 
+    /**
+     * ArgumentType: ArgumentUUID</br>
+     * Get argument type as a UUID
+     *
+     * @param argumentName argument name
+     * @return uuid
+     */
     public UUID getAsUUID(String argumentName) {
         return ArgumentUUID.instance().get(commandContext, argumentName);
     }
 
+    /**
+     * ArgumentType: ArgumentNBTTag</br>
+     * Get argument type as a nbt tag json object
+     *
+     * @param argumentName argument name
+     * @return nbt tag json object
+     */
     public JsonObject getAsNBTTag(String argumentName) {
         return ArgumentNBTTag.instance().get(commandContext, argumentName);
     }

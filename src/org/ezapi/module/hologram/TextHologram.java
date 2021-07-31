@@ -49,6 +49,7 @@ public final class TextHologram implements Hologram {
         return text;
     }
 
+    @Override
     public void setText(ChatMessage text) {
         if (isDropped()) return;
         this.text = text;
@@ -59,6 +60,7 @@ public final class TextHologram implements Hologram {
         }
     }
 
+    @Override
     public World getWorld() {
         return bukkitWorld;
     }
@@ -68,6 +70,7 @@ public final class TextHologram implements Hologram {
         return location;
     }
 
+    @Override
     public void setLocation(Location location) {
         if (isDropped()) return;
         this.location = location.clone().add(0.0, -1.0, 0.0);
@@ -78,6 +81,7 @@ public final class TextHologram implements Hologram {
         }
     }
 
+    @Override
     public void addViewer(Player player) {
         if (isDropped()) return;
         if (!viewers.containsKey(player)) {
@@ -109,6 +113,7 @@ public final class TextHologram implements Hologram {
         }
     }
 
+    @Override
     public void refresh(Player player) {
         if (isDropped()) return;
         if (viewers.containsKey(player)) {
@@ -135,6 +140,7 @@ public final class TextHologram implements Hologram {
         }
     }
 
+    @Override
     public void destroy(Player player) {
         if (isDropped()) return;
         if (viewers.containsKey(player)) {
@@ -151,6 +157,7 @@ public final class TextHologram implements Hologram {
         }
     }
 
+    @Override
     public void removeViewer(Player player) {
         if (isDropped()) return;
         if (viewers.containsKey(player)) {
@@ -162,11 +169,13 @@ public final class TextHologram implements Hologram {
         }
     }
 
+    @Override
     public List<Player> getViewers() {
         if (isDropped()) return new ArrayList<>();
         return new ArrayList<>(viewers.keySet());
     }
 
+    @Override
     public void removeAll() {
         if (isDropped()) return;
         for (Player player : getViewers()) {
@@ -174,6 +183,7 @@ public final class TextHologram implements Hologram {
         }
     }
 
+    @Override
     public void drop() {
         if (!dropped) {
             removeAll();
@@ -181,6 +191,7 @@ public final class TextHologram implements Hologram {
         }
     }
 
+    @Override
     public boolean isDropped() {
         return dropped;
     }

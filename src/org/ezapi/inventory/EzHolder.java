@@ -10,10 +10,18 @@ public final class EzHolder implements InventoryHolder {
 
     private final String id;
 
+    /**
+     * You shouldn't create a new EzHolder by your self
+     * @param id holder id
+     */
     public EzHolder(String id) {
         this.id = id;
     }
 
+    /**
+     * Get holder id
+     * @return holder id
+     */
     public String getId() {
         return id;
     }
