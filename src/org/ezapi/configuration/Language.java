@@ -35,16 +35,17 @@ public final class Language {
             firstOpenAndFileNotExist = true;
             try {
                 if (file.createNewFile()) {
-                    FileWriter fileWriter = new FileWriter(file);
-                    fileWriter.write("{}");
-                    fileWriter.close();
+                    //FileWriter fileWriter = new FileWriter(file);
+                    PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"Unicode")));
+                    writer.write("{}");
+                    writer.close();
                 }
             } catch (IOException ignored) {
             }
         }
         try {
-            jsonObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
-        } catch (FileNotFoundException ignored) {
+            jsonObject = new JsonParser().parse(new BufferedReader(new InputStreamReader(new FileInputStream(file),"Unicode"))).getAsJsonObject();
+        } catch (FileNotFoundException | UnsupportedEncodingException ignored) {
         }
         for (String key : languageDefault.keys()) {
             if (!has(key)) {
@@ -56,8 +57,8 @@ public final class Language {
 
     public void reload() {
         try {
-            jsonObject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
-        } catch (FileNotFoundException ignored) {
+            jsonObject = new JsonParser().parse(new BufferedReader(new InputStreamReader(new FileInputStream(file),"Unicode"))).getAsJsonObject();
+        } catch (FileNotFoundException | UnsupportedEncodingException ignored) {
         }
     }
 
@@ -82,9 +83,9 @@ public final class Language {
 
     public void save() {
         try {
-            FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(new Gson().toJson(jsonObject));
-            fileWriter.close();
+            PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"Unicode")));
+            writer.write(new Gson().toJson(jsonObject));
+            writer.close();
         } catch (IOException ignored) {
         }
     }
