@@ -1,24 +1,12 @@
 package org.ezapi;
 
-import io.netty.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ezapi.command.EzCommandManager;
-import org.ezapi.command.defaults.NPCCommand;
 import org.ezapi.configuration.LanguageManager;
-import org.ezapi.module.packet.NMSPackets;
-import org.ezapi.module.packet.Protocol;
-import org.ezapi.module.packet.play.in.PlayInUseEntityPacket;
-import org.ezapi.module.packet.play.in.PlayInUseEntityPacket.ClickType;
-import org.ezapi.reflect.EzClass;
-import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.ReflectionUtils;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 public final class EasyAPI extends JavaPlugin {
@@ -72,7 +60,7 @@ public final class EasyAPI extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(EzCommandManager.INSTANCE, this);
         //new EzApiCommand().register();
         //new HologramCommand().register();
-        new NPCCommand().register();
+        //new NPCCommand().register();
         reload();
         /*
         Break bedrock - Just for fun

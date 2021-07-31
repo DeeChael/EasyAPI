@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class NPCCommand {
+final class NPCCommand {
 
     private EzCommand ezCommand;
 
@@ -27,7 +27,7 @@ public final class NPCCommand {
 
     private final Map<String, EzNPC> npcs = new HashMap<>();
 
-    public NPCCommand() {
+    private NPCCommand() {
         this.ezCommand = new EzCommand("npc");
         ezCommand.then(new EzCommand("create")
                 .then(new EzArgument(BaseArguments.string(), "name")
