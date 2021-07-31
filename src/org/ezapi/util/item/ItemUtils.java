@@ -33,7 +33,8 @@ public final class ItemUtils {
     public static Object asNMSCopy(ItemStack bukkitItemStack) {
         try {
             return Reflection_Class.asNMSCopy(bukkitItemStack);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored) {
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace(System.out);
         }
         return null;
     }

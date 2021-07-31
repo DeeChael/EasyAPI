@@ -64,7 +64,7 @@ public final class LanguageCode {
     public static final String IS_IS = "is_is";
     public static final String ISV = "isv";
     public static final String IT_IT = "it_it";
-    public static final String JA_JP = "ja-jp";
+    public static final String JA_JP = "ja_jp";
     public static final String JBO_EN = "jbo_en";
     public static final String KA_GE = "ka_ge";
     public static final String KK_KZ = "kk_kz";

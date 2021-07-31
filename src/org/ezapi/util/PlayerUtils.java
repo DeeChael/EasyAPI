@@ -338,7 +338,7 @@ public final class PlayerUtils {
             playerConnectionClass.setInstance(playerConnection);
             playerConnectionClass.invokeMethod("sendPacket", new Class[] {packetClass.getInstanceClass()}, new Object[] {packet});
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
     }
 

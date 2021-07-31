@@ -1,8 +1,11 @@
 package org.ezapi.module.npc;
 
+import com.mojang.datafixers.util.Pair;
 import io.netty.channel.Channel;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.ezapi.EasyAPI;
@@ -15,6 +18,7 @@ import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.PlayerUtils;
 import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.item.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +52,13 @@ public final class EzNPC implements NPC {
     private NonReturnWithTwo<Player, ClickType> onClick = this::defaultOnClick;
 
     private void defaultOnClick(Player player, ClickType clickType) {}
+
+    private ItemStack main_hand = new ItemStack(Material.AIR);
+    private ItemStack off_hand = new ItemStack(Material.AIR);
+    private ItemStack head = new ItemStack(Material.AIR);
+    private ItemStack chest = new ItemStack(Material.AIR);
+    private ItemStack legs = new ItemStack(Material.AIR);
+    private ItemStack feet = new ItemStack(Material.AIR);
 
     public EzNPC(NPCType<?> type, ChatMessage name, Location location) {
         this.type = type;
@@ -112,26 +123,68 @@ public final class EzNPC implements NPC {
         this.onClick = onClick;
     }
 
+    @Override
+    public void setItemInMainHand(ItemStack itemStack) {
+        if (isDropped()) return;
+        this.main_hand = itemStack;
+        refreshAll();
+    }
+
+    @Override
+    public void setItemInOffHand(ItemStack itemStack) {
+        if (isDropped()) return;
+        this.off_hand = itemStack;
+        refreshAll();
+    }
+
+    @Override
+    public void setBoots(ItemStack itemStack) {
+        if (isDropped()) return;
+        this.feet = itemStack;
+        refreshAll();
+    }
+
+    @Override
+    public void setLeggings(ItemStack itemStack) {
+        if (isDropped()) return;
+        this.legs = itemStack;
+        refreshAll();
+    }
+
+    @Override
+    public void setChestplate(ItemStack itemStack) {
+        if (isDropped()) return;
+        this.chest = itemStack;
+        refreshAll();
+    }
+
+    @Override
+    public void setHelmet(ItemStack itemStack) {
+        if (isDropped()) return;
+        this.head = itemStack;
+        refreshAll();
+    }
+
+    @Override
     public void setName(ChatMessage name) {
         if (isDropped()) return;
         this.name = name;
-        if (hasShown.size() > 0) {
-            for (Player player : hasShown) {
-                refresh(player);
-            }
-        }
+        refreshAll();
     }
 
+    @Override
     public void setType(NPCType<?> type) {
         if (isDropped()) return;
         this.type = type;
         reload();
     }
 
+    @Override
     public NPCType<?> getType() {
         return type;
     }
 
+    @Override
     public void setData(Object data) {
         if (isDropped()) return;
         this.data = data;
@@ -148,10 +201,47 @@ public final class EzNPC implements NPC {
         }
     }
 
+    @Override
     public void look(boolean look) {
         if (isDropped()) return;
         this.look = look;
     }
+
+    @Override
+    public void lookAt(Player player, Location target) {
+        if (isDropped()) return;
+        EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
+        Entity.setInstance(viewers.get(player).getInstance());
+        Location loc = location.clone();
+        loc.setDirection(target.clone().subtract(loc).toVector());
+        float yaw = loc.getYaw();
+        float pitch = loc.getPitch();
+        EzClass PacketPlayOutEntityLook = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutEntity$PacketPlayOutEntityLook", "PacketPlayOutEntity$PacketPlayOutEntityLook"));
+        PacketPlayOutEntityLook.setConstructor(int.class, byte.class, byte.class, boolean.class);
+        int id = (int) Entity.invokeMethod("getId", new Class[0], new Object[0]);
+        PacketPlayOutEntityLook.newInstance(id, ((byte) ((yaw % 360) * 256 / 360)), ((byte) ((pitch % 360) * 256 / 360)), false);
+        EzClass PacketPlayOutEntityHeadRotation = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutEntityHeadRotation", "PacketPlayOutEntityHeadRotation"));
+        PacketPlayOutEntityHeadRotation.setConstructor(Entity.getInstanceClass(), byte.class);
+        PacketPlayOutEntityHeadRotation.newInstance(Entity.getInstance(), ((byte) ((yaw % 360) * 256 / 360)));
+        PlayerUtils.sendPacket(player, PacketPlayOutEntityLook.getInstance());
+        PlayerUtils.sendPacket(player, PacketPlayOutEntityHeadRotation.getInstance());
+    }
+
+    /*
+    public void moveTo(Player player, Location location) {
+        if (isDropped()) return;
+        EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
+        Entity.setInstance(viewers.get(player).getInstance());
+        if (!look) {
+            lookAt(player, location);
+        }
+        EzClass PacketPlayOutRelEntityMove = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutEntity$PacketPlayOutRelEntityMove", "PacketPlayOutEntity$PacketPlayOutRelEntityMove"));
+        PacketPlayOutRelEntityMove.setConstructor(int.class, short.class, short.class, short.class, boolean.class);
+        int id = (int) Entity.invokeMethod("getId", new Class[0], new Object[0]);
+        PacketPlayOutRelEntityMove.newInstance(id, ((short) location.getX()), ((short) location.getY()), ((short) location.getZ()), false);
+        PlayerUtils.sendPacket(player, PacketPlayOutRelEntityMove.getInstance());
+    }
+    */
 
     @Override
     public void setLocation(Location location) {
@@ -199,25 +289,7 @@ public final class EzNPC implements NPC {
                     }
                     if (look) {
                         if (hasShown.contains(player)) {
-                            EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
-                            Entity.setInstance(viewers.get(player).getInstance());
-                            float yaw = 0.0f;
-                            float pitch = 0.0f;
-                            if (look) {
-                                Location loc = location.clone();
-                                loc.setDirection(player.getLocation().clone().subtract(loc).toVector());
-                                yaw = loc.getYaw();
-                                pitch = loc.getPitch();
-                            }
-                            EzClass PacketPlayOutEntityLook = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutEntity$PacketPlayOutEntityLook", "PacketPlayOutEntity$PacketPlayOutEntityLook"));
-                            PacketPlayOutEntityLook.setConstructor(int.class, byte.class, byte.class, boolean.class);
-                            int id = (int) Entity.invokeMethod("getId", new Class[0], new Object[0]);
-                            PacketPlayOutEntityLook.newInstance(id, ((byte) ((yaw % 360) * 256 / 360)), ((byte) ((pitch % 360) * 256 / 360)), false);
-                            EzClass PacketPlayOutEntityHeadRotation = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutEntityHeadRotation", "PacketPlayOutEntityHeadRotation"));
-                            PacketPlayOutEntityHeadRotation.setConstructor(Entity.getInstanceClass(), byte.class);
-                            PacketPlayOutEntityHeadRotation.newInstance(Entity.getInstance(), ((byte) ((yaw % 360) * 256 / 360)));
-                            PlayerUtils.sendPacket(player, PacketPlayOutEntityLook.getInstance());
-                            PlayerUtils.sendPacket(player, PacketPlayOutEntityHeadRotation.getInstance());
+                            lookAt(player, player.getLocation());
                         }
                     }
                 }
@@ -259,6 +331,32 @@ public final class EzNPC implements NPC {
                 for (EzClass packet : this.type.createSpawnPacket(this.viewers.get(player).getInstance())) {
                     PlayerUtils.sendPacket(player, packet.getInstance());
                 }
+                EzClass EntityLiving = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.EntityLiving", "EntityLiving"));
+                if (EntityLiving.getInstanceClass().isInstance(this.viewers.get(player).getInstance())) {
+                    List<Pair<Object, Object>> list = new ArrayList<>();
+                    EzEnum EnumItemSlot = new EzEnum(ReflectionUtils.getNmsOrOld("world.entity.EnumItemSlot", "EnumItemSlot"));
+                    if (ReflectionUtils.getVersion() >= 16) {
+                        if (main_hand.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("a"), ItemUtils.asNMSCopy(main_hand)));
+                        if (off_hand.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("b"), ItemUtils.asNMSCopy(off_hand)));
+                        if (head.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("f"), ItemUtils.asNMSCopy(head)));
+                        if (chest.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("e"), ItemUtils.asNMSCopy(chest)));
+                        if (legs.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("d"), ItemUtils.asNMSCopy(legs)));
+                        if (feet.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("c"), ItemUtils.asNMSCopy(feet)));
+                    } else {
+                        if (main_hand.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("MAINHAND"), ItemUtils.asNMSCopy(main_hand)));
+                        if (off_hand.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("OFFHAND"), ItemUtils.asNMSCopy(off_hand)));
+                        if (head.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("HEAD"), ItemUtils.asNMSCopy(head)));
+                        if (chest.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("CHEST"), ItemUtils.asNMSCopy(chest)));
+                        if (legs.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("LEGS"), ItemUtils.asNMSCopy(legs)));
+                        if (feet.getType() != Material.AIR) list.add(new Pair<>(EnumItemSlot.valueOf("FEET"), ItemUtils.asNMSCopy(feet)));
+                    }
+                    if (list.size() > 0) {
+                        EzClass PacketPlayOutEntityEquipment = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutEntityEquipment", "PacketPlayOutEntityEquipment"));
+                        PacketPlayOutEntityEquipment.setConstructor(int.class, List.class);
+                        PacketPlayOutEntityEquipment.newInstance(Entity.invokeMethod("getId", new Class[0], new Object[0]), list);
+                        PlayerUtils.sendPacket(player, PacketPlayOutEntityEquipment.getInstance());
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace(System.out);
             }
@@ -297,6 +395,7 @@ public final class EzNPC implements NPC {
         }
     }
 
+    @Override
     public void drop() {
         if (!dropped) {
             removeAll();
@@ -305,7 +404,9 @@ public final class EzNPC implements NPC {
         }
     }
 
+    @Override
     public boolean isDropped() {
         return dropped;
     }
+
 }

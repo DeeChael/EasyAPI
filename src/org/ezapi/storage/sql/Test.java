@@ -1,10 +1,15 @@
 package org.ezapi.storage.sql;
 
+import com.electronwill.nightconfig.core.Config;
+import com.electronwill.nightconfig.core.file.FileConfig;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 final class Test {
 
-    static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IOException {
         /*
         Mysql mysql = new Mysql("127.0.0.1", 3306, "minecraft", "ezapi", "root", "xxxxxxxxxxxx");
         SqlContext sqlContext = new SqlContext();

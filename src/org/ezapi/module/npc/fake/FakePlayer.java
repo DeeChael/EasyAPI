@@ -82,6 +82,10 @@ public final class FakePlayer extends FakeEntity {
         List<EzClass> list = new ArrayList<>();
         list.add(PacketPlayerOutPlayerInfo);
         list.add(PacketPlayOutNamedEntitySpawn);
+        EzClass Remove = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutPlayerInfo", "PacketPlayOutPlayerInfo"));
+        Remove.setConstructor(EnumPlayerInfoAction.getInstanceEnum(), ReflectionUtils.getArrayClassFromClass(EntityPlayer.getInstanceClass()));
+        Remove.newInstance(EnumPlayerInfoAction.valueOf("REMOVE_PLAYER"), objects);
+        list.add(Remove);
         return list;
     }
 

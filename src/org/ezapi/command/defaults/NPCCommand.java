@@ -2,7 +2,9 @@ package org.ezapi.command.defaults;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.command.EzArgument;
 import org.ezapi.command.EzCommand;
@@ -17,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-final class NPCCommand {
+public final class NPCCommand {
 
     private EzCommand ezCommand;
 
@@ -25,7 +27,7 @@ final class NPCCommand {
 
     private final Map<String, EzNPC> npcs = new HashMap<>();
 
-    private NPCCommand() {
+    public NPCCommand() {
         this.ezCommand = new EzCommand("npc");
         ezCommand.then(new EzCommand("create")
                 .then(new EzArgument(BaseArguments.string(), "name")
@@ -67,6 +69,28 @@ final class NPCCommand {
                         )
                 )
         );
+        /*
+        ezCommand.then(new EzCommand("move")
+                .then(new EzArgument(BaseArguments.string(), "name")
+                        .suggest((sender, suggestion) -> {
+                            npcs.keySet().forEach(suggestion::suggest);
+                            return suggestion.buildFuture();
+                        })
+                        .then(new EzArgument(ArgumentLocation.argumentType(), "position")
+                                .executes(((sender, argument) -> {
+                                    String name = argument.getAsString("name");
+                                    if (npcs.containsKey(name)) {
+                                        for (Player player : npcs.get(name).getViewers()) {
+                                            this.npcs.get(name).moveTo(player, argument.getAsLocation("position"));
+                                        }
+                                        return 1;
+                                    }
+                                    return 0;
+                                }))
+                        )
+                )
+        );
+        */
         ezCommand.then(new EzCommand("skin")
                 .then(new EzArgument(BaseArguments.string(), "name")
                         .suggest((sender, suggestion) -> {
