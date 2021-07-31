@@ -1,18 +1,31 @@
-package org.ezapi.storage;
+package org.ezapi.configuration;
 
 import org.ezapi.util.FileUtils;
 import org.ezapi.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class EzPropertiesStorage extends FileStorage implements Storage {
+public final class EzProperties {
+
+    private File file;
 
     private final List<EzProperty> context = new ArrayList<>();
 
-    public EzPropertiesStorage(File file) {
-        super(file);
+    public EzProperties(File file) {
+        this.file = file;
+        if (!(file.exists() || file.isFile())) {
+            File parentFile = file.getParentFile();
+            if (parentFile != null) {
+                parentFile.mkdirs();
+            }
+            try {
+                file.createNewFile();
+            } catch (IOException ignored) {
+            }
+        }
         String text = FileUtils.readText(file);
         if (text.contains("\n")) {
             for (String string : text.split("\\\\n")) {
@@ -37,18 +50,16 @@ public final class EzPropertiesStorage extends FileStorage implements Storage {
         }
     }
 
-    @Override
     public boolean has(String key) {
         return keys().contains(key);
     }
 
-    @Override
-    public StorageContext remove(String key) {
+    public String remove(String key) {
         if (has(key)) {
             for (EzProperty ezProperty : context) {
                 if (ezProperty instanceof PropertyObject) {
                     if (((PropertyObject) ezProperty).getKey().equals(key)) {
-                        StorageContext value = StorageContext.getByString(((PropertyObject) ezProperty).getValue());
+                        String value = ((PropertyObject) ezProperty).getValue();
                         context.remove(ezProperty);
                         save();
                         return value;
@@ -59,19 +70,32 @@ public final class EzPropertiesStorage extends FileStorage implements Storage {
         return null;
     }
 
-    @Override
     public void removeAll() {
         context.clear();
         regenerate();
     }
 
-    @Override
-    public StorageContext get(String key) {
+    public File getFile() {
+        return this.file;
+    }
+
+    public void regenerate() {
+        if (this.file.exists()) {
+            if (this.file.delete()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException ignored) {
+                }
+            }
+        }
+    }
+
+    public String get(String key) {
         if (has(key)) {
             for (EzProperty ezProperty : context) {
                 if (ezProperty instanceof PropertyObject) {
                     if (((PropertyObject) ezProperty).getKey().equals(key)) {
-                        return StorageContext.getByString(((PropertyObject) ezProperty).getValue());
+                        return ((PropertyObject) ezProperty).getValue();
                     }
                 }
             }
@@ -79,21 +103,19 @@ public final class EzPropertiesStorage extends FileStorage implements Storage {
         return null;
     }
 
-    @Override
-    public StorageContext get(String key, StorageContext defaultValue) {
-        StorageContext value = get(key);
+    public String get(String key, String defaultValue) {
+        String value = get(key);
         return value != null ? value : defaultValue;
     }
 
-    @Override
-    public void set(String key, StorageContext value) {
+    public void set(String key, String value) {
         if (!has(key)) {
-            context.add(new PropertyObject(key, value.toString()));
+            context.add(new PropertyObject(key, value));
         } else {
             for (EzProperty ezProperty : context) {
                 if (ezProperty instanceof PropertyObject) {
                     if (((PropertyObject) ezProperty).getKey().equals(key)) {
-                        ((PropertyObject) ezProperty).setValue(value.toString());
+                        ((PropertyObject) ezProperty).setValue(value);
                     }
                 }
             }
@@ -105,7 +127,6 @@ public final class EzPropertiesStorage extends FileStorage implements Storage {
         context.add(new PropertyAnnotation(annotation));
     }
 
-    @Override
     public List<String> keys() {
         List<String> keys = new ArrayList<>();
         for (EzProperty ezProperty : context) {
@@ -116,12 +137,11 @@ public final class EzPropertiesStorage extends FileStorage implements Storage {
         return keys;
     }
 
-    @Override
-    public List<StorageContext> values() {
-        List<StorageContext> values = new ArrayList<>();
+    public List<String> values() {
+        List<String> values = new ArrayList<>();
         for (EzProperty ezProperty : context) {
             if (ezProperty instanceof PropertyObject) {
-                values.add(StorageContext.getByString(((PropertyObject) ezProperty).getValue()));
+                values.add(((PropertyObject) ezProperty).getValue());
             }
         }
         return values;

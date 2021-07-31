@@ -1,10 +1,6 @@
 package org.ezapi.util;
 
 import org.bukkit.plugin.Plugin;
-import org.ezapi.storage.JsonStorage;
-import org.ezapi.storage.PropertiesStorage;
-import org.ezapi.storage.Storage;
-import org.ezapi.storage.YamlStorage;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -39,18 +35,6 @@ public final class FileUtils {
             fileWriter.close();
         } catch (IOException ignored) {
         }
-    }
-
-    public static Storage getStorage(File file) {
-        if (!file.exists()) return null;
-        if (file.getName().endsWith(".json")) {
-            return new JsonStorage(file);
-        } else if (file.getName().endsWith(".yml") || file.getName().endsWith(".yaml")) {
-            return new YamlStorage(file);
-        } else if (file.getName().endsWith("properties")) {
-            return new PropertiesStorage(file);
-        }
-        return null;
     }
 
     public static List<Class<?>> getClasses(Plugin plugin, String[] ignore) {
