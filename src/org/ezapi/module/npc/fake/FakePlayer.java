@@ -62,29 +62,30 @@ public final class FakePlayer extends FakeEntity {
 
     @Override
     public List<EzClass> packet(Object entity) {
-        EzClass PacketPlayerOutPlayerInfo = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutPlayerInfo", "PacketPlayOutPlayerInfo"));
-        EzEnum EnumPlayerInfoAction = new EzEnum(PacketPlayerOutPlayerInfo.getInstanceClass().getName() + "$EnumPlayerInfoAction");
-        if (ReflectionUtils.getVersion() >= 16) {
-            EnumPlayerInfoAction.newInstance("a");
-        } else {
-            EnumPlayerInfoAction.newInstance("ADD_PLAYER");
-        }
+        EzClass Add = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutPlayerInfo", "PacketPlayOutPlayerInfo"));
+        EzClass Remove = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutPlayerInfo", "PacketPlayOutPlayerInfo"));
+        EzEnum EnumPlayerInfoAction = new EzEnum(Add.getInstanceClass().getName() + "$EnumPlayerInfoAction");
         EzClass EntityPlayer = new EzClass(ReflectionUtils.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
         EntityPlayer.setInstance(entity);
-        PacketPlayerOutPlayerInfo.setConstructor(EnumPlayerInfoAction.getInstanceEnum(), ReflectionUtils.getArrayClassFromClass(EntityPlayer.getInstanceClass()));
+        Add.setConstructor(EnumPlayerInfoAction.getInstanceEnum(), ReflectionUtils.getArrayClassFromClass(EntityPlayer.getInstanceClass()));
+        Remove.setConstructor(EnumPlayerInfoAction.getInstanceEnum(), ReflectionUtils.getArrayClassFromClass(EntityPlayer.getInstanceClass()));
         Object[] objects = (Object[]) Array.newInstance(EntityPlayer.getInstanceClass(), 1);
         objects[0] = entity;
-        PacketPlayerOutPlayerInfo.newInstance(EnumPlayerInfoAction.getInstance(), objects);
+        if (ReflectionUtils.getVersion() >= 16) {
+            Add.newInstance(EnumPlayerInfoAction.valueOf("a"), objects);
+            Remove.newInstance(EnumPlayerInfoAction.valueOf("e"), objects);
+        } else {
+            Add.newInstance(EnumPlayerInfoAction.valueOf("ADD_PLAYER"), objects);
+            Remove.newInstance(EnumPlayerInfoAction.valueOf("REMOVE_PLAYER"), objects);
+        }
+
         EzClass PacketPlayOutNamedEntitySpawn = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutNamedEntitySpawn", "PacketPlayOutNamedEntitySpawn"));
         EzClass EntityHuman = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.player.EntityHuman", "EntityHuman"));
         PacketPlayOutNamedEntitySpawn.setConstructor(EntityHuman.getInstanceClass());
         PacketPlayOutNamedEntitySpawn.newInstance(entity);
         List<EzClass> list = new ArrayList<>();
-        list.add(PacketPlayerOutPlayerInfo);
+        list.add(Add);
         list.add(PacketPlayOutNamedEntitySpawn);
-        EzClass Remove = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutPlayerInfo", "PacketPlayOutPlayerInfo"));
-        Remove.setConstructor(EnumPlayerInfoAction.getInstanceEnum(), ReflectionUtils.getArrayClassFromClass(EntityPlayer.getInstanceClass()));
-        Remove.newInstance(EnumPlayerInfoAction.valueOf("REMOVE_PLAYER"), objects);
         list.add(Remove);
         return list;
     }
