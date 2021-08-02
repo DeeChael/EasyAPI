@@ -62,7 +62,138 @@ public final class EzArgument {
         if (permission > 4) permission = 4;
         int finalPermission = permission;
         requiredArgumentBuilder.requires((requirement) -> permissionCheck(requirement, finalPermission, bukkitPermission));
-        Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, permissionDefault));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission) == null) {
+            Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, permissionDefault));
+        } else {
+            Bukkit.getPluginManager().getPermission(bukkitPermission).setDefault(permissionDefault);
+        }
+        if (argumentType.getClass().equals(ArgumentAttribute.ArgumentMinecraftKeyRegistered())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentAttribute.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+        if (argumentType.getClass().equals(ArgumentEntityType.ArgumentEntitySummon())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentEntityType.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+    }
+
+    public EzArgument(ArgumentType<?> argumentType, String argumentName, int permission, Permission bukkitPermission) {
+        requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
+        if (permission < 0) permission = 0;
+        if (permission > 4) permission = 4;
+        int finalPermission = permission;
+        requiredArgumentBuilder.requires((requirement) -> permissionCheck(requirement, finalPermission, bukkitPermission.getName().toLowerCase()));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission.getName()) == null) {
+            Bukkit.getPluginManager().addPermission(bukkitPermission);
+        }
+        if (argumentType.getClass().equals(ArgumentAttribute.ArgumentMinecraftKeyRegistered())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentAttribute.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+        if (argumentType.getClass().equals(ArgumentEntityType.ArgumentEntitySummon())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentEntityType.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+    }
+
+    public EzArgument(ArgumentType<?> argumentType, String argumentName, int permission, String bukkitPermission) {
+        requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
+        if (permission < 0) permission = 0;
+        if (permission > 4) permission = 4;
+        int finalPermission = permission;
+        requiredArgumentBuilder.requires((requirement) -> permissionCheck(requirement, finalPermission, bukkitPermission));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission) == null) {
+            Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, PermissionDefault.OP));
+        }
+        if (argumentType.getClass().equals(ArgumentAttribute.ArgumentMinecraftKeyRegistered())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentAttribute.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+        if (argumentType.getClass().equals(ArgumentEntityType.ArgumentEntitySummon())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentEntityType.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+    }
+
+    public EzArgument(ArgumentType<?> argumentType, String argumentName, int permission) {
+        requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
+        if (permission < 0) permission = 0;
+        if (permission > 4) permission = 4;
+        int finalPermission = permission;
+        requiredArgumentBuilder.requires((requirement) -> permissionCheck(requirement, finalPermission));
+        if (argumentType.getClass().equals(ArgumentAttribute.ArgumentMinecraftKeyRegistered())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentAttribute.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+        if (argumentType.getClass().equals(ArgumentEntityType.ArgumentEntitySummon())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentEntityType.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+    }
+
+    public EzArgument(ArgumentType<?> argumentType, String argumentName, Permission bukkitPermission) {
+        requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
+        requiredArgumentBuilder.requires((requirement) -> permissionCheck(requirement, bukkitPermission.getName().toLowerCase()));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission.getName()) == null) {
+            Bukkit.getPluginManager().addPermission(bukkitPermission);
+        }
+        if (argumentType.getClass().equals(ArgumentAttribute.ArgumentMinecraftKeyRegistered())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentAttribute.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+        if (argumentType.getClass().equals(ArgumentEntityType.ArgumentEntitySummon())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentEntityType.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+    }
+
+
+    public EzArgument(ArgumentType<?> argumentType, String argumentName, String bukkitPermission) {
+        requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
+        requiredArgumentBuilder.requires((requirement) -> permissionCheck(requirement, bukkitPermission));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission) == null) {
+            Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, PermissionDefault.OP));
+        }
+        if (argumentType.getClass().equals(ArgumentAttribute.ArgumentMinecraftKeyRegistered())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentAttribute.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+        if (argumentType.getClass().equals(ArgumentEntityType.ArgumentEntitySummon())) {
+            SuggestionProvider<Object> suggestionProvider = ArgumentEntityType.suggests();
+            if (suggestionProvider != null) {
+                requiredArgumentBuilder.suggests(suggestionProvider);
+            }
+        }
+    }
+
+    public EzArgument(ArgumentType<?> argumentType, String argumentName, String bukkitPermission, PermissionDefault permissionDefault) {
+        requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
+        requiredArgumentBuilder.requires((requirement) -> permissionCheck(requirement, bukkitPermission));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission) == null) {
+            Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, permissionDefault));
+        }
         if (argumentType.getClass().equals(ArgumentAttribute.ArgumentMinecraftKeyRegistered())) {
             SuggestionProvider<Object> suggestionProvider = ArgumentAttribute.suggests();
             if (suggestionProvider != null) {
@@ -131,7 +262,7 @@ public final class EzArgument {
      * Set tab complete suggestion
      *
      * @param biFunction lambda with EzSender and SuggestionsBuilder returns CompletableFuture
-     * @return
+     * @return self
      */
     public EzArgument suggest(BiFunction<EzSender, SuggestionsBuilder, CompletableFuture<Suggestions>> biFunction) {
         requiredArgumentBuilder.suggests(((commandContext, suggestionsBuilder) -> biFunction.apply(new EzSender(commandContext.getSource()), suggestionsBuilder)));
@@ -141,6 +272,25 @@ public final class EzArgument {
     private static boolean permissionCheck(Object commandListenerWrapper, int permission, String bukkitPermission) {
         try {
             return (((Boolean) CommandListenerWrapper().getMethod("hasPermission", int.class).invoke(commandListenerWrapper, permission)) && ((CommandSender) CommandListenerWrapper().getMethod("getBukkitSender").invoke(commandListenerWrapper)).hasPermission(bukkitPermission));
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    private static boolean permissionCheck(Object commandListenerWrapper, String bukkitPermission) {
+        try {
+            return ((CommandSender) CommandListenerWrapper().getMethod("getBukkitSender").invoke(commandListenerWrapper)).hasPermission(bukkitPermission);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static boolean permissionCheck(Object commandListenerWrapper, int permission) {
+        try {
+            return (((Boolean) CommandListenerWrapper().getMethod("hasPermission", int.class).invoke(commandListenerWrapper, permission)));
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }

@@ -50,7 +50,73 @@ public final class EzCommand {
         if (permission > 4) permission = 4;
         int finalPermission = permission;
         literalArgumentBuilder.requires((requirement) -> permissionCheck(requirement, finalPermission, bukkitPermission));
-        Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, permissionDefault));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission) == null) {
+            Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, permissionDefault));
+        } else {
+            Bukkit.getPluginManager().getPermission(bukkitPermission).setDefault(permissionDefault);
+        }
+    }
+
+    public EzCommand(String commandName, int permission, Permission bukkitPermission) {
+        commandName = commandName.toLowerCase();
+        this.literalArgumentBuilder = createCommand(commandName);
+        if (permission < 0) permission = 0;
+        if (permission > 4) permission = 4;
+        int finalPermission = permission;
+        literalArgumentBuilder.requires((requirement) -> permissionCheck(requirement, finalPermission, bukkitPermission.getName().toLowerCase()));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission.getName()) == null) {
+            Bukkit.getPluginManager().addPermission(bukkitPermission);
+        }
+    }
+
+    public EzCommand(String commandName, int permission, String bukkitPermission) {
+        commandName = commandName.toLowerCase();
+        this.literalArgumentBuilder = createCommand(commandName);
+        if (permission < 0) permission = 0;
+        if (permission > 4) permission = 4;
+        int finalPermission = permission;
+        literalArgumentBuilder.requires((requirement) -> permissionCheck(requirement, finalPermission, bukkitPermission));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission) == null) {
+            Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, PermissionDefault.OP));
+        }
+    }
+
+    public EzCommand(String commandName, int permission) {
+        commandName = commandName.toLowerCase();
+        this.literalArgumentBuilder = createCommand(commandName);
+        if (permission < 0) permission = 0;
+        if (permission > 4) permission = 4;
+        int finalPermission = permission;
+        literalArgumentBuilder.requires((requirement) -> permissionCheck(requirement, finalPermission));
+    }
+
+    public EzCommand(String commandName, String bukkitPermission) {
+        commandName = commandName.toLowerCase();
+        this.literalArgumentBuilder = createCommand(commandName);
+        literalArgumentBuilder.requires((requirement) -> permissionCheck(requirement, bukkitPermission));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission) == null) {
+            Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, PermissionDefault.OP));
+        }
+    }
+
+    public EzCommand(String commandName, String bukkitPermission, PermissionDefault permissionDefault) {
+        commandName = commandName.toLowerCase();
+        this.literalArgumentBuilder = createCommand(commandName);
+        literalArgumentBuilder.requires((requirement) -> permissionCheck(requirement, bukkitPermission));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission) == null) {
+            Bukkit.getPluginManager().addPermission(new Permission(bukkitPermission, permissionDefault));
+        } else {
+            Bukkit.getPluginManager().getPermission(bukkitPermission).setDefault(permissionDefault);
+        }
+    }
+
+    public EzCommand(String commandName, Permission bukkitPermission) {
+        commandName = commandName.toLowerCase();
+        this.literalArgumentBuilder = createCommand(commandName);
+        literalArgumentBuilder.requires((requirement) -> permissionCheck(requirement, bukkitPermission.getName().toLowerCase()));
+        if (Bukkit.getPluginManager().getPermission(bukkitPermission.getName()) == null) {
+            Bukkit.getPluginManager().addPermission(bukkitPermission);
+        }
     }
 
     /**
@@ -143,6 +209,25 @@ public final class EzCommand {
         }
         return false;
     }
+
+    private static boolean permissionCheck(Object commandListenerWrapper, String bukkitPermission) {
+        try {
+            return ((CommandSender) CommandListenerWrapper().getMethod("getBukkitSender").invoke(commandListenerWrapper)).hasPermission(bukkitPermission);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static boolean permissionCheck(Object commandListenerWrapper, int permission) {
+        try {
+            return (((Boolean) CommandListenerWrapper().getMethod("hasPermission", int.class).invoke(commandListenerWrapper, permission)));
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     private static Class<?> CommandListenerWrapper() {
         if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {

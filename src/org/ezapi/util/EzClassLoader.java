@@ -5,6 +5,7 @@ import sun.misc.Unsafe;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -13,7 +14,9 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 
 public final class EzClassLoader {
@@ -49,9 +52,23 @@ public final class EzClassLoader {
         }
          */
         try {
-            load1(file.toURI().toURL());
+            load2(file);
         } catch (Throwable e) {
             e.printStackTrace();
+        }
+
+    }
+
+    private static void load2(File file) throws IOException, ClassNotFoundException {
+        URLClassLoader classLoader = new URLClassLoader(new URL[]{file.toURI().toURL()});
+        JarFile jar = new JarFile(file);
+        Enumeration<JarEntry> enumeration = jar.entries();
+        while (enumeration.hasMoreElements()) {
+            JarEntry entry = enumeration.nextElement();
+            if (entry.getName().endsWith(".class")) {
+                classLoader.loadClass(entry.getName().replace("/", ".").replace(".class", ""));
+                System.out.println(entry.getName().replace("/", ".").replace(".class", ""));
+            }
         }
 
     }

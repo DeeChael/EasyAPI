@@ -8,7 +8,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.ezapi.EasyAPI;
 import org.ezapi.block.BlockBreakAnimation;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.reflect.EzClass;
