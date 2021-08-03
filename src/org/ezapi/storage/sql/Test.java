@@ -2,9 +2,13 @@ package org.ezapi.storage.sql;
 
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
+import org.ezapi.reflect.EzClass;
+import org.ezapi.util.ReflectionUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
 final class Test {
@@ -32,6 +36,24 @@ final class Test {
         System.out.println(mongoDB.get("DeeChael").get(0));
         mongoDB.close();
         */
+
+        //EzClass Reflection examples
+        EzClass ChatMessage = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
+        ChatMessage.setConstructor(String.class);
+        ChatMessage.newInstance("Testing");
+        Object chatMessageEz = ChatMessage.getInstance();
+
+        //Java Original Reflection examples
+        Class<?> clazz = ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage");
+        if (clazz != null) {
+            try {
+                Constructor<?> constructor = clazz.getDeclaredConstructor(String.class);
+                constructor.setAccessible(true);
+                Object chatMessage = constructor.newInstance("Testing");
+            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

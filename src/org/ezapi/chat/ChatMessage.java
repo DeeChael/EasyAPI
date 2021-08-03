@@ -16,6 +16,8 @@ import java.util.*;
 
 public final class ChatMessage {
 
+    public static final ChatMessage NULL = new ChatMessage("", false);
+
     private final String data;
 
     private final boolean flag;
@@ -126,9 +128,10 @@ public final class ChatMessage {
      * System.out.println(a.getText());</br>
      * It will print "aaaabbbb";
      *
-     * @param chatMessage
+     * @param chatMessage message
      */
     public void sub(ChatMessage chatMessage) {
+        if (chatMessage.subs.contains(this)) return;
         subs.add(chatMessage);
     }
 
@@ -219,6 +222,20 @@ public final class ChatMessage {
      */
     public String getText() {
         return getText("en_us");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChatMessage)) return false;
+        ChatMessage message = (ChatMessage) o;
+        if (message.subs.size() != subs.size()) {
+            return false;
+        }
+        for (int i = 0; i < subs.size(); i++) {
+            if (!subs.get(i).equals(message.subs.get(i))) return false;
+        }
+        return flag == message.flag && Objects.equals(data, message.data);
     }
 
 }

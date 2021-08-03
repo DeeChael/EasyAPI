@@ -259,20 +259,20 @@ public final class EzInventory implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (isDropped()) return;
-        if (Objects.equals(event.getClickedInventory(), event.getView().getTopInventory())) {
-            if (event.getWhoClicked() instanceof Player) {
-                Player player = (Player) event.getWhoClicked();
-                if (event.getInventory().getHolder() instanceof EzHolder) {
-                    EzHolder ezHolder = (EzHolder) event.getInventory().getHolder();
-                    if (ezHolder.getId().equalsIgnoreCase(this.id)) {
+        if (event.getWhoClicked() instanceof Player) {
+            Player player = (Player) event.getWhoClicked();
+            if (event.getInventory().getHolder() instanceof EzHolder) {
+                EzHolder ezHolder = (EzHolder) event.getInventory().getHolder();
+                if (ezHolder.getId().equalsIgnoreCase(this.id)) {
+                    if (Objects.equals(event.getClickedInventory(), event.getView().getTopInventory())) {
                         if (cache.get(player).containsKey(event.getRawSlot())) {
                             Input input = cache.get(player).get(event.getRawSlot());
                             if (input instanceof Button) {
                                 ((Button) input).onClick(player, event.getClick(), event.getAction());
                             }
                         }
-                        event.setCancelled(true);
                     }
+                    event.setCancelled(true);
                 }
             }
         }

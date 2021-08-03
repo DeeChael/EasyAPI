@@ -2,7 +2,15 @@ package org.ezapi.util;
 
 import net.md_5.bungee.api.ChatColor;
 
+import java.util.Random;
+
 public final class ColorUtils {
+
+    private final static char[] keys = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k','l', 'm', 'n', 'o', 'r'};
+
+    public static String randomColor() {
+        return "§" + keys[new Random().nextInt(keys.length)];
+    }
 
     public static String translate(String textToTranslate) {
         String text = textToTranslate;
