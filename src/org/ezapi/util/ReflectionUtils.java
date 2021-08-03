@@ -138,6 +138,54 @@ public final class ReflectionUtils {
         return version;
     }
 
+    public static int getProtocolVersion(String version) {
+        switch (version) {
+            case "1.13":
+            case "1.13.0":
+                return 393;
+            case "1.13.1":
+                return 401;
+            case "1.13.2":
+                return 404;
+            case "1.14":
+            case "1.14.0":
+                return 477;
+            case "1.14.1":
+                return 480;
+            case "1.14.2":
+                return 485;
+            case "1.14.3":
+                return 490;
+            case "1.14.4":
+                return 498;
+            case "1.15":
+            case "1.15.0":
+                return 573;
+            case "1.15.1":
+                return 575;
+            case "1.15.2":
+                return 578;
+            case "1.16":
+            case "1.16.0":
+                return 735;
+            case "1.16.1":
+                return 736;
+            case "1.16.2":
+                return 751;
+            case "1.16.3":
+                return 753;
+            case "1.16.4":
+            case "1.16.5":
+                return 754;
+            case "1.17":
+                return 755;
+            case "1.17.1":
+                return 756;
+            default:
+                return -1;
+        }
+    }
+
     public static int getVersion() {
         switch (getServerVersion()) {
             case "v1_8_R1": return 1;
