@@ -1,19 +1,15 @@
 package org.ezapi;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import org.ezapi.command.EzCommandManager;
 import org.ezapi.configuration.LanguageManager;
 import org.ezapi.util.ReflectionUtils;
 
-import java.lang.reflect.InvocationTargetException;
-
 public final class EasyAPI extends JavaPlugin {
 
     private static EasyAPI INSTANCE;
-
-    private static CommandMap BUKKIT_COMMAND_MAP;
 
     /*
     private final Map<Player, BukkitTask> started = new HashMap<>();
@@ -25,11 +21,6 @@ public final class EasyAPI extends JavaPlugin {
             getLogger().severe("Unsupported Server Version " + ReflectionUtils.getServerVersion());
             Bukkit.getPluginManager().disablePlugin(this);
             return;
-        }
-        try {
-            BUKKIT_COMMAND_MAP = (CommandMap) Bukkit.getServer().getClass().getMethod("getCommandMap").invoke(Bukkit.getServer());
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
         }
         INSTANCE = this;
         //Java 9 not support
@@ -62,9 +53,10 @@ public final class EasyAPI extends JavaPlugin {
         //new HologramCommand().register();
         //new NPCCommand().register();
         //new SBCommand().register();
+        //new BBarCommand().register();
         reload();
+        //Break bedrock - Just for fun
         /*
-        Break bedrock - Just for fun
         protocol = new Protocol(this) {
             @Override
             public Object onPacketInAsync(Player sender, Channel channel, Object packet) {
@@ -123,10 +115,6 @@ public final class EasyAPI extends JavaPlugin {
 
     public void reload() {
         LanguageManager.INSTANCE.reload();
-    }
-
-    public static CommandMap getBukkitCommandMap() {
-        return BUKKIT_COMMAND_MAP;
     }
 
     public static EasyAPI getInstance() {

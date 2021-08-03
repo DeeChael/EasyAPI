@@ -18,6 +18,10 @@ public final class DateUtils {
         }
     }
 
+    public static String now() {
+        return format(yyyy_MM_dd_HH_mm_ss, new Date());
+    }
+
     public static String format(String format, Date date) {
         return new SimpleDateFormat(format).format(date);
     }

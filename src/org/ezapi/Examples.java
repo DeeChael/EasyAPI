@@ -11,6 +11,9 @@ import org.ezapi.command.EzCommandManager;
 import org.ezapi.command.argument.ArgumentLocation;
 import org.ezapi.command.argument.ArgumentPlayer;
 import org.ezapi.command.argument.BaseArguments;
+import org.ezapi.module.bossbar.BarColor;
+import org.ezapi.module.bossbar.BarStyle;
+import org.ezapi.module.bossbar.EzBossBar;
 import org.ezapi.module.hologram.TextHologram;
 import org.ezapi.module.npc.EzNPC;
 import org.ezapi.module.npc.NPCType;
@@ -69,6 +72,7 @@ public class Examples {
     }
 
     private static void hologramExample(Player player) {
+
         //Create a new hologram
         TextHologram hologram = new TextHologram(new ChatMessage("I am an example", false), player.getWorld(), player.getLocation());
         //Add a new viewer
@@ -81,6 +85,33 @@ public class Examples {
         hologram.removeViewer(player);
         //Drop the hologram
         hologram.drop();
+    }
+
+    private static void bossBarExample(Player player) {
+        //Create a new boss bar
+        EzBossBar bossBar = new EzBossBar(new ChatMessage("Ender Dragon", false));
+        //Add a new viewer
+        bossBar.addViewer(player);
+        //Set boss bar progress
+        bossBar.setProgress(0.5f);
+        //Set boss bar color
+        bossBar.setColor(BarColor.BLUE);
+        //Set boss bar style
+        bossBar.setStyle(BarStyle.NOTCHED_20);
+        //Make sky dark
+        bossBar.setDarkenSky(true);
+        //Play music to player
+        bossBar.setPlayMusic(true);
+        //Create fog
+        bossBar.setCreateFog(true);
+        //Make player cannot see the boss bar
+        bossBar.hide(player);
+        //Make player can see the boss bar
+        bossBar.show(player);
+        //Remove a viewer
+        bossBar.removeViewer(player);
+        //Drop the boss bar
+        bossBar.drop();
     }
 
     private static void commandExample() {

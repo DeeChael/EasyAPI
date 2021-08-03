@@ -5,6 +5,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class ArrayUtils {
 
+    public static <T> int index(T[] array, T item) {
+        final int[] i = {0};
+        Loop.foreach(array, ((integer, t) -> {
+            if (t.equals(item)) {
+                i[0] = integer;
+            }
+        }));
+        return i[0];
+    }
+
     public static <T> boolean contains(T[] array, T item) {
         for (T t : array) {
             if (t.equals(item)) {

@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -241,9 +242,7 @@ public final class EzInventory implements Listener {
                     player.closeInventory();
                 }
             }
-            InventoryClickEvent.getHandlerList().unregister(this);
-            InventoryCloseEvent.getHandlerList().unregister(this);
-            PlayerQuitEvent.getHandlerList().unregister(this);
+            HandlerList.unregisterAll(this);
             dropped = true;
         }
     }

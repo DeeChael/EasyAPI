@@ -40,6 +40,10 @@ final class SBCommand {
         ezCommand.then(new EzCommand("add")
                 .then(new EzArgument(ArgumentPlayer.argumentType(), "targets")
                         .then(new EzArgument(BaseArguments.string(), "name")
+                                .suggest(((sender, suggestion) -> {
+                                    scoreboards.keySet().forEach(suggestion::suggest);
+                                    return suggestion.buildFuture();
+                                }))
                                 .executes(((sender, argument) -> {
                                     String name = argument.getAsString("name");
                                     if (scoreboards.containsKey(name)) {
@@ -53,6 +57,10 @@ final class SBCommand {
         );
         ezCommand.then(new EzCommand("set")
                 .then(new EzArgument(BaseArguments.string(), "name")
+                        .suggest(((sender, suggestion) -> {
+                            scoreboards.keySet().forEach(suggestion::suggest);
+                            return suggestion.buildFuture();
+                        }))
                         .then(new EzArgument(BaseArguments.integer(), "line")
                                 .then(new EzArgument(ArgumentChat.argumentType(), "text")
                                         .executes(((sender, argument) -> {
@@ -69,6 +77,10 @@ final class SBCommand {
         );
         ezCommand.then(new EzCommand("display")
                 .then(new EzArgument(BaseArguments.string(), "name")
+                        .suggest(((sender, suggestion) -> {
+                            scoreboards.keySet().forEach(suggestion::suggest);
+                            return suggestion.buildFuture();
+                        }))
                         .then(new EzArgument(ArgumentChat.argumentType(), "text")
                                 .executes(((sender, argument) -> {
                                     String name = argument.getAsString("name");
@@ -83,6 +95,10 @@ final class SBCommand {
         );
         ezCommand.then(new EzCommand("remove")
                 .then(new EzArgument(BaseArguments.string(), "name")
+                        .suggest(((sender, suggestion) -> {
+                            scoreboards.keySet().forEach(suggestion::suggest);
+                            return suggestion.buildFuture();
+                        }))
                         .then(new EzArgument(BaseArguments.integer(), "line")
                                 .executes(((sender, argument) -> {
                                     String name = argument.getAsString("name");

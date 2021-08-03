@@ -4,27 +4,30 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import org.ezapi.EasyAPI;
-import org.ezapi.util.PlayerUtils;
+
 import org.ezapi.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class EzCommandManager implements Listener {
+
+    private static CommandMap BUKKIT_COMMAND_MAP;
 
     @EventHandler
     public void onLoad(ServerLoadEvent serverLoadEvent) {
@@ -94,6 +97,14 @@ public final class EzCommandManager implements Listener {
      * @return registered command
      */
     public static EzCommandRegistered register(String prefix, EzCommand ezCommand) {
+        if (BUKKIT_COMMAND_MAP == null) {
+            try {
+                BUKKIT_COMMAND_MAP = (CommandMap) Bukkit.getServer().getClass().getMethod("getCommandMap").invoke(Bukkit.getServer());
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
         EzCommandRegistered ezCommandRegistered = ezCommand.register();
         //EasyAPI.getBukkitCommandMap().register(prefix, new UnsupportCommand(ezCommandRegistered.commandNode.getName(), ezCommand.aliases.toArray(new String[0])));
         if (!REGISTERED.containsKey(prefix)) REGISTERED.put(prefix, new ArrayList<>());
@@ -101,7 +112,7 @@ public final class EzCommandManager implements Listener {
         Command command = createVanillaCommandWrapper(null, ezCommandRegistered.commandNode);
         command.setPermission("ez.api.command.check");
         command.setAliases(ezCommand.aliases);
-        EasyAPI.getBukkitCommandMap().register(prefix.toLowerCase(), command);
+        BUKKIT_COMMAND_MAP.register(prefix.toLowerCase(), command);
         return ezCommandRegistered;
     }
 
@@ -140,17 +151,25 @@ public final class EzCommandManager implements Listener {
         try {
             Field field = SimpleCommandMap.class.getDeclaredField("knownCommands");
             field.setAccessible(true);
-            field.set(EasyAPI.getBukkitCommandMap(), knownCommands);
+            field.set(BUKKIT_COMMAND_MAP, knownCommands);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
     private static Map<String,Command> getKnownCommands() {
+        if (BUKKIT_COMMAND_MAP == null) {
+            try {
+                BUKKIT_COMMAND_MAP = (CommandMap) Bukkit.getServer().getClass().getMethod("getCommandMap").invoke(Bukkit.getServer());
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
         try {
             Field field = SimpleCommandMap.class.getDeclaredField("knownCommands");
             field.setAccessible(true);
-            return (Map<String, Command>) field.get(EasyAPI.getBukkitCommandMap());
+            return (Map<String, Command>) field.get(BUKKIT_COMMAND_MAP);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
