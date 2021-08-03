@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ezapi.command.EzCommandManager;
-import org.ezapi.command.defaults.SBCommand;
 import org.ezapi.configuration.LanguageManager;
 import org.ezapi.util.ReflectionUtils;
 
@@ -62,7 +61,7 @@ public final class EasyAPI extends JavaPlugin {
         //new EzApiCommand().register();
         //new HologramCommand().register();
         //new NPCCommand().register();
-        new SBCommand().register();
+        //new SBCommand().register();
         reload();
         /*
         Break bedrock - Just for fun

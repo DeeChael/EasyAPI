@@ -11,7 +11,7 @@ import org.ezapi.module.scoreboard.EzScoreboard;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SBCommand {
+final class SBCommand {
 
     private EzCommand ezCommand;
 
@@ -19,7 +19,7 @@ public class SBCommand {
 
     private final Map<String, EzScoreboard> scoreboards = new HashMap<>();
 
-    public SBCommand() {
+    private SBCommand() {
         this.ezCommand = new EzCommand("sb");
         ezCommand.then(new EzCommand("create")
                 .then(new EzArgument(BaseArguments.string(), "name")
