@@ -122,6 +122,14 @@ public final class ChatMessage {
     }
 
     /**
+     * To set placeholder provider
+     * @param placeholderProvider placeholder provider
+     */
+    public void setPlaceholderProvider(PlaceholderProvider placeholderProvider) {
+        this.placeholderProvider = placeholderProvider;
+    }
+
+    /**
      * Add text</br>
      * Example:</br>
      * ChatMessage a = new ChatMessage("aaaa", false);</br>
