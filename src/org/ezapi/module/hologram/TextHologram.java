@@ -54,8 +54,18 @@ public final class TextHologram implements Hologram {
         if (isDropped()) return;
         this.text = text;
         if (hasShown.size() > 0) {
-            for (Player player : hasShown) {
-                refresh(player);
+            for (Player player : new ArrayList<>(hasShown)) {
+                EzClass ChatMessage = ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzClass(Objects.requireNonNull(ReflectionUtils.getNmsClass("ChatMessage"))) : new EzClass("net.minecraft.network.chat.ChatMessage");
+                ChatMessage.setConstructor(String.class);
+                ChatMessage.newInstance(text.getText(player));
+                EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
+                Entity.setInstance(viewers.get(player).getInstance());
+                int id = (int) Entity.invokeMethod("getId", new Class[0], new Object[0]);
+                Entity.invokeMethod("setCustomName", new Class[]{ReflectionUtils.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent")}, new Object[]{ChatMessage.getInstance()});
+                EzClass PacketPlayOutEntityMetadata = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutEntityMetadata", "PacketPlayOutEntityMetadata"));
+                PacketPlayOutEntityMetadata.setConstructor(int.class, ReflectionUtils.getNmsOrOld("network.syncher.DataWatcher", "DataWatcher"), boolean.class);
+                PacketPlayOutEntityMetadata.newInstance(id, Entity.invokeMethod("getDataWatcher", new Class[0], new Object[0]), true);
+                PlayerUtils.sendPacket(player, PacketPlayOutEntityMetadata.getInstance());
             }
         }
     }
@@ -75,7 +85,7 @@ public final class TextHologram implements Hologram {
         if (isDropped()) return;
         this.location = location.clone().add(0.0, -1.0, 0.0);
         if (hasShown.size() > 0) {
-            for (Player player : hasShown) {
+            for (Player player : new ArrayList<>(hasShown)) {
                 refresh(player);
             }
         }

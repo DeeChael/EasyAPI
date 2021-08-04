@@ -42,6 +42,7 @@ public final class EzScoreboard implements Scoreboard {
     private boolean check(int newLine, ChatMessage text) {
         boolean contains = false;
         for (int i = 0; i < texts.size(); i++) {
+            if (!texts.containsKey(i)) continue;
             ChatMessage message = texts.get(i);
             if (message.equals(text)) {
                 if (i != newLine) {
@@ -71,7 +72,7 @@ public final class EzScoreboard implements Scoreboard {
                 Action.newInstance("CHANGE");
             }
             PacketPlayOutScoreboardScore.setConstructor(Action.getInstanceEnum(), String.class, String.class, int.class);
-            PacketPlayOutScoreboardScore.newInstance(Action.getInstance(), id, text.getText(player), line);
+            PacketPlayOutScoreboardScore.newInstance(Action.getInstance(), id, text.getText(player).substring(0, 40), line);
             PlayerUtils.sendPacket(player, PacketPlayOutScoreboardScore.getInstance());
         }
         this.texts.put(line, text);
@@ -90,7 +91,7 @@ public final class EzScoreboard implements Scoreboard {
                 Action.newInstance("REMOVE");
             }
             PacketPlayOutScoreboardScore.setConstructor(Action.getInstanceEnum(), String.class, String.class, int.class);
-            PacketPlayOutScoreboardScore.newInstance(Action.getInstance(), id, texts.get(line).getText(player), line);
+            PacketPlayOutScoreboardScore.newInstance(Action.getInstance(), id, texts.get(line).getText(player).substring(0, 40), line);
             PlayerUtils.sendPacket(player, PacketPlayOutScoreboardScore.getInstance());
         }
         this.texts.remove(line);
@@ -120,7 +121,7 @@ public final class EzScoreboard implements Scoreboard {
             EzClass IChatBaseComponent = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent"));
             EzClass ChatMessage = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
             ChatMessage.setConstructor(String.class);
-            ChatMessage.newInstance(this.title.getText(player));
+            ChatMessage.newInstance(this.title.getText(player).substring(0, 40));
             ScoreboardObjective.invokeMethod("setDisplayName", new Class[] {IChatBaseComponent.getInstanceClass()}, new Object[] {ChatMessage.getInstance()});
             PacketPlayOutScoreboardObjective.setConstructor(ScoreboardObjective.getInstanceClass(), int.class);
             PacketPlayOutScoreboardObjective.newInstance(ScoreboardObjective.getInstance(), 2);
@@ -141,7 +142,7 @@ public final class EzScoreboard implements Scoreboard {
             EzClass ChatMessage = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
             EzClass ScoreboardTeam = new EzClass(ReflectionUtils.getNmsOrOld("world.scores.ScoreboardTeam", "ScoreboardTeam"));
             ChatMessage.setConstructor(String.class);
-            ChatMessage.newInstance(this.title.getText(player));
+            ChatMessage.newInstance(this.title.getText(player).substring(0, 40));
             if (ReflectionUtils.getVersion() == 9 || ReflectionUtils.getVersion() == 10) {
                 IScoreboardCriteria.setInstance(IScoreboardCriteria.getStaticField("b"));
                 EnumScoreboardHealthDisplay.newInstance("INTEGER");

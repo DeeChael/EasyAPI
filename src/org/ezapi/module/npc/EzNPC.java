@@ -254,7 +254,7 @@ public final class EzNPC implements NPC {
         result.setWorld(this.location.getWorld());
         this.location = result;
         if (hasShown.size() > 0) {
-            for (Player player : hasShown) {
+            for (Player player : new ArrayList<>(hasShown)) {
                 refresh(player);
             }
         }
