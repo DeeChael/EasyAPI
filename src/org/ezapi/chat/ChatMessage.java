@@ -32,6 +32,8 @@ public final class ChatMessage {
 
     private Map<String,String> replaces = new HashMap<>();
 
+    private PlaceholderProvider placeholderProvider = null;
+
     /**
      * Should be used with Language API</br>
      * Send to player by PlayerUtils.sendMessage(org.bukkit.entity.Player, org.ezapi.chat.ChatMessage);
@@ -156,16 +158,26 @@ public final class ChatMessage {
                 for (String key : replaces.keySet()) {
                     finalText = finalText.replace(key, replaces.get(key));
                 }
+                if (placeholderProvider != null) {
+                    finalText = placeholderProvider.setPlaceholder(finalText);
+                }
                 return finalText;
             } else if (LanguageManager.INSTANCE.hasText("en_us", data)) {
                 String finalText = ColorUtils.translate(LanguageManager.INSTANCE.getText("en_us", data));
                 for (String key : replaces.keySet()) {
                     finalText = finalText.replace(key, replaces.get(key));
                 }
+                if (placeholderProvider != null) {
+                    finalText = placeholderProvider.setPlaceholder(finalText);
+                }
                 return finalText;
             }
         }
-        return ColorUtils.translate(data);
+        String dataText = data;
+        if (placeholderProvider != null) {
+            dataText = placeholderProvider.setPlaceholder(dataText);
+        }
+        return ColorUtils.translate(dataText);
     }
 
     /**
@@ -195,6 +207,9 @@ public final class ChatMessage {
                 for (String key : replaces.keySet()) {
                     finalText = finalText.replace(key, replaces.get(key));
                 }
+                if (placeholderProvider != null) {
+                    finalText = placeholderProvider.setPlaceholder(finalText);
+                }
                 return finalText;
             } else if (LanguageManager.INSTANCE.hasText("en_us", data)) {
                 StringBuilder text = new StringBuilder(LanguageManager.INSTANCE.getText("en_us", data));
@@ -205,14 +220,17 @@ public final class ChatMessage {
                 for (String key : replaces.keySet()) {
                     finalText = finalText.replace(key, replaces.get(key));
                 }
+                if (placeholderProvider != null) {
+                    finalText = placeholderProvider.setPlaceholder(finalText);
+                }
                 return finalText;
             }
         }
-        String finalText = ColorUtils.translate(data);
-        for (String key : replaces.keySet()) {
-            finalText = finalText.replace(key, replaces.get(key));
+        String dataText = data;
+        if (placeholderProvider != null) {
+            dataText = placeholderProvider.setPlaceholder(dataText);
         }
-        return finalText;
+        return ColorUtils.translate(dataText);
     }
 
     /**

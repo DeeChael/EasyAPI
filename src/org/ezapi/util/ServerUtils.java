@@ -17,6 +17,14 @@ import java.util.Base64;
 
 public class ServerUtils {
 
+    public static double[] getTps() {
+        EzClass MinecraftServer = new EzClass(ReflectionUtils.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
+        EzClass CraftServer = new EzClass(ReflectionUtils.getObcClass("CraftServer"));
+        CraftServer.setInstance(Bukkit.getServer());
+        MinecraftServer.setInstance(CraftServer.invokeMethod("getServer", new Class[0], new Object[0]));
+        return (double[]) MinecraftServer.getField("recentTps");
+    }
+
     public static void setMotd(String motd) {
         EzClass MinecraftServer = new EzClass(ReflectionUtils.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
         EzClass CraftServer = new EzClass(ReflectionUtils.getObcClass("CraftServer"));
