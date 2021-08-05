@@ -2,6 +2,7 @@ package org.ezapi;
 
 import org.bukkit.Bukkit;
 
+import org.bukkit.plugin.java.JavaPlugin;
 import org.ezapi.command.EzCommandManager;
 import org.ezapi.configuration.AutoReloadFile;
 import org.ezapi.configuration.LanguageManager;
@@ -129,6 +130,10 @@ public final class EasyAPI extends EasyPlugin {
 
     public static String getLanguage() {
         return getInstance().getLocale();
+    }
+
+    private static EasyAPI getInstance() {
+        return JavaPlugin.getPlugin(EasyAPI.class);
     }
 
     public void reload() {

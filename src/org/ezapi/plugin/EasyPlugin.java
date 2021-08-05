@@ -23,8 +23,6 @@ import java.util.List;
 
 public abstract class EasyPlugin extends JavaPlugin {
 
-    private static EasyPlugin INSTANCE;
-
     private static CommandMap BUKKIT_COMMAND_MAP;
 
     private final File configFile;
@@ -43,7 +41,6 @@ public abstract class EasyPlugin extends JavaPlugin {
 
     @Override
     public final void onLoad() {
-        INSTANCE = this;
         load();
     }
 
@@ -200,10 +197,6 @@ public abstract class EasyPlugin extends JavaPlugin {
 
     public final void registerBukkitCommand(String prefix, Command command) {
         BUKKIT_COMMAND_MAP.register(prefix, command);
-    }
-
-    public static EasyPlugin getInstance() {
-        return JavaPlugin.getPlugin(INSTANCE.getClass());
     }
 
 }
