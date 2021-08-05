@@ -2,6 +2,7 @@ package org.ezapi.command;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.ezapi.EasyAPI;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.util.PlayerUtils;
 import org.ezapi.util.ReflectionUtils;
@@ -74,7 +75,7 @@ public final class EzSender {
             if (isPlayer()) {
                 PlayerUtils.sendMessage(player(), chatMessage);
             } else {
-                CommandListenerWrapper().getMethod("sendMessage", IChatBaseComponent(), boolean.class).invoke(commandListenerWrapper, createChatMessage(chatMessage.getText()), false);
+                CommandListenerWrapper().getMethod("sendMessage", IChatBaseComponent(), boolean.class).invoke(commandListenerWrapper, createChatMessage(chatMessage.getText(EasyAPI.getLanguage())), false);
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();

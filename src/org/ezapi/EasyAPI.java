@@ -1,28 +1,32 @@
 package org.ezapi;
 
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import org.ezapi.command.EzCommandManager;
+import org.ezapi.configuration.AutoReloadFile;
 import org.ezapi.configuration.LanguageManager;
+import org.ezapi.plugin.EasyPlugin;
 import org.ezapi.util.ReflectionUtils;
 
-public final class EasyAPI extends JavaPlugin {
-
-    private static EasyAPI INSTANCE;
+public final class EasyAPI extends EasyPlugin {
 
     /*
     private final Map<Player, BukkitTask> started = new HashMap<>();
     */
 
+    private AutoReloadFile autoReloadFile;
+
     @Override
-    public void onEnable() {
+    public final void load() {
+    }
+
+    @Override
+    public final void enable() {
         if (ReflectionUtils.getVersion() < 9) {
             getLogger().severe("Unsupported Server Version " + ReflectionUtils.getServerVersion());
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        INSTANCE = this;
         //Java 9 not support
         //Trying to find way to solve this problem
         /*
@@ -54,7 +58,12 @@ public final class EasyAPI extends JavaPlugin {
         //new NPCCommand().register();
         //new SBCommand().register();
         //new BBarCommand().register();
+        LanguageManager.INSTANCE.reload();
         reload();
+        setLocale(getConfig().getString("Setting.Language", "en_us"));
+        this.autoReloadFile = new AutoReloadFile(this, getConfigFile());
+        autoReloadFile.onModified(this::reload);
+        autoReloadFile.onDeleted(this::reload);
         //Break bedrock - Just for fun
         /*
         protocol = new Protocol(this) {
@@ -113,12 +122,22 @@ public final class EasyAPI extends JavaPlugin {
         */
     }
 
-    public void reload() {
-        LanguageManager.INSTANCE.reload();
+    @Override
+    public final void disable() {
+        autoReloadFile.stop();
     }
 
-    public static EasyAPI getInstance() {
-        return INSTANCE;
+    public static String getLanguage() {
+        return getInstance().getLocale();
+    }
+
+    public void reload() {
+        createDefaultConfig();
+        reloadConfig();
+        if (!getConfig().contains("Setting.Language")) {
+            getConfig().set("Setting.Language", "en_us");
+            saveConfig();
+        }
     }
 
 }
