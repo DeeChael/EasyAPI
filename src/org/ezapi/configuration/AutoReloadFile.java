@@ -28,6 +28,7 @@ public final class AutoReloadFile {
         if (file.isDirectory()) throw new IllegalArgumentException("The file must be a file not a directory");
         if (file.getParentFile() == null) throw new IllegalArgumentException("The file's parent cannot be null");
         this.file = file;
+        init(plugin);
     }
 
     public void onModified(NonReturn method) {
@@ -40,10 +41,16 @@ public final class AutoReloadFile {
 
     public void stop() {
         try {
-            watchService.close();
-            task.cancel();
+            if (watchService != null) {
+                watchService.close();
+            }
+            if (task != null) {
+                task.cancel();
+            }
         } catch (IOException ignored) {
-            task.cancel();
+            if (task != null) {
+                task.cancel();
+            }
         }
     }
 
@@ -61,12 +68,8 @@ public final class AutoReloadFile {
                             SensitivityWatchEventModifier.HIGH);
                     while (true) {
                         if (!plugin.isEnabled()) {
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    AutoReloadFile.this.stop();
-                                }
-                            }.runTask(plugin);
+                            watcher.close();
+                            cancel();
                             break;
                         }
                         WatchKey key = watcher.poll();

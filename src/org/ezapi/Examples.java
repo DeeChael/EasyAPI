@@ -11,6 +11,7 @@ import org.ezapi.command.EzCommandManager;
 import org.ezapi.command.argument.ArgumentLocation;
 import org.ezapi.command.argument.ArgumentPlayer;
 import org.ezapi.command.argument.BaseArguments;
+import org.ezapi.configuration.AutoReloadFile;
 import org.ezapi.module.bossbar.BarColor;
 import org.ezapi.module.bossbar.BarStyle;
 import org.ezapi.module.bossbar.EzBossBar;
@@ -18,6 +19,9 @@ import org.ezapi.module.hologram.TextHologram;
 import org.ezapi.module.npc.EzNPC;
 import org.ezapi.module.npc.NPCType;
 import org.ezapi.module.scoreboard.EzScoreboard;
+import org.ezapi.util.FileUtils;
+
+import java.io.File;
 
 public class Examples {
 
@@ -176,6 +180,19 @@ public class Examples {
         //Register command with prefix "example"
         //You can call this command with "example" (If there is not any other command named "example") or "example:example" (If there is not any other command named "example" and registered with prefix "example")
         EzCommandManager.register("example", command);
+    }
+
+    private static void autoReloadFileExample() {
+        File file = new File("plugins/EasyAPI/", "example.yml");
+        FileUtils.create(file, true);
+        AutoReloadFile autoReloadFile = new AutoReloadFile(EasyAPI.getInstance(), file);
+        autoReloadFile.onModified(() -> {
+            System.out.println("Modified");
+            System.out.println("Content: " + FileUtils.readText(file));
+        });
+        autoReloadFile.onDeleted(() -> {
+            System.out.println("Deleted");
+        });
     }
 
 }

@@ -13,6 +13,23 @@ import java.util.jar.JarFile;
 
 public final class FileUtils {
 
+    public static void create(File file, boolean isFile) {
+        if (file.exists() && file.isFile() && isFile) return;
+        if (isFile) {
+            try {
+                if (file.getParentFile() != null) {
+                    if (!file.getParentFile().exists()) {
+                        file.getParentFile().mkdirs();
+                    }
+                }
+                file.createNewFile();
+            } catch (IOException ignored) {
+            }
+        } else {
+            file.mkdirs();
+        }
+    }
+
     public static String readText(File file) {
         try {
             Scanner scanner = new Scanner(file);
