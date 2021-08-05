@@ -132,7 +132,7 @@ public final class EasyAPI extends EasyPlugin {
         return getInstance().getLocale();
     }
 
-    private static EasyAPI getInstance() {
+    public static EasyAPI getInstance() {
         return JavaPlugin.getPlugin(EasyAPI.class);
     }
 
