@@ -53,7 +53,16 @@ public final class ChatMessage {
      * @return message
      */
     public TextComponent getMessage(Player player) {
-        return getMessage(player.getLocale());
+        String locale = player.getLocale();
+        TextComponent base = new TextComponent();
+        TextComponent self = new TextComponent(getSelfText(player));
+        if (clickEvent != null) self.setClickEvent(clickEvent);
+        if (hoverEvent != null) self.setHoverEvent(hoverEvent);
+        base.addExtra(self);
+        for (ChatMessage chatMessage : subs) {
+            base.addExtra(chatMessage.getMessage(player));
+        }
+        return base;
     }
 
     /**
@@ -188,6 +197,36 @@ public final class ChatMessage {
         return ColorUtils.translate(dataText);
     }
 
+    private String getSelfText(Player player) {
+        if (flag) {
+            String locale = player.getLocale();
+            if (LanguageManager.INSTANCE.hasText(locale, data)) {
+                String finalText = ColorUtils.translate(LanguageManager.INSTANCE.getText(locale, data));
+                for (String key : replaces.keySet()) {
+                    finalText = finalText.replace(key, replaces.get(key));
+                }
+                if (placeholderProvider != null) {
+                    finalText = placeholderProvider.setPlaceholder(finalText, player);
+                }
+                return finalText;
+            } else if (LanguageManager.INSTANCE.hasText("en_us", data)) {
+                String finalText = ColorUtils.translate(LanguageManager.INSTANCE.getText("en_us", data));
+                for (String key : replaces.keySet()) {
+                    finalText = finalText.replace(key, replaces.get(key));
+                }
+                if (placeholderProvider != null) {
+                    finalText = placeholderProvider.setPlaceholder(finalText, player);
+                }
+                return finalText;
+            }
+        }
+        String dataText = data;
+        if (placeholderProvider != null) {
+            dataText = placeholderProvider.setPlaceholder(dataText, player);
+        }
+        return ColorUtils.translate(dataText);
+    }
+
     /**
      * Get text with player's locale
      *
@@ -195,7 +234,41 @@ public final class ChatMessage {
      * @return text
      */
     public String getText(Player player) {
-        return getText(player.getLocale());
+        if (flag) {
+            String locale = player.getLocale();
+            if (LanguageManager.INSTANCE.hasText(locale, data)) {
+                StringBuilder text = new StringBuilder(LanguageManager.INSTANCE.getText(locale, data));
+                for (ChatMessage chatMessage : subs) {
+                    text.append(chatMessage.getText(locale));
+                }
+                String finalText = ColorUtils.translate(text.toString());
+                for (String key : replaces.keySet()) {
+                    finalText = finalText.replace(key, replaces.get(key));
+                }
+                if (placeholderProvider != null) {
+                    finalText = placeholderProvider.setPlaceholder(finalText, player);
+                }
+                return finalText;
+            } else if (LanguageManager.INSTANCE.hasText("en_us", data)) {
+                StringBuilder text = new StringBuilder(LanguageManager.INSTANCE.getText("en_us", data));
+                for (ChatMessage chatMessage : subs) {
+                    text.append(chatMessage.getText("en_us"));
+                }
+                String finalText = ColorUtils.translate(text.toString());
+                for (String key : replaces.keySet()) {
+                    finalText = finalText.replace(key, replaces.get(key));
+                }
+                if (placeholderProvider != null) {
+                    finalText = placeholderProvider.setPlaceholder(finalText, player);
+                }
+                return finalText;
+            }
+        }
+        String dataText = data;
+        if (placeholderProvider != null) {
+            dataText = placeholderProvider.setPlaceholder(dataText, player);
+        }
+        return ColorUtils.translate(dataText);
     }
 
     /**
