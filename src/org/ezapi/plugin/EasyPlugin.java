@@ -13,13 +13,14 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.command.EzCommand;
 import org.ezapi.command.EzCommandManager;
+import org.ezapi.configuration.AutoReloadFile;
 import org.ezapi.util.PlayerUtils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public abstract class EasyPlugin extends JavaPlugin {
 
@@ -29,14 +30,20 @@ public abstract class EasyPlugin extends JavaPlugin {
 
     private String locale = "en_us";
 
+    private AutoReloadFile configReloader = null;
+
+    private boolean isConfigAutoReload = false;
+
     public EasyPlugin() {
         super();
         configFile = new File(getDataFolder(), "config.yml");
+        init();
     }
 
     protected EasyPlugin(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
         configFile = new File(getDataFolder(), "config.yml");
+        init();
     }
 
     @Override
@@ -53,11 +60,25 @@ public abstract class EasyPlugin extends JavaPlugin {
                 getLogger().severe("Failed to get CommandMap");
             }
         }
+        this.configReloader = new AutoReloadFile(this, configFile);
+        this.configReloader.onModified(() -> {
+            if (isConfigAutoReload) {
+                onConfigReload();
+            }
+        });
+        this.configReloader.onDeleted(() -> {
+            if (isConfigAutoReload) {
+                onConfigDelete();
+            }
+        });
         enable();
     }
 
     @Override
     public final void onDisable() {
+        if (configReloader != null) {
+            configReloader.stop();
+        }
         disable();
     }
 
@@ -177,12 +198,6 @@ public abstract class EasyPlugin extends JavaPlugin {
         return super.onTabComplete(sender, command, label, args);
     }
 
-    public void load() {}
-
-    public abstract void enable();
-
-    public abstract void disable();
-
     public final void registerCommand(EzCommand command) {
         this.registerCommand(this.getName().toLowerCase(), command);
     }
@@ -197,6 +212,78 @@ public abstract class EasyPlugin extends JavaPlugin {
 
     public final void registerBukkitCommand(String prefix, Command command) {
         BUKKIT_COMMAND_MAP.register(prefix, command);
+    }
+
+    public final boolean isConfigAutoReload() {
+        return isConfigAutoReload;
+    }
+
+    public final void setConfigAutoReload(boolean configAutoReload) {
+        isConfigAutoReload = configAutoReload;
+    }
+
+    public final void saveResource(String resourcePath, boolean replace) {
+        if (resourcePath != null && !resourcePath.equals("")) {
+            resourcePath = resourcePath.replace('\\', '/');
+            InputStream in = this.getResource(resourcePath);
+            if (in != null) {
+                File outFile = new File(this.getDataFolder(), resourcePath);
+                int lastIndex = resourcePath.lastIndexOf(47);
+                File outDir = new File(this.getDataFolder(), resourcePath.substring(0, Math.max(lastIndex, 0)));
+                if (!outDir.exists()) {
+                    if (!outDir.mkdirs()) {
+                        getLogger().severe("Failed to create " + outDir.getPath());
+                    }
+                }
+
+                try {
+                    if (!outFile.exists() || replace) {
+                        OutputStream out = new FileOutputStream(outFile);
+                        byte[] buf = new byte[1024];
+
+                        int len;
+                        while((len = in.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+
+                        out.close();
+                        in.close();
+                    }
+                } catch (IOException ignored) {
+                }
+            }
+        }
+    }
+
+    public final boolean hasResource(String resourcePath) {
+        resourcePath = resourcePath.replace('\\', '/');
+        InputStream in = this.getResource(resourcePath);
+        boolean bool = in != null;
+        if (bool) {
+            try {
+                in.close();
+            } catch (IOException ignored) {
+            }
+        }
+        return bool;
+    }
+
+    public void init() {}
+
+    public void load() {}
+
+    public abstract void enable();
+
+    public abstract void disable();
+
+    public void onConfigReload() {
+        reloadConfig();
+    }
+
+    public void onConfigDelete() {
+        for (String key : getConfig().getKeys(false)) {
+            getConfig().set(key, null);
+        }
     }
 
 }
