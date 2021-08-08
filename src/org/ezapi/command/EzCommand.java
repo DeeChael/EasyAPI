@@ -37,6 +37,7 @@ public final class EzCommand {
 
     /**
      * Command API command
+     * If requires bukkit permission hasn't been registered will auto register it
      *
      * @param commandName command name
      * @param permission argument requires int permission over 0 less than 4
@@ -57,6 +58,14 @@ public final class EzCommand {
         }
     }
 
+    /**
+     * Command API command
+     * If requires bukkit permission hasn't been registered will auto register it
+     *
+     * @param commandName command name
+     * @param permission argument requires int permission over 0 less then 4
+     * @param bukkitPermission argument requires bukkit permission
+     */
     public EzCommand(String commandName, int permission, Permission bukkitPermission) {
         commandName = commandName.toLowerCase();
         this.literalArgumentBuilder = createCommand(commandName);
@@ -69,6 +78,14 @@ public final class EzCommand {
         }
     }
 
+    /**
+     * Command API command
+     * If requires bukkit permission hasn't been registered will auto register it with OP as default
+     *
+     * @param commandName command name
+     * @param permission argument requires int permission over 0 less then 4
+     * @param bukkitPermission argument requires bukkit permission
+     */
     public EzCommand(String commandName, int permission, String bukkitPermission) {
         commandName = commandName.toLowerCase();
         this.literalArgumentBuilder = createCommand(commandName);
@@ -81,6 +98,13 @@ public final class EzCommand {
         }
     }
 
+    /**
+     * Command API command
+     * Won't check bukkit permission
+     *
+     * @param commandName command name
+     * @param permission argument requires int permission over 0 less then 4
+     */
     public EzCommand(String commandName, int permission) {
         commandName = commandName.toLowerCase();
         this.literalArgumentBuilder = createCommand(commandName);
@@ -90,6 +114,14 @@ public final class EzCommand {
         literalArgumentBuilder.requires((requirement) -> permissionCheck(requirement, finalPermission));
     }
 
+    /**
+     * Command API command
+     * If requires bukkit permission hasn't been registered will auto register it with OP as default
+     * Won't check integer permission
+     *
+     * @param commandName command name
+     * @param bukkitPermission argument requires bukkit permission
+     */
     public EzCommand(String commandName, String bukkitPermission) {
         commandName = commandName.toLowerCase();
         this.literalArgumentBuilder = createCommand(commandName);
@@ -99,6 +131,13 @@ public final class EzCommand {
         }
     }
 
+    /**
+     * Command API command
+     *
+     * @param commandName command name
+     * @param bukkitPermission argument requires bukkit permission
+     * @param permissionDefault permission defaults owner
+     */
     public EzCommand(String commandName, String bukkitPermission, PermissionDefault permissionDefault) {
         commandName = commandName.toLowerCase();
         this.literalArgumentBuilder = createCommand(commandName);

@@ -20,10 +20,18 @@ public final class AutoReloadFile {
 
     private NonReturn onDeleted = this::emptyMethod;
 
+    private NonReturn onCreated = this::emptyMethod;
+
     private WatchService watchService;
 
     private void emptyMethod() {}
 
+    /**
+     * Listening to a file and call event when the file was modified or deleted
+     *
+     * @param plugin your plugin instance
+     * @param file the file to listen
+     */
     public AutoReloadFile(Plugin plugin, File file) {
         if (file.isDirectory()) throw new IllegalArgumentException("The file must be a file not a directory");
         if (file.getParentFile() == null) throw new IllegalArgumentException("The file's parent cannot be null");
@@ -31,14 +39,35 @@ public final class AutoReloadFile {
         init(plugin);
     }
 
+    /**
+     * Called when file has been modified
+     * @param method on modified
+     */
     public void onModified(NonReturn method) {
         this.onModified = method;
     }
 
+    /**
+     * Called when file has been deleted
+     * @param method on deleted
+     */
     public void onDeleted(NonReturn method) {
         this.onDeleted = method;
     }
 
+    /**
+     * Called when file has been created
+     * I think it shouldn't be called
+     *
+     * @param method on created
+     */
+    public void onCreated(NonReturn method) {
+        this.onCreated = method;
+    }
+
+    /**
+     * Stop listening and auto reload
+     */
     public void stop() {
         try {
             if (watchService != null) {
@@ -83,21 +112,28 @@ public final class AutoReloadFile {
                             if (!file.getName().equals(path.toString())) {
                                 continue;
                             }
-                            if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+                            if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        onCreated.apply();
+                                    }
+                                }.runTask(plugin);
+                            } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
                                 new BukkitRunnable() {
                                     @Override
                                     public void run() {
                                         onDeleted.apply();
                                     }
                                 }.runTask(plugin);
-                                continue;
+                            } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        onModified.apply();
+                                    }
+                                }.runTask(plugin);
                             }
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    onModified.apply();
-                                }
-                            }.runTask(plugin);
                         }
                         key.reset();
                     }

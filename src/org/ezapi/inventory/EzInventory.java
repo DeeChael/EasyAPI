@@ -15,6 +15,7 @@ import org.bukkit.plugin.Plugin;
 
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.function.NonReturnWithOne;
+import org.ezapi.function.NonReturnWithTwo;
 
 import java.util.*;
 import java.util.function.Function;
@@ -35,7 +36,7 @@ public final class EzInventory implements Listener {
 
     private final Map<Player,Map<Integer,Input>> cache = new HashMap<>();
 
-    private NonReturnWithOne<EzInventory> onClose = EzInventory::defaultOnClose;
+    private NonReturnWithTwo<EzInventory, Player> onClose = EzInventory::defaultOnClose;
 
     private boolean dropped = false;
 
@@ -119,7 +120,7 @@ public final class EzInventory implements Listener {
      * @param slot slot
      * @param input input
      */
-    public void add(int slot, Input input) {
+    public void set(int slot, Input input) {
         if (isDropped()) return;
         items.put(slot, input);
     }
@@ -182,7 +183,7 @@ public final class EzInventory implements Listener {
     public void fill(Input input) {
         if (isDropped()) return;
         for (int i = 0; i < lines * 9; i++) {
-            add(i, input);
+            set(i, input);
         }
     }
 
@@ -196,7 +197,7 @@ public final class EzInventory implements Listener {
         if (witchLine < 1) witchLine = 1;
         if (witchLine > lines) witchLine = lines;
         for (int i = (witchLine * 9) - 9; i < (witchLine * 9); i++) {
-            add(i, input);
+            set(i, input);
         }
     }
 
@@ -210,7 +211,7 @@ public final class EzInventory implements Listener {
         if (witchVerticalLine < 1) witchVerticalLine = 1;
         if (witchVerticalLine > 9) witchVerticalLine = 9;
         for (int i = witchVerticalLine - 1; i < lines * 9; i += 9) {
-            add(i, input);
+            set(i, input);
         }
     }
 
@@ -284,7 +285,7 @@ public final class EzInventory implements Listener {
                 EzHolder ezHolder = (EzHolder) event.getInventory().getHolder();
                 if (ezHolder.getId().equalsIgnoreCase(this.id)) {
                     this.cache.remove((Player) event.getPlayer());
-                    this.onClose.apply(this);
+                    this.onClose.apply(this, (Player) event.getPlayer());
                 }
             }
         }
@@ -295,17 +296,17 @@ public final class EzInventory implements Listener {
         if (isDropped()) return;
         if (this.cache.containsKey(event.getPlayer())) {
             this.cache.remove(event.getPlayer());
-            this.onClose.apply(this);
+            this.onClose.apply(this, event.getPlayer());
         }
     }
 
-    private static void defaultOnClose(EzInventory ezInventory) {}
+    private static void defaultOnClose(EzInventory ezInventory, Player player) {}
 
     /**
      * Set event on player close the inventory
      * @param nonReturn function
      */
-    public void setOnClose(NonReturnWithOne<EzInventory> nonReturn) {
+    public void setOnClose(NonReturnWithTwo<EzInventory, Player> nonReturn) {
         if (isDropped()) return;
         onClose = nonReturn;
     }

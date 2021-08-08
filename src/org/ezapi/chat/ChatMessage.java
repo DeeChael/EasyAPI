@@ -197,6 +197,11 @@ public final class ChatMessage {
         return ColorUtils.translate(dataText);
     }
 
+    /**
+     * Get text only self without subs
+     * @param player placeholder requires
+     * @return self text
+     */
     private String getSelfText(Player player) {
         if (flag) {
             String locale = player.getLocale();

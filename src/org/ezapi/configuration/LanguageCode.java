@@ -1,5 +1,8 @@
 package org.ezapi.configuration;
 
+/**
+ * All language code
+ */
 public final class LanguageCode {
 
     public static final String AF_ZA = "af_za";

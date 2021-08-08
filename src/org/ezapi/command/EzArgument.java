@@ -23,7 +23,7 @@ public final class EzArgument {
     protected final RequiredArgumentBuilder<Object,?> requiredArgumentBuilder;
 
     /**
-     * Command API argument</br>
+     * Command API argument
      * It's not static
      *
      * @param argumentType argument type
@@ -47,7 +47,7 @@ public final class EzArgument {
     }
 
     /**
-     * Command API argument</br>
+     * Command API argument
      * It's not static
      *
      * @param argumentType argument type
@@ -81,6 +81,15 @@ public final class EzArgument {
         }
     }
 
+    /**
+     * Command API argument
+     * It's not static
+     *
+     * @param argumentType argument type
+     * @param argumentName argument name
+     * @param permission argument requires int permission over 0 less than 4
+     * @param bukkitPermission argument requires bukkit permission
+     */
     public EzArgument(ArgumentType<?> argumentType, String argumentName, int permission, Permission bukkitPermission) {
         requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
         if (permission < 0) permission = 0;
@@ -104,6 +113,15 @@ public final class EzArgument {
         }
     }
 
+    /**
+     * Command API argument
+     * It's not static
+     *
+     * @param argumentType argument type
+     * @param argumentName argument name
+     * @param permission argument requires int permission over 0 less than 4
+     * @param bukkitPermission argument requires bukkit permission
+     */
     public EzArgument(ArgumentType<?> argumentType, String argumentName, int permission, String bukkitPermission) {
         requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
         if (permission < 0) permission = 0;
@@ -127,6 +145,14 @@ public final class EzArgument {
         }
     }
 
+    /**
+     * Command API argument
+     * It's not static
+     *
+     * @param argumentType argument type
+     * @param argumentName argument name
+     * @param permission argument requires int permission over 0 less than 4
+     */
     public EzArgument(ArgumentType<?> argumentType, String argumentName, int permission) {
         requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
         if (permission < 0) permission = 0;
@@ -147,6 +173,14 @@ public final class EzArgument {
         }
     }
 
+    /**
+     * Command API argument
+     * It's not static
+     *
+     * @param argumentType argument type
+     * @param argumentName argument name
+     * @param bukkitPermission argument requires bukkit permission
+     */
     public EzArgument(ArgumentType<?> argumentType, String argumentName, Permission bukkitPermission) {
         requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
         requiredArgumentBuilder.requires((requirement) -> permissionCheck(requirement, bukkitPermission.getName().toLowerCase()));
@@ -167,7 +201,14 @@ public final class EzArgument {
         }
     }
 
-
+    /**
+     * Command API argument
+     * It's not static
+     *
+     * @param argumentType argument type
+     * @param argumentName argument name
+     * @param bukkitPermission argument requires bukkit permission
+     */
     public EzArgument(ArgumentType<?> argumentType, String argumentName, String bukkitPermission) {
         requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
         requiredArgumentBuilder.requires((requirement) -> permissionCheck(requirement, bukkitPermission));
@@ -188,6 +229,15 @@ public final class EzArgument {
         }
     }
 
+    /**
+     * Command API argument
+     * It's not static
+     *
+     * @param argumentType argument type
+     * @param argumentName argument name
+     * @param bukkitPermission argument requires bukkit permission
+     * @param permissionDefault permission defaults owner
+     */
     public EzArgument(ArgumentType<?> argumentType, String argumentName, String bukkitPermission, PermissionDefault permissionDefault) {
         requiredArgumentBuilder = RequiredArgumentBuilder.argument(argumentName, argumentType);
         requiredArgumentBuilder.requires((requirement) -> permissionCheck(requirement, bukkitPermission));
