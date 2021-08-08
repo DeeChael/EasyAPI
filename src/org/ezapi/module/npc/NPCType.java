@@ -69,12 +69,16 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakeVindicator> VINDICATOR = new NPCType<>(new FakeVindicator(), "vindicator");
 
+    public final static NPCType<FakeWitch> WITCH = new NPCType<>(new FakeWitch(), "witch");
+
+    public final static NPCType<FakeZoglin> ZOGLIN = new NPCType<>(new FakeZoglin(), "zoglin");
+
     private final static NPCType<?>[] VALUES = new NPCType<?>[] {
             PLAYER, VILLAGER, BLAZE, CAVE_SPIDER, CREEPER, DROWNED, ENDERMAN,
             ELDER_GUARDIAN, EVOKER, GHAST, GIANT, GUARDIAN, ILLUSIONER,
             MAGMA_CUBE, PHANTOM, WANDERING_TRADER, ZOMBIFIED_PIGLIN, PILLAGER,
             RAVAGER, SHULKER, SILVERFISH, SKELETON, STRAY, WITHER_SKELETON, SLIME,
-            SPIDER, STRIDER, VEX, VINDICATOR
+            SPIDER, STRIDER, VEX, VINDICATOR, ZOGLIN
     };
 
     private final BiFunction<String, Location, EzClass> create;
