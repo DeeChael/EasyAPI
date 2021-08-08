@@ -2,10 +2,7 @@ package org.ezapi.module.npc;
 
 import org.bukkit.Location;
 import org.ezapi.function.NonReturnWithTwo;
-import org.ezapi.module.npc.fake.FakeBlaze;
-import org.ezapi.module.npc.fake.FakeEntity;
-import org.ezapi.module.npc.fake.FakePlayer;
-import org.ezapi.module.npc.fake.FakeVillager;
+import org.ezapi.module.npc.fake.*;
 import org.ezapi.reflect.EzClass;
 
 import java.util.List;
@@ -19,6 +16,24 @@ public final class NPCType<T extends FakeEntity> {
     public final static NPCType<FakeVillager> VILLAGER = new NPCType<>(new FakeVillager());
 
     public final static NPCType<FakeBlaze> BLAZE = new NPCType<>(new FakeBlaze());
+
+    public final static NPCType<FakeCaveSpider> CAVE_SPIDER = new NPCType<>(new FakeCaveSpider());
+
+    public final static NPCType<FakeCreeper> CREEPER = new NPCType<>(new FakeCreeper());
+
+    public final static NPCType<FakeDrowned> DROWNED = new NPCType<>(new FakeDrowned());
+
+    public final static NPCType<FakeEnderman> ENDERMAN = new NPCType<>(new FakeEnderman());
+
+    public final static NPCType<FakeElderGuardian> ELDER_GUARDIAN = new NPCType<>(new FakeElderGuardian());
+
+    public final static NPCType<FakeEvoker> EVOKER = new NPCType<>(new FakeEvoker());
+
+    public final static NPCType<FakeGhast> GHAST = new NPCType<>(new FakeGhast());
+
+    public final static NPCType<FakeGiant> GIANT = new NPCType<>(new FakeGiant());
+
+    public final static NPCType<FakeGuardian> GUARDIAN = new NPCType<>(new FakeGuardian());
 
     private final BiFunction<String, Location, EzClass> create;
 

@@ -6,9 +6,9 @@ import org.ezapi.reflect.EzClass;
 import org.ezapi.util.Ref;
 import sun.reflect.Reflection;
 
-public final class FakeBlaze extends FakeLiving {
+public final class FakeGhast extends FakeLiving {
 
-    public FakeBlaze() {
+    public FakeGhast() {
         if (Reflection.getCallerClass() != NPCType.class) {
             throw new RuntimeException("You cannot call this class without NPCType class!!");
         }
@@ -16,11 +16,12 @@ public final class FakeBlaze extends FakeLiving {
 
     @Override
     public EzClass create(String name, Location location) {
-        return this.create(Ref.getNmsOrOld("world.entity.monster.EntityBlaze", "EntityBlaze"), "BLAZE", "h", name, location);
+        return this.create(Ref.getNmsOrOld("world.entity.monster.EntityGhast", "EntityGhast"), "GHAST", "F", name, location);
     }
 
     @Override
     public void data(Object entity, Object data) {
     }
+
 
 }
