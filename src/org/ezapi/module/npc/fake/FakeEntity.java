@@ -8,9 +8,7 @@ import java.util.List;
 
 public abstract class FakeEntity {
 
-    protected FakeEntity(Class<?> nmsEntityClass) {
-        EzClass Entity = new EzClass(Ref.getNmsOrOld("world.entity.Entity", "Entity"));
-        if (!Entity.getInstanceClass().isAssignableFrom(nmsEntityClass)) throw new IllegalArgumentException("Need a nms entity class");
+    protected FakeEntity() {
     }
 
     public abstract EzClass create(String name, Location location);

@@ -2,6 +2,7 @@ package org.ezapi.module.npc;
 
 import org.bukkit.Location;
 import org.ezapi.function.NonReturnWithTwo;
+import org.ezapi.module.npc.fake.FakeBlaze;
 import org.ezapi.module.npc.fake.FakeEntity;
 import org.ezapi.module.npc.fake.FakePlayer;
 import org.ezapi.module.npc.fake.FakeVillager;
@@ -17,13 +18,15 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakeVillager> VILLAGER = new NPCType<>(new FakeVillager());
 
+    public final static NPCType<FakeBlaze> BLAZE = new NPCType<>(new FakeBlaze());
+
     private final BiFunction<String, Location, EzClass> create;
 
     private final Function<Object, List<EzClass>> packet;
 
     private final NonReturnWithTwo<Object, Object> data;
 
-    private NPCType(FakeEntity entity) {
+    private NPCType(T entity) {
         this.create = entity::create;
         this.packet = entity::packet;
         this.data = entity::data;

@@ -59,6 +59,7 @@ public final class EasyAPI extends EasyPlugin {
         }
         */
         Bukkit.getPluginManager().registerEvents(EzCommandManager.INSTANCE, this);
+        /*
         this.registerCommand("ez-api", new EzCommand("testing")
                 .executes((sender, argument) -> {
                     if (sender.isPlayer()) {
@@ -82,6 +83,7 @@ public final class EasyAPI extends EasyPlugin {
                     return 0;
                 })
         );
+        */
         //new EzApiCommand().register();
         //new HologramCommand().register();
         //new NPCCommand().register();

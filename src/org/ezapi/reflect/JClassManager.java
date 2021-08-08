@@ -8,7 +8,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JClassManager {
+public final class JClassManager {
 
     private JClassManager() {}
 

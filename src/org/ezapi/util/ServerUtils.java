@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-public class ServerUtils {
+public final class ServerUtils {
 
     public static double[] getTps() {
         EzClass MinecraftServer = new EzClass(Ref.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
