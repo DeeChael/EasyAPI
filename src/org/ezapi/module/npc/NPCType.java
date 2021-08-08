@@ -77,12 +77,15 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakeHusk> HUSK = new NPCType<>(new FakeHusk(), "husk");
 
+    public final static NPCType<FakeZombieVillager> ZOMBIE_VILLAGER = new NPCType<>(new FakeZombieVillager(), "zombie_villager");
+
     private final static NPCType<?>[] VALUES = new NPCType<?>[] {
             PLAYER, VILLAGER, BLAZE, CAVE_SPIDER, CREEPER, DROWNED, ENDERMAN,
             ELDER_GUARDIAN, EVOKER, GHAST, GIANT, GUARDIAN, ILLUSIONER,
             MAGMA_CUBE, PHANTOM, WANDERING_TRADER, ZOMBIFIED_PIGLIN, PILLAGER,
             RAVAGER, SHULKER, SILVERFISH, SKELETON, STRAY, WITHER_SKELETON, SLIME,
-            SPIDER, STRIDER, VEX, VINDICATOR, ZOGLIN, ZOMBIE, HUSK
+            SPIDER, STRIDER, VEX, VINDICATOR, ZOGLIN, ZOMBIE, HUSK, ZOMBIE_VILLAGER,
+            WITCH
     };
 
     private final BiFunction<String, Location, EzClass> create;
@@ -118,6 +121,15 @@ public final class NPCType<T extends FakeEntity> {
 
     public static NPCType<?>[] values() {
         return VALUES;
+    }
+
+    public static NPCType<?> valueOf(String name) {
+        for (NPCType<?> type : values()) {
+            if (type.name().equals(name)) {
+                return type;
+            }
+        }
+        return null;
     }
 
 }
