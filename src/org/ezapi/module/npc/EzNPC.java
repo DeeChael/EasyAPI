@@ -2,6 +2,7 @@ package org.ezapi.module.npc;
 
 import com.mojang.datafixers.util.Pair;
 import io.netty.channel.Channel;
+import net.minecraft.server.v1_16_R3.EntityPlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -216,8 +217,8 @@ public final class EzNPC implements NPC {
         if (isDropped()) return;
         EzClass Entity = new EzClass(Ref.getNmsOrOld("world.entity.Entity", "Entity"));
         Entity.setInstance(viewers.get(player).getInstance());
-        float height = (float) (Ref.getVersion() <= 10 ? Entity.getField("length") : Entity.invokeMethod("getHeight", new Class[0], new Object[0]));
-        Location loc = location.clone().add(0.0, Math.floor(height), 0.0);
+        float height = (float) Entity.invokeMethod("getHeadHeight", new Class[0], new Object[0]);
+        Location loc = location.clone().add(0.0, height, 0.0);
         loc.setDirection(target.clone().subtract(loc).toVector());
         float yaw = loc.getYaw();
         float pitch = loc.getPitch();
@@ -294,7 +295,7 @@ public final class EzNPC implements NPC {
                     }
                     if (look) {
                         if (hasShown.contains(player)) {
-                            lookAt(player, player.getLocation().clone().add(0.0, 1.0, 0.0));
+                            lookAt(player, player.getLocation().clone().add(0.0, player.isSneaking() ? 1.32 : 1.62, 0.0));
                         }
                     }
                 }

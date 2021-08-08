@@ -2,16 +2,13 @@ package org.ezapi.command.defaults;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.command.EzArgument;
 import org.ezapi.command.EzCommand;
 import org.ezapi.command.EzCommandManager;
 import org.ezapi.command.EzCommandRegistered;
 import org.ezapi.command.argument.*;
-import org.ezapi.module.hologram.TextHologram;
 import org.ezapi.module.npc.EzNPC;
 import org.ezapi.module.npc.NPCType;
 
