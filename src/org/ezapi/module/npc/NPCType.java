@@ -51,6 +51,10 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakeRavager> RAVAGER = new NPCType<>(new FakeRavager());
 
+    public final static NPCType<FakeShulker> SHULKER = new NPCType<>(new FakeShulker());
+
+    public final static NPCType<FakeSilverfish> SILVERFISH = new NPCType<>(new FakeSilverfish());
+
     private final BiFunction<String, Location, EzClass> create;
 
     private final Function<Object, List<EzClass>> packet;
