@@ -59,6 +59,8 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakeStray> STRAY = new NPCType<>(new FakeStray());
 
+    public final static NPCType<FakeWitherSkeleton> WITHER_SKELETON = new NPCType<>(new FakeWitherSkeleton());
+
     private final BiFunction<String, Location, EzClass> create;
 
     private final Function<Object, List<EzClass>> packet;
