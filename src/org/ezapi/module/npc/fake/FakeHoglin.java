@@ -11,7 +11,7 @@ public final class FakeHoglin extends FakeLiving {
 
     @Override
     public EzClass create(String name, Location location) {
-        return this.create(Ref.getNmsOrOld("world.entity.monster.EntityHoglin", "EntityHoglin"), "HOGLIN", "L", name, location);
+        return this.create(Ref.getNmsOrOld("world.entity.monster.hoglin.EntityHoglin", "EntityHoglin"), "HOGLIN", "L", name, location);
     }
 
     @Override
