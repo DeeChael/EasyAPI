@@ -41,6 +41,8 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakePhantom> PHANTOM = new NPCType<>(new FakePhantom());
 
+    public final static NPCType<FakeWanderingTrader> WANDERING_TRADER = new NPCType<>(new FakeWanderingTrader());
+
     private final BiFunction<String, Location, EzClass> create;
 
     private final Function<Object, List<EzClass>> packet;
