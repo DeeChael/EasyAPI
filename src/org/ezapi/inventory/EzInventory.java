@@ -1,29 +1,25 @@
 package org.ezapi.inventory;
 
-import com.google.gson.JsonObject;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.ezapi.EasyAPI;
+
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.function.NonReturnWithOne;
-import org.ezapi.util.item.ItemUtils;
 
 import java.util.*;
 import java.util.function.Function;
 
 public final class EzInventory implements Listener {
-
-    private Plugin plugin;
 
     private final int lines;
 
@@ -55,7 +51,7 @@ public final class EzInventory implements Listener {
         this.lines = lineAmount;
         String id = plugin.getName() + "_" + new Random().nextInt(1000000);
         this.id = id;
-        Bukkit.getPluginManager().registerEvents(this, EasyAPI.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     /**
@@ -73,7 +69,7 @@ public final class EzInventory implements Listener {
         this.lines = lineAmount;
         String id = plugin.getName() + "_" + new Random().nextInt(1000000);
         this.id = id;
-        Bukkit.getPluginManager().registerEvents(this, EasyAPI.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     /**
@@ -88,9 +84,9 @@ public final class EzInventory implements Listener {
         ezHolder.setInventory(inventory);
         cache.put(player, new HashMap<>());
         for (int i = 0; i < 9 * lines; i ++) {
-            if (items.containsKey(i)) {
+            if (items.get(i) instanceof Drawer) {
                 DrawSetting drawSetting = new DrawSetting(i);
-                items.get(i).onDraw(player, drawSetting);
+                ((Drawer) items.get(i)).onDraw(player, drawSetting);
                 inventory.setItem(i, drawSetting.render(player));
                 cache.get(player).put(i, items.get(i));
             }
@@ -105,10 +101,12 @@ public final class EzInventory implements Listener {
             }
             for (int i = 0; i < (Math.min(empty.size(), list.size())); i++) {
                 Input input = list.get(i);
-                DrawSetting drawSetting = new DrawSetting(-1);
-                input.onDraw(player, drawSetting);
-                ItemStack itemStack = drawSetting.render(player);
-                inventory.setItem(empty.get(i), itemStack);
+                if (input instanceof Drawer) {
+                    DrawSetting drawSetting = new DrawSetting(-1);
+                    ((Drawer) input).onDraw(player, drawSetting);
+                    ItemStack itemStack = drawSetting.render(player);
+                    inventory.setItem(empty.get(i), itemStack);
+                }
                 cache.get(player).put(empty.get(i), input);
             }
         }
@@ -264,14 +262,15 @@ public final class EzInventory implements Listener {
                 EzHolder ezHolder = (EzHolder) event.getInventory().getHolder();
                 if (ezHolder.getId().equalsIgnoreCase(this.id)) {
                     if (Objects.equals(event.getClickedInventory(), event.getView().getTopInventory())) {
+                        event.setCancelled(true);
                         if (cache.get(player).containsKey(event.getRawSlot())) {
                             Input input = cache.get(player).get(event.getRawSlot());
-                            if (input instanceof Button) {
-                                ((Button) input).onClick(player, event.getClick(), event.getAction());
+                            if (input instanceof Click) {
+                                ((Click) input).onClick(player, event.getClick(), event.getAction());
                             }
                         }
                     }
-                    event.setCancelled(true);
+                    if (event.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) event.setCancelled(true);
                 }
             }
         }

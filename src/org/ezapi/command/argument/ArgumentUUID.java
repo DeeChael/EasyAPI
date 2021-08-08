@@ -3,7 +3,7 @@ package org.ezapi.command.argument;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import org.ezapi.reflect.EzClass;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
@@ -45,11 +45,11 @@ public final class ArgumentUUID implements Argument {
     }
 
     private static Class<?> ArgumentUUID() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentUUID");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentUUID");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentUUID");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentUUID");
         }
     }
 

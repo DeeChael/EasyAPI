@@ -6,7 +6,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -38,8 +38,8 @@ public final class ArgumentParticle implements Argument {
     }
 
     public static Particle nmsParticleToBukkitParticle(Object particleParam) {
-        EzClass ParticleParam = ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzClass(ReflectionUtils.getNmsClass("ParticleParam")) : new EzClass("net.minecraft.core.particles.ParticleParam");
-        EzEnum CraftParticle = new EzEnum(ReflectionUtils.getObcClass("CraftParticle"));
+        EzClass ParticleParam = Ref.getVersion() <= 15 && Ref.getVersion() >= 9 ? new EzClass(Ref.getNmsClass("ParticleParam")) : new EzClass("net.minecraft.core.particles.ParticleParam");
+        EzEnum CraftParticle = new EzEnum(Ref.getObcClass("CraftParticle"));
         return (Particle) CraftParticle.invokeStaticMethod("toBukkit", new Class[] { ParticleParam.getInstanceClass() }, new Object[] { particleParam });
     }
 
@@ -53,11 +53,11 @@ public final class ArgumentParticle implements Argument {
     }
 
     private static Class<?> ArgumentParticle() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentParticle");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentParticle");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentParticle");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentParticle");
         }
     }
 

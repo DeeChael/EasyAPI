@@ -3,7 +3,7 @@ package org.ezapi.command.argument;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import org.bukkit.potion.PotionEffectType;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -37,7 +37,7 @@ public final class ArgumentPotionEffectType implements Argument {
     }
 
     public static PotionEffectType mobEffectListToPotionEffectType(Object mobEffectList) {
-        Class<?> clazz = ReflectionUtils.getObcClass("potion.CraftPotionEffectType");
+        Class<?> clazz = Ref.getObcClass("potion.CraftPotionEffectType");
         try {
             Constructor<?> constructor = clazz.getConstructor(mobEffectList.getClass());
             return (PotionEffectType) constructor.newInstance(mobEffectList);
@@ -57,10 +57,10 @@ public final class ArgumentPotionEffectType implements Argument {
     }
 
     private static Class<?> ArgumentMobEffect() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentMobEffect");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentMobEffect");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentMobEffect");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentMobEffect");
 
         }
     }

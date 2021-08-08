@@ -1,12 +1,36 @@
 package org.ezapi.util;
 
 import org.bukkit.Bukkit;
+import org.ezapi.EasyAPI;
+import sun.misc.Unsafe;
 
+import javax.tools.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collections;
 
-public final class ReflectionUtils {
+public final class Ref {
 
-    public static boolean isExtended(Class<?> child, Class<?> parent) {
+    private Ref() {}
+
+    private static Unsafe UNSAFE;
+
+    static {
+        try {
+            Field field = Unsafe.class.getDeclaredField("theUnsafe");
+            field.setAccessible(true);
+            UNSAFE = (Unsafe) field.get(null);
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+        }
+    }
+
+    public static boolean isExtendedFrom(Class<?> child, Class<?> parent) {
         return parent.isAssignableFrom(child);
     }
 
@@ -46,8 +70,24 @@ public final class ReflectionUtils {
         return clazz.isEnum();
     }
 
-    public static Class<?> getClassInClass(Class<?> clazz, String className) {
-        return getClass(clazz.getName() + "$" + className);
+    public static Class<?> getClass(String name) {
+        try {
+            return Class.forName(name);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+    }
+    
+    public static Class<?> getArrayClass(Class<?> contentClass) {
+        return Array.newInstance(contentClass, 0).getClass();
+    }
+    
+    public static Class<?> getContentClass(Class<?> arrayClass) {
+        return arrayClass.isArray() ? arrayClass.getComponentType() : null;
+    }
+    
+    public static <T extends Enum<T>> T getEnumObject(Class<T> enumClass, String name) {
+        return Enum.valueOf(enumClass, name);
     }
 
     public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... arguments) {
@@ -60,24 +100,19 @@ public final class ReflectionUtils {
         return null;
     }
 
-    public static Field getFieldOrOld(Class<?> clazz, String newName, String oldName) {
-        if (ReflectionUtils.getVersion() >= 16) return getField(clazz, newName);
-        return getField(clazz, oldName);
-    }
-
-    public static Field getField(Class<?> clazz, String name) {
+    public static Field getField(Class<?> clazz, String fieldName) {
         try {
-            Field field = clazz.getDeclaredField(name);
+            Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             return field;
         } catch (NoSuchFieldException ignored) {
         }
         return null;
     }
-
-    public static Method getMethod(Class<?> clazz, String name, Class<?>... arguments) {
+    
+    public static Method getMethod(Class<?> clazz, String methodName, Class<?>... classes) {
         try {
-            Method method = clazz.getDeclaredMethod(name, arguments);
+            Method method = clazz.getDeclaredMethod(methodName, classes);
             method.setAccessible(true);
             return method;
         } catch (NoSuchMethodException ignored) {
@@ -85,20 +120,151 @@ public final class ReflectionUtils {
         return null;
     }
 
-    public static Class<?> getArrayClassFromClass(Class<?> classToTransferToArrayClass) {
-        return Array.newInstance(classToTransferToArrayClass, 1).getClass();
+    public static long getFieldOffset(Field field) {
+        return Modifier.isStatic(field.getModifiers()) ? UNSAFE.staticFieldOffset(field) : UNSAFE.objectFieldOffset(field);
     }
 
-    public static Class<?> getClassFromArrayClass(Class<?> arrayClassToTransferToClass) {
-        return arrayClassToTransferToClass.getComponentType();
+    public static Class<?> getInnerClass(Class<?> owner, String name) {
+        return getClass(owner.getName() + "$" + name);
     }
 
-    public static Class<?> getClass(String path) {
-        try {
-            return Class.forName(path);
-        } catch (ClassNotFoundException ignored) {
+    public static Class<?> getOwnerClass(Class<?> innerClass) {
+        String className = innerClass.getName();
+        if (!className.contains("$")) {
+            return null;
         }
-        return Object.class;
+        String[] split = className.split("\\$");
+        return getClass(className.substring(0, split[split.length - 1].length() - 1));
+    }
+
+    public static Class<?> getOutestClass(Class<?> innerClass) {
+        String className = innerClass.getName();
+        if (!className.contains("$")) {
+            return null;
+        }
+        return getClass(className.split("\\$")[0]);
+    }
+
+    public static boolean implemented(Class<?> clazz) {
+        return clazz.getInterfaces().length > 0;
+    }
+
+    public static boolean extended(Class<?> clazz) {
+        return clazz.getSuperclass() != null;
+    }
+
+    public static <T> T newInstance(Class<T> clazz) {
+        for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
+            if (constructor.getParameterCount() == 0) {
+                try {
+                    return clazz.cast(constructor.newInstance());
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException ignored) {
+                    try {
+                        return clazz.cast(UNSAFE.allocateInstance(clazz));
+                    } catch (InstantiationException e) {
+                        return null;
+                    }
+                }
+            }
+        }
+        try {
+            return clazz.cast(UNSAFE.allocateInstance(clazz));
+        } catch (InstantiationException e) {
+            return null;
+        }
+    }
+
+    public static Class<?> createClass(String className, String input) {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        StandardJavaFileManager javaFileManager = compiler.getStandardFileManager(null, null, null);
+        UnsafeJavaFileManager unsafeJavaFileManager = new UnsafeJavaFileManager(javaFileManager);
+        try {
+            JavaCompiler.CompilationTask task = compiler.getTask(null, unsafeJavaFileManager, null, null, null, Collections.singletonList(new StringObject(new URI(className + ".java"), JavaFileObject.Kind.SOURCE, input)));
+            if (task.call()) {
+                UnsafeJavaFileObject javaFileObject = unsafeJavaFileManager.getJavaFileObject();
+                ClassLoader classLoader = new UnsafeClassLoader(className, javaFileObject.getBytes());
+                return classLoader.loadClass(className);
+            }
+        } catch (URISyntaxException | ClassNotFoundException ignored) {
+        }
+        return null;
+    }
+
+    private static class UnsafeJavaFileManager extends ForwardingJavaFileManager {
+
+        private UnsafeJavaFileObject javaFileObject;
+
+        protected UnsafeJavaFileManager(JavaFileManager fileManager) {
+            super(fileManager);
+        }
+
+        public UnsafeJavaFileObject getJavaFileObject() {
+            return javaFileObject;
+        }
+
+        @Override
+        public JavaFileObject getJavaFileForOutput(Location location, String className, JavaFileObject.Kind kind, FileObject sibling) throws IOException {
+            return javaFileObject = new UnsafeJavaFileObject(className, kind);
+        }
+
+    }
+
+    private static class UnsafeJavaFileObject extends SimpleJavaFileObject {
+
+        private ByteArrayOutputStream byteArrayOutputStream;
+
+        protected UnsafeJavaFileObject(String className, Kind kind) {
+            super(URI.create(className + kind.extension), kind);
+            this.byteArrayOutputStream = new ByteArrayOutputStream();
+        }
+
+        @Override
+        public OutputStream openOutputStream() throws IOException {
+            return byteArrayOutputStream;
+        }
+
+        public byte[] getBytes() {
+            return this.byteArrayOutputStream.toByteArray();
+        }
+
+    }
+
+    private static class StringObject extends SimpleJavaFileObject {
+
+        private final String content;
+
+        protected StringObject(URI uri, Kind kind, String content) {
+            super(uri, kind);
+            this.content = content;
+        }
+
+        @Override
+        public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+            return content;
+        }
+
+    }
+
+    private static class UnsafeClassLoader extends ClassLoader {
+
+        private final String className;
+
+        private final byte[] bytes;
+
+        private UnsafeClassLoader(String className, byte[] bytes) {
+            this.className = className;
+            this.bytes = bytes;
+        }
+
+        @Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+            return defineClass(className, bytes, 0, bytes.length);
+        }
+    }
+
+    public static Field getFieldOrOld(Class<?> clazz, String newName, String oldName) {
+        if (Ref.getVersion() >= 16) return getField(clazz, newName);
+        return getField(clazz, oldName);
     }
 
     /**

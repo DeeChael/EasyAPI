@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -38,7 +38,7 @@ public final class ArgumentItemStack implements Argument {
 
     public static ItemStack nmsItemStackToBukkitItemStack(Object nmsItemStack, int amount) {
         try {
-            ItemStack itemStack = (ItemStack) ReflectionUtils.getObcClass("inventory.CraftItemStack").getMethod("asBukkitCopy", nmsItemStack.getClass()).invoke(null, nmsItemStack);
+            ItemStack itemStack = (ItemStack) Ref.getObcClass("inventory.CraftItemStack").getMethod("asBukkitCopy", nmsItemStack.getClass()).invoke(null, nmsItemStack);
             if (amount > itemStack.getMaxStackSize()) amount = itemStack.getMaxStackSize();
             itemStack.setAmount(amount);
             return itemStack;
@@ -58,11 +58,11 @@ public final class ArgumentItemStack implements Argument {
     }
 
     private static Class<?> ArgumentItemStack() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentItemStack");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentItemStack");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.item.ArgumentItemStack");
+            return Ref.getClass("net.minecraft.commands.arguments.item.ArgumentItemStack");
         }
     }
 

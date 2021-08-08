@@ -17,7 +17,7 @@ public final class ColorUtils {
         for (char c : ChatColor.ALL_CODES.toCharArray()) {
             text = text.replace("&" + c, "§" + c);
         }
-        if (ReflectionUtils.getVersion() >= 13) {
+        if (Ref.getVersion() >= 13) {
             if (text.contains("&#")) {
                 for (String msg : text.split("&#")) {
                     if ((msg.length() >= 6)) {

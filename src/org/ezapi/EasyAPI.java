@@ -2,12 +2,19 @@ package org.ezapi;
 
 import org.bukkit.Bukkit;
 
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.ezapi.command.EzCommand;
 import org.ezapi.command.EzCommandManager;
 import org.ezapi.configuration.AutoReloadFile;
 import org.ezapi.configuration.LanguageManager;
+import org.ezapi.inventory.*;
 import org.ezapi.plugin.EasyPlugin;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 public final class EasyAPI extends EasyPlugin {
 
@@ -15,16 +22,14 @@ public final class EasyAPI extends EasyPlugin {
     private final Map<Player, BukkitTask> started = new HashMap<>();
     */
 
-    private AutoReloadFile autoReloadFile;
-
     @Override
     public final void load() {
     }
 
     @Override
     public final void enable() {
-        if (ReflectionUtils.getVersion() < 9) {
-            getLogger().severe("Unsupported Server Version " + ReflectionUtils.getServerVersion());
+        if (Ref.getVersion() < 9) {
+            getLogger().severe("Unsupported Server Version " + Ref.getServerVersion());
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -54,6 +59,29 @@ public final class EasyAPI extends EasyPlugin {
         }
         */
         Bukkit.getPluginManager().registerEvents(EzCommandManager.INSTANCE, this);
+        this.registerCommand("ez-api", new EzCommand("testing")
+                .executes((sender, argument) -> {
+                    if (sender.isPlayer()) {
+                        Player player = sender.player();
+                        if (player != null) {
+                            EzAnvil anvil = new EzAnvil(this);
+                            anvil.setLeftInput((Drawer) (target, drawSetting) -> drawSetting.setType(Material.DIAMOND));
+                            anvil.setOutput((Click) (target, click, action) -> {
+                                Inventory inventory = anvil.getBukkit(target);
+                                if (inventory != null) {
+                                    target.setItemOnCursor(inventory.getItem(2));
+                                    inventory.setItem(0, new ItemStack(Material.AIR));
+                                    inventory.setItem(2, new ItemStack(Material.AIR));
+                                    target.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+                                }
+                            });
+                            anvil.openToPlayer(player);
+                            return 1;
+                        }
+                    }
+                    return 0;
+                })
+        );
         //new EzApiCommand().register();
         //new HologramCommand().register();
         //new NPCCommand().register();
@@ -62,9 +90,6 @@ public final class EasyAPI extends EasyPlugin {
         LanguageManager.INSTANCE.reload();
         reload();
         setLocale(getConfig().getString("Setting.Language", "en_us"));
-        this.autoReloadFile = new AutoReloadFile(this, getConfigFile());
-        autoReloadFile.onModified(this::reload);
-        autoReloadFile.onDeleted(this::reload);
         //Break bedrock - Just for fun
         /*
         protocol = new Protocol(this) {
@@ -125,7 +150,6 @@ public final class EasyAPI extends EasyPlugin {
 
     @Override
     public final void disable() {
-        autoReloadFile.stop();
     }
 
     public static String getLanguage() {
@@ -134,6 +158,16 @@ public final class EasyAPI extends EasyPlugin {
 
     public static EasyAPI getInstance() {
         return JavaPlugin.getPlugin(EasyAPI.class);
+    }
+
+    @Override
+    public void onConfigReload() {
+        reload();
+    }
+
+    @Override
+    public void onConfigDelete() {
+        reload();
     }
 
     public void reload() {

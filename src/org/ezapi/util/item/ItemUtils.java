@@ -40,12 +40,12 @@ public final class ItemUtils {
     }
 
     public static void spawnUnpickItem(ItemStack itemStack, Location location) {
-        if (ReflectionUtils.getVersion() < 9) return;
+        if (Ref.getVersion() < 9) return;
         spawnUnpickItem(itemStack, location, Bukkit.getOnlinePlayers().toArray(new Player[0]));
     }
 
     public static void spawnUnpickItem(ItemStack itemStack, Location location, Player... whoCanSee) {
-        if (ReflectionUtils.getVersion() < 9) return;
+        if (Ref.getVersion() < 9) return;
         if (whoCanSee.length > 0) {
             Object entityItem = Reflection_Class.createEntityItem(itemStack, location);
             Reflection_Class.setPickUpDelayTo32767(entityItem);
@@ -60,7 +60,7 @@ public final class ItemUtils {
     }
 
     public static void spawnPickItemOnlySee(ItemStack itemStack, Location location, Player player) {
-        if (ReflectionUtils.getVersion() < 9) return;
+        if (Ref.getVersion() < 9) return;
         Item item = location.getWorld().dropItem(location, itemStack);
         Object entityItem = Reflection_Class.getEntityItem(item);
         int id = Reflection_Class.getId(entityItem);
@@ -74,14 +74,14 @@ public final class ItemUtils {
     }
 
     public static void spawnPickItem(ItemStack itemStack, Location location, Player player) {
-        if (ReflectionUtils.getVersion() < 9) return;
+        if (Ref.getVersion() < 9) return;
         Item item = location.getWorld().dropItem(location, itemStack);
         Object entityItem = Reflection_Class.getEntityItem(item);
         Reflection_Class.setOwner(entityItem, player);
     }
 
     public static void spawnPickItem(ItemStack itemStack, Location location, Player whoCanPickUp, Player... whoCanSee) {
-        if (ReflectionUtils.getVersion() < 9) return;
+        if (Ref.getVersion() < 9) return;
         Item item = location.getWorld().dropItem(location, itemStack);
         Object entityItem = Reflection_Class.getEntityItem(item);
         int id = Reflection_Class.getId(entityItem);
@@ -156,7 +156,7 @@ public final class ItemUtils {
     }
 
     public static ItemStack toItemStack(String jsonObjectString) {
-        if (!(ReflectionUtils.getVersion() <= 16 && ReflectionUtils.getVersion() >= 9)) {
+        if (!(Ref.getVersion() <= 16 && Ref.getVersion() >= 9)) {
             return new ItemStack(Material.AIR);
         }
         if (JsonUtils.isJsonObject(jsonObjectString)) {
@@ -166,7 +166,7 @@ public final class ItemUtils {
     }
 
     public static ItemStack toItemStack(JsonObject jsonObject) {
-        if (!(ReflectionUtils.getVersion() <= 16 && ReflectionUtils.getVersion() >= 9)) {
+        if (!(Ref.getVersion() <= 16 && Ref.getVersion() >= 9)) {
             return new ItemStack(Material.AIR);
         }
         ItemStack itemStack = new ItemStack(Material.valueOf(jsonObject.get("type").getAsString().toUpperCase()));
@@ -197,7 +197,7 @@ public final class ItemUtils {
     }
 
     public static JsonObject toJsonObject(ItemStack itemStack) {
-        if (!(ReflectionUtils.getVersion() <= 16 && ReflectionUtils.getVersion() >= 9)) {
+        if (!(Ref.getVersion() <= 16 && Ref.getVersion() >= 9)) {
             return new JsonObject();
         }
         Object nmsItemStack = null;
@@ -428,21 +428,21 @@ public final class ItemUtils {
         for (String key : Reflection_Class.getKeys(nbtTagCompound)) {
             Object nbtBase = Reflection_Class.get(nbtTagCompound, key);
             if (nbtBase.getClass().equals(Reflection_Class.NBTTagString())) {
-                nbtJsonObject.addProperty(key, "string$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asString").invoke(nbtBase)));
+                nbtJsonObject.addProperty(key, "string$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asString").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagInt())) {
-                nbtJsonObject.addProperty(key, "int$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asInt").invoke(nbtBase)));
+                nbtJsonObject.addProperty(key, "int$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asInt").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagLong())) {
-                nbtJsonObject.addProperty(key, "long$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asLong").invoke(nbtBase)));
+                nbtJsonObject.addProperty(key, "long$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asLong").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagShort())) {
-                nbtJsonObject.addProperty(key, "short$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asShort").invoke(nbtBase)));
+                nbtJsonObject.addProperty(key, "short$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asShort").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagByte())) {
-                nbtJsonObject.addProperty(key, "byte$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asByte").invoke(nbtBase)));
+                nbtJsonObject.addProperty(key, "byte$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asByte").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagFloat())) {
-                nbtJsonObject.addProperty(key, "float$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asFloat").invoke(nbtBase)));
+                nbtJsonObject.addProperty(key, "float$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asFloat").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagDouble())) {
-                nbtJsonObject.addProperty(key, "double$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asDouble").invoke(nbtBase)));
+                nbtJsonObject.addProperty(key, "double$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("asDouble").invoke(nbtBase)));
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagIntArray())) {
-                int[] ints = (int[]) (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("getInts").invoke(nbtBase));
+                int[] ints = (int[]) (Ref.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("getInts").invoke(nbtBase));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (int i : ints) {
                     stringBuilder.append(i).append(",");
@@ -450,7 +450,7 @@ public final class ItemUtils {
                 String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 nbtJsonObject.addProperty(key, "int_array$" + string);
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagLongArray())) {
-                long[] longs = (long[]) (ReflectionUtils.getVersion() < 16 ? (ReflectionUtils.getVersion() < 11 ? nbtBase.getClass().getMethod("d").invoke(nbtBase) : nbtBase.getClass().getMethod("getLongs").invoke(nbtBase)) : nbtBase.getClass().getMethod("getLongs").invoke(nbtBase));
+                long[] longs = (long[]) (Ref.getVersion() < 16 ? (Ref.getVersion() < 11 ? nbtBase.getClass().getMethod("d").invoke(nbtBase) : nbtBase.getClass().getMethod("getLongs").invoke(nbtBase)) : nbtBase.getClass().getMethod("getLongs").invoke(nbtBase));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (long l : longs) {
                     stringBuilder.append(l).append(",");
@@ -458,7 +458,7 @@ public final class ItemUtils {
                 String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 nbtJsonObject.addProperty(key, "long_array$" + string);
             } else if (nbtBase.getClass().equals(Reflection_Class.NBTTagByteArray())) {
-                byte[] by = (byte[]) (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("getBytes").invoke(nbtBase));
+                byte[] by = (byte[]) (Ref.getVersion() < 16 ? Reflection_Class.getData(nbtBase) : nbtBase.getClass().getMethod("getBytes").invoke(nbtBase));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (byte b : by) {
                     stringBuilder.append(b).append(",");
@@ -481,21 +481,21 @@ public final class ItemUtils {
         JsonArray jsonArray = new JsonArray();
         for (Object base : nbtTagList) {
             if (base.getClass().equals(Reflection_Class.NBTTagString())) {
-                jsonArray.add("string$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asString").invoke(base)));
+                jsonArray.add("string$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asString").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagInt())) {
-                jsonArray.add("int$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asInt").invoke(base)));
+                jsonArray.add("int$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asInt").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagLong())) {
-                jsonArray.add("long$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asLong").invoke(base)));
+                jsonArray.add("long$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asLong").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagShort())) {
-                jsonArray.add("short$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asShort").invoke(base)));
+                jsonArray.add("short$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asShort").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagByte())) {
-                jsonArray.add("byte$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asByte").invoke(base)));
+                jsonArray.add("byte$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asByte").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagFloat())) {
-                jsonArray.add("float$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asFloat").invoke(base)));
+                jsonArray.add("float$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asFloat").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagDouble())) {
-                jsonArray.add("double$" + (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asDouble").invoke(base)));
+                jsonArray.add("double$" + (Ref.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("asDouble").invoke(base)));
             } else if (base.getClass().equals(Reflection_Class.NBTTagIntArray())) {
-                int[] ints = (int[]) (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("getInts").invoke(base));
+                int[] ints = (int[]) (Ref.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("getInts").invoke(base));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (int i : ints) {
                     stringBuilder.append(i).append(",");
@@ -503,7 +503,7 @@ public final class ItemUtils {
                 String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 jsonArray.add("int_array$" + string);
             } else if (base.getClass().equals(Reflection_Class.NBTTagLongArray())) {
-                long[] longs = (long[]) (ReflectionUtils.getVersion() < 16 ? (ReflectionUtils.getVersion() < 11 ? base.getClass().getMethod("d").invoke(base) : base.getClass().getMethod("getLongs").invoke(base)) : base.getClass().getMethod("getLongs").invoke(base));
+                long[] longs = (long[]) (Ref.getVersion() < 16 ? (Ref.getVersion() < 11 ? base.getClass().getMethod("d").invoke(base) : base.getClass().getMethod("getLongs").invoke(base)) : base.getClass().getMethod("getLongs").invoke(base));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (long l : longs) {
                     stringBuilder.append(l).append(",");
@@ -511,7 +511,7 @@ public final class ItemUtils {
                 String string = stringBuilder.substring(0, stringBuilder.length()-1) + "]";
                 jsonArray.add("long_array$" + string);
             } else if (base.getClass().equals(Reflection_Class.NBTTagByteArray())) {
-                byte[] by = (byte[]) (ReflectionUtils.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("getBytes").invoke(base));
+                byte[] by = (byte[]) (Ref.getVersion() < 16 ? Reflection_Class.getData(base) : base.getClass().getMethod("getBytes").invoke(base));
                 StringBuilder stringBuilder = new StringBuilder("[");
                 for (byte b : by) {
                     stringBuilder.append(b).append(",");
@@ -574,14 +574,14 @@ public final class ItemUtils {
         }
 
         public static Class<?> CraftItemStack() {
-            return ReflectionUtils.getObcClass("inventory.CraftItemStack");
+            return Ref.getObcClass("inventory.CraftItemStack");
         }
 
         public static Class<?> ItemStack() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("ItemStack");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("ItemStack");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.world.item.ItemStack");
+                return Ref.getClass("net.minecraft.world.item.ItemStack");
             }
         }
 
@@ -594,106 +594,106 @@ public final class ItemUtils {
         }
 
         public static Class<?> NBTTagCompound() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagCompound");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagCompound");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagCompound");
+                return Ref.getClass("net.minecraft.nbt.NBTTagCompound");
             }
         }
 
         public static Class<?> NBTTagString() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagString");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagString");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagString");
+                return Ref.getClass("net.minecraft.nbt.NBTTagString");
             }
         }
 
         public static Class<?> NBTTagInt() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagInt");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagInt");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagInt");
+                return Ref.getClass("net.minecraft.nbt.NBTTagInt");
             }
         }
 
         public static Class<?> NBTTagLong() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagLong");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagLong");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagLong");
+                return Ref.getClass("net.minecraft.nbt.NBTTagLong");
             }
         }
 
         public static Class<?> NBTTagShort() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagShort");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagShort");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagShort");
+                return Ref.getClass("net.minecraft.nbt.NBTTagShort");
             }
         }
 
         public static Class<?> NBTTagByte() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagByte");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagByte");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagByte");
+                return Ref.getClass("net.minecraft.nbt.NBTTagByte");
             }
         }
 
         public static Class<?> NBTTagFloat() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagFloat");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagFloat");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagFloat");
+                return Ref.getClass("net.minecraft.nbt.NBTTagFloat");
             }
         }
 
         public static Class<?> NBTTagDouble() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagDouble");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagDouble");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagDouble");
+                return Ref.getClass("net.minecraft.nbt.NBTTagDouble");
             }
         }
 
         public static Class<?> NBTTagIntArray() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagIntArray");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagIntArray");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagIntArray");
+                return Ref.getClass("net.minecraft.nbt.NBTTagIntArray");
             }
         }
 
         public static Class<?> NBTTagLongArray() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagLongArray");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagLongArray");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagLongArray");
+                return Ref.getClass("net.minecraft.nbt.NBTTagLongArray");
             }
         }
 
         public static Class<?> NBTTagByteArray() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagByteArray");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagByteArray");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagByteArray");
+                return Ref.getClass("net.minecraft.nbt.NBTTagByteArray");
             }
         }
 
         public static Class<?> NBTTagList() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagList");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagList");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagList");
+                return Ref.getClass("net.minecraft.nbt.NBTTagList");
             }
         }
 
         public static Class<?> NBTBase() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTBase");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTBase");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTBase");
+                return Ref.getClass("net.minecraft.nbt.NBTBase");
             }
         }
 
@@ -706,10 +706,10 @@ public final class ItemUtils {
         }
 
         private static Class<?> EntityItem() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("EntityItem");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("EntityItem");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.world.entity.item.EntityItem");
+                return Ref.getClass("net.minecraft.world.entity.item.EntityItem");
             }
         }
 
@@ -735,42 +735,42 @@ public final class ItemUtils {
         }
 
         private static Class<?> PacketPlayOutEntityDestroy() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("PacketPlayOutEntityDestroy");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("PacketPlayOutEntityDestroy");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy");
+                return Ref.getClass("net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy");
             }
         }
 
         private static Class<?> PacketPlayOutSpawnEntity() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("PacketPlayOutSpawnEntity");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("PacketPlayOutSpawnEntity");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity");
+                return Ref.getClass("net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity");
             }
         }
 
         private static Class<?> PacketPlayOutEntityMetadata() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("PacketPlayOutEntityMetadata");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("PacketPlayOutEntityMetadata");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata");
+                return Ref.getClass("net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata");
             }
         }
 
         private static Class<?> Packet() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("Packet");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("Packet");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.network.protocol.Packet");
+                return Ref.getClass("net.minecraft.network.protocol.Packet");
             }
         }
 
         private static Class<?> PlayerConnection() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("PlayerConnection");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("PlayerConnection");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.server.network.PlayerConnection");
+                return Ref.getClass("net.minecraft.server.network.PlayerConnection");
             }
         }
 
@@ -792,10 +792,10 @@ public final class ItemUtils {
         }
 
         private static Class<?> Entity() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("Entity");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("Entity");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.world.entity.Entity");
+                return Ref.getClass("net.minecraft.world.entity.Entity");
             }
         }
 
@@ -817,10 +817,10 @@ public final class ItemUtils {
         }
 
         private static Class<?> DataWatcher() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("DataWatcher");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("DataWatcher");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.network.syncher.DataWatcher");
+                return Ref.getClass("net.minecraft.network.syncher.DataWatcher");
             }
         }
 
@@ -849,10 +849,10 @@ public final class ItemUtils {
         }
 
         private static Class<?> World() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("World");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("World");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.world.level.World");
+                return Ref.getClass("net.minecraft.world.level.World");
             }
         }
 

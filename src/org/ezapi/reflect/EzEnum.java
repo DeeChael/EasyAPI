@@ -1,7 +1,7 @@
 package org.ezapi.reflect;
 
 import org.apache.commons.lang.IllegalClassException;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +19,7 @@ public final class EzEnum {
     private boolean created = false;
 
     public EzEnum(String className) {
-        this(ReflectionUtils.getClass(className));
+        this(Ref.getClass(className));
     }
 
     public EzEnum(Class<?> clazz) {

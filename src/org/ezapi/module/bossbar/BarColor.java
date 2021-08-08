@@ -3,7 +3,7 @@ package org.ezapi.module.bossbar;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.ArrayUtils;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 public enum BarColor {
 
@@ -36,8 +36,8 @@ public enum BarColor {
     }
 
     public EzEnum getNms() {
-        EzEnum BarColor = new EzEnum(ReflectionUtils.getNmsOrOld("world.BossBattle$BarColor", "BossBattle$BarColor"));
-        if (ReflectionUtils.getVersion() < 16) {
+        EzEnum BarColor = new EzEnum(Ref.getNmsOrOld("world.BossBattle$BarColor", "BossBattle$BarColor"));
+        if (Ref.getVersion() < 16) {
             BarColor.newInstance(this.name());
         } else {
             char[] chars = new char[] {'a', 'b', 'c', 'd', 'e', 'f', 'g'};

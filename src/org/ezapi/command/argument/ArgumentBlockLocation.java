@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -47,8 +47,8 @@ public final class ArgumentBlockLocation implements Argument {
     }
 
     private static int getX(Object blockPosition) {
-        if (ReflectionUtils.getVersion() < 9) return 0;
-        if (ReflectionUtils.getVersion() >= 9 && ReflectionUtils.getVersion() <= 16) {
+        if (Ref.getVersion() < 9) return 0;
+        if (Ref.getVersion() >= 9 && Ref.getVersion() <= 16) {
             try {
                 return (int) blockPosition.getClass().getMethod("getX").invoke(blockPosition);
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -59,8 +59,8 @@ public final class ArgumentBlockLocation implements Argument {
     }
 
     private static int getY(Object blockPosition) {
-        if (ReflectionUtils.getVersion() < 9) return 0;
-        if (ReflectionUtils.getVersion() >= 9 && ReflectionUtils.getVersion() <= 16) {
+        if (Ref.getVersion() < 9) return 0;
+        if (Ref.getVersion() >= 9 && Ref.getVersion() <= 16) {
             try {
                 return (int) blockPosition.getClass().getMethod("getY").invoke(blockPosition);
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -71,8 +71,8 @@ public final class ArgumentBlockLocation implements Argument {
     }
 
     private static int getZ(Object blockPosition) {
-        if (ReflectionUtils.getVersion() < 9) return 0;
-        if (ReflectionUtils.getVersion() >= 9 && ReflectionUtils.getVersion() <= 16) {
+        if (Ref.getVersion() < 9) return 0;
+        if (Ref.getVersion() >= 9 && Ref.getVersion() <= 16) {
             try {
                 return (int) blockPosition.getClass().getMethod("getZ").invoke(blockPosition);
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -92,11 +92,11 @@ public final class ArgumentBlockLocation implements Argument {
     }
 
     private static Class<?> ArgumentPosition() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentPosition");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentPosition");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.coordinates.ArgumentPosition");
+            return Ref.getClass("net.minecraft.commands.arguments.coordinates.ArgumentPosition");
         }
     }
 

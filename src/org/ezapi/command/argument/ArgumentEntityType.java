@@ -8,7 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.ezapi.reflect.EzClass;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -68,15 +68,15 @@ public final class ArgumentEntityType implements Argument {
 
     public static SuggestionProvider<Object> suggests() {
         EzClass ezClass = CompletionProviders();
-        return (SuggestionProvider<Object>) ((ReflectionUtils.getVersion() <= 12 && ReflectionUtils.getVersion() >= 9) ? ezClass.getStaticField("d") : ezClass.getStaticField("e"));
+        return (SuggestionProvider<Object>) ((Ref.getVersion() <= 12 && Ref.getVersion() >= 9) ? ezClass.getStaticField("d") : ezClass.getStaticField("e"));
     }
 
     private static EzClass nmsWorld() {
-        return ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzClass(ReflectionUtils.getNmsClass("World")) : new EzClass("net.minecraft.world.level.World");
+        return Ref.getVersion() <= 15 && Ref.getVersion() >= 9 ? new EzClass(Ref.getNmsClass("World")) : new EzClass("net.minecraft.world.level.World");
     }
 
     private static EzClass EntityLiving() {
-        return ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzClass(ReflectionUtils.getNmsClass("EntityLiving")) : new EzClass("net.minecraft.world.entity.EntityLiving");
+        return Ref.getVersion() <= 15 && Ref.getVersion() >= 9 ? new EzClass(Ref.getNmsClass("EntityLiving")) : new EzClass("net.minecraft.world.entity.EntityLiving");
     }
 
     private static Object getNmsWorld(World world) {
@@ -98,25 +98,25 @@ public final class ArgumentEntityType implements Argument {
     }
 
     private static Class<?> EntityTypes() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("EntityTypes");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("EntityTypes");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.world.entity.EntityTypes");
+            return Ref.getClass("net.minecraft.world.entity.EntityTypes");
         }
     }
 
     public static Class<?> ArgumentEntitySummon() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentEntitySummon");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentEntitySummon");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentEntitySummon");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentEntitySummon");
         }
     }
 
     private static EzClass CompletionProviders() {
-        return ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzClass(ReflectionUtils.getNmsClass("CompletionProviders")) : new EzClass("net.minecraft.commands.synchronization.CompletionProviders");
+        return Ref.getVersion() <= 15 && Ref.getVersion() >= 9 ? new EzClass(Ref.getNmsClass("CompletionProviders")) : new EzClass("net.minecraft.commands.synchronization.CompletionProviders");
     }
 
 }

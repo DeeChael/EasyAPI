@@ -34,7 +34,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.mojang.authlib.GameProfile;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 /**
  * Forked from https://github.com/aadnk/ProtocolLib/blob/master/TinyProtocol/src/main/java/com/comphenix/tinyprotocol/TinyProtocol.java
@@ -43,37 +43,37 @@ public abstract class Protocol {
 
     private static final AtomicInteger ID = new AtomicInteger(0);
 
-    private static final Method getPlayerHandle = ReflectionUtils.getMethod(ReflectionUtils.getObcClass("entity.CraftPlayer"), "getHandle");
+    private static final Method getPlayerHandle = Ref.getMethod(Ref.getObcClass("entity.CraftPlayer"), "getHandle");
 
-    private static final Field getConnection = ReflectionUtils.getFieldOrOld(ReflectionUtils.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"), "b", "playerConnection");
-    private static final Field getManager = ReflectionUtils.getFieldOrOld(ReflectionUtils.getNmsOrOld("server.network.PlayerConnection", "PlayerConnection"), "a", "networkManager");
-    private static final Field getChannel = ReflectionUtils.getFieldOrOld(ReflectionUtils.getNmsOrOld("network.NetworkManager", "NetworkManager"), "k", "channel");
+    private static final Field getConnection = Ref.getFieldOrOld(Ref.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"), "b", "playerConnection");
+    private static final Field getManager = Ref.getFieldOrOld(Ref.getNmsOrOld("server.network.PlayerConnection", "PlayerConnection"), "a", "networkManager");
+    private static final Field getChannel = Ref.getFieldOrOld(Ref.getNmsOrOld("network.NetworkManager", "NetworkManager"), "k", "channel");
 
-    private static final Class<?> minecraftServerClass = ReflectionUtils.getNmsOrOld("server.MinecraftServer", "MinecraftServer");
+    private static final Class<?> minecraftServerClass = Ref.getNmsOrOld("server.MinecraftServer", "MinecraftServer");
     private static final Class<?> serverConnectionClass;
-    private static final Field getMinecraftServer = ReflectionUtils.getField(ReflectionUtils.getObcClass("CraftServer"), "console");
-    private static final Field getServerConnection = ReflectionUtils.getFieldOrOld(minecraftServerClass, "K", "serverConnection");
+    private static final Field getMinecraftServer = Ref.getField(Ref.getObcClass("CraftServer"), "console");
+    private static final Field getServerConnection = Ref.getFieldOrOld(minecraftServerClass, "K", "serverConnection");
     private static final Field getNetworkMarkers;
     private static final Field getChannels;
 
     static {
-        serverConnectionClass = ReflectionUtils.getNmsOrOld("server.network.ServerConnection", "ServerConnection");
-        if (ReflectionUtils.getVersion() == 12) {
-            getNetworkMarkers = ReflectionUtils.getField(serverConnectionClass, "listeningChannels");
-        } else if (ReflectionUtils.getVersion() >= 12 && ReflectionUtils.getVersion() <= 15) {
-            getNetworkMarkers = ReflectionUtils.getField(serverConnectionClass, "connectedChannels");
+        serverConnectionClass = Ref.getNmsOrOld("server.network.ServerConnection", "ServerConnection");
+        if (Ref.getVersion() == 12) {
+            getNetworkMarkers = Ref.getField(serverConnectionClass, "listeningChannels");
+        } else if (Ref.getVersion() >= 12 && Ref.getVersion() <= 15) {
+            getNetworkMarkers = Ref.getField(serverConnectionClass, "connectedChannels");
         } else {
-            getNetworkMarkers = ReflectionUtils.getField(serverConnectionClass, "g");
+            getNetworkMarkers = Ref.getField(serverConnectionClass, "g");
         }
-        if (ReflectionUtils.getVersion() >= 12 && ReflectionUtils.getVersion() <= 15) {
-            getChannels = ReflectionUtils.getField(serverConnectionClass, "listeningChannels");
+        if (Ref.getVersion() >= 12 && Ref.getVersion() <= 15) {
+            getChannels = Ref.getField(serverConnectionClass, "listeningChannels");
         } else {
-            getChannels = ReflectionUtils.getField(serverConnectionClass, "f");
+            getChannels = Ref.getField(serverConnectionClass, "f");
         }
     }
 
-    private static final Class<?> PACKET_LOGIN_IN_START = ReflectionUtils.getNmsOrOld("network.protocol.login.PacketLoginInStart", "PacketLoginInStart");
-    private static final Field getGameProfile = ReflectionUtils.getField(PACKET_LOGIN_IN_START, "a");
+    private static final Class<?> PACKET_LOGIN_IN_START = Ref.getNmsOrOld("network.protocol.login.PacketLoginInStart", "PacketLoginInStart");
+    private static final Field getGameProfile = Ref.getField(PACKET_LOGIN_IN_START, "a");
 
     private Map<String, Channel> channelLookup = new MapMaker().weakValues().makeMap();
     private Listener listener;

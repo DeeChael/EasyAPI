@@ -2,7 +2,7 @@ package org.ezapi.command.argument;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -43,10 +43,10 @@ public final class ArgumentPlayer implements Argument {
     }
 
     private static Class<?> ArgumentEntity() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentEntity");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentEntity");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentEntity");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentEntity");
         }
     }
 

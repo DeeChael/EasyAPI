@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.ezapi.EasyAPI;
 import org.ezapi.util.ColorUtils;
 import org.ezapi.util.StringUtils;
 
@@ -19,6 +20,8 @@ public final class Language {
     private JsonObject jsonObject = new JsonObject();
 
     private final String languageCode;
+
+    private AutoReloadFile reloader;
 
     /**
      * Language API
@@ -58,6 +61,9 @@ public final class Language {
                 this.jsonObject.addProperty(key, languageDefault.getDefault(key));
             }
         }
+        reloader = new AutoReloadFile(EasyAPI.getInstance(), file);
+        reloader.onModified(this::reload);
+        reloader.onDeleted(() -> LanguageManager.INSTANCE.unregister(this));
         save();
     }
 

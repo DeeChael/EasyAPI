@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -230,10 +230,10 @@ public final class EzCommand {
 
 
     private static Class<?> CommandListenerWrapper() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("CommandListenerWrapper");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("CommandListenerWrapper");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.CommandListenerWrapper");
+            return Ref.getClass("net.minecraft.commands.CommandListenerWrapper");
         }
     }
 
@@ -256,10 +256,10 @@ public final class EzCommand {
     }
 
     private static Class<?> nmsCommandDispatcher() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("CommandDispatcher");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("CommandDispatcher");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.CommandDispatcher");
+            return Ref.getClass("net.minecraft.commands.CommandDispatcher");
         }
     }
 
@@ -274,10 +274,10 @@ public final class EzCommand {
     }
 
     private static Class<?> MinecraftServer() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("MinecraftServer");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("MinecraftServer");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.server.MinecraftServer");
+            return Ref.getClass("net.minecraft.server.MinecraftServer");
         }
     }
 

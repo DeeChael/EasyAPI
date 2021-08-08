@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -48,8 +48,8 @@ public final class ArgumentLocation implements Argument {
     }
 
     private static double getX(Object vec3D) {
-        if (ReflectionUtils.getVersion() < 9) return 0.0;
-        if (ReflectionUtils.getVersion() == 9 || ReflectionUtils.getVersion() == 10) {
+        if (Ref.getVersion() < 9) return 0.0;
+        if (Ref.getVersion() == 9 || Ref.getVersion() == 10) {
             try {
                 Field field = vec3D.getClass().getDeclaredField("x");
                 field.setAccessible(true);
@@ -68,8 +68,8 @@ public final class ArgumentLocation implements Argument {
     }
 
     private static double getY(Object vec3D) {
-        if (ReflectionUtils.getVersion() < 9) return 0.0;
-        if (ReflectionUtils.getVersion() == 9 || ReflectionUtils.getVersion() == 10) {
+        if (Ref.getVersion() < 9) return 0.0;
+        if (Ref.getVersion() == 9 || Ref.getVersion() == 10) {
             try {
                 Field field = vec3D.getClass().getDeclaredField("y");
                 field.setAccessible(true);
@@ -88,8 +88,8 @@ public final class ArgumentLocation implements Argument {
     }
 
     private static double getZ(Object vec3D) {
-        if (ReflectionUtils.getVersion() < 9) return 0.0;
-        if (ReflectionUtils.getVersion() == 9 || ReflectionUtils.getVersion() == 10) {
+        if (Ref.getVersion() < 9) return 0.0;
+        if (Ref.getVersion() == 9 || Ref.getVersion() == 10) {
             try {
                 Field field = vec3D.getClass().getDeclaredField("z");
                 field.setAccessible(true);
@@ -117,11 +117,11 @@ public final class ArgumentLocation implements Argument {
     }
 
     private static Class<?> ArgumentVec3() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentVec3");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentVec3");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.coordinates.ArgumentVec3");
+            return Ref.getClass("net.minecraft.commands.arguments.coordinates.ArgumentVec3");
         }
     }
 

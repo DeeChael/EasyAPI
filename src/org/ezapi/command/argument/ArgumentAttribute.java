@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import org.bukkit.attribute.Attribute;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +29,7 @@ public final class ArgumentAttribute implements Argument {
     @Override
     public Object get(CommandContext<Object> commandContext, String name) {
         try {
-            return ReflectionUtils.getVersion() >= 16 ? ArgumentMinecraftKeyRegistered().getMethod("f", CommandContext.class, String.class).invoke(null, commandContext, name) : ArgumentMinecraftKeyRegistered().getMethod("e", CommandContext.class, String.class).invoke(null, commandContext, name);
+            return Ref.getVersion() >= 16 ? ArgumentMinecraftKeyRegistered().getMethod("f", CommandContext.class, String.class).invoke(null, commandContext, name) : ArgumentMinecraftKeyRegistered().getMethod("e", CommandContext.class, String.class).invoke(null, commandContext, name);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -38,7 +38,7 @@ public final class ArgumentAttribute implements Argument {
 
     public static Attribute nmsAttributeBaseToBukkitAttribute(Object nmsAttribute) {
         try {
-            return (Attribute) ReflectionUtils.getObcClass("attribute.CraftAttributeMap").getMethod("fromMinecraft", String.class).invoke(null, nmsAttribute.getClass().getMethod("getKey").invoke(nmsAttribute).toString());
+            return (Attribute) Ref.getObcClass("attribute.CraftAttributeMap").getMethod("fromMinecraft", String.class).invoke(null, nmsAttribute.getClass().getMethod("getKey").invoke(nmsAttribute).toString());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -55,18 +55,18 @@ public final class ArgumentAttribute implements Argument {
     }
 
     public static Class<?> ArgumentMinecraftKeyRegistered() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentMinecraftKeyRegistered");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentMinecraftKeyRegistered");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentMinecraftKeyRegistered");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentMinecraftKeyRegistered");
         }
     }
 
     private static Class<?> CommandAttribute() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("CommandAttribute");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("CommandAttribute");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.server.commands.CommandAttribute");
+            return Ref.getClass("net.minecraft.server.commands.CommandAttribute");
         }
     }
 

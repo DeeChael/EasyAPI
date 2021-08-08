@@ -6,7 +6,7 @@ import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.DateUtils;
 import org.ezapi.util.PlayerUtils;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,21 +48,21 @@ public final class EzBossBar implements BossBar{
         if (getViewers().size() == 0) return;
         for (Player player : getViewers()) {
             if (!hasShown.contains(player)) continue;
-            EzClass PacketPlayOutBoss = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
-            EzClass BossBattle = new EzClass(ReflectionUtils.getNmsOrOld("world.BossBattle", "BossBattle"));
+            EzClass PacketPlayOutBoss = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
+            EzClass BossBattle = new EzClass(Ref.getNmsOrOld("world.BossBattle", "BossBattle"));
 
             BossBattle.setInstance(viewers.get(player).getInstance());
 
-            if (ReflectionUtils.getVersion() >= 16) {
+            if (Ref.getVersion() >= 16) {
                 BossBattle.invokeMethod("setProgress", new Class[] {float.class}, new Object[] {progress});
             } else {
                 BossBattle.invokeMethod("a", new Class[] {float.class}, new Object[] {progress});
             }
 
-            if (ReflectionUtils.getVersion() >= 16) {
+            if (Ref.getVersion() >= 16) {
                 PacketPlayOutBoss.setInstance(PacketPlayOutBoss.invokeStaticMethod("createUpdateProgressPacket", new Class[] {BossBattle.getInstanceClass()}, new Object[] {BossBattle.getInstance()}));
             } else {
-                EzEnum Action = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutBoss$Action"));
+                EzEnum Action = new EzEnum(Ref.getNmsClass("PacketPlayOutBoss$Action"));
                 Action.newInstance("UPDATE_PCT");
                 PacketPlayOutBoss.setConstructor(Action.getInstanceEnum(), BossBattle.getInstanceClass());
                 PacketPlayOutBoss.newInstance(Action.getInstance(), BossBattle.getInstance());
@@ -99,12 +99,12 @@ public final class EzBossBar implements BossBar{
         if (getViewers().size() == 0) return;
         for (Player player : getViewers()) {
             if (!hasShown.contains(player)) continue;
-            EzClass PacketPlayOutBoss = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
-            EzClass BossBattle = new EzClass(ReflectionUtils.getNmsOrOld("world.BossBattle", "BossBattle"));
+            EzClass PacketPlayOutBoss = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
+            EzClass BossBattle = new EzClass(Ref.getNmsOrOld("world.BossBattle", "BossBattle"));
 
             BossBattle.setInstance(viewers.get(player).getInstance());
 
-            if (ReflectionUtils.getVersion() >= 16) {
+            if (Ref.getVersion() >= 16) {
                 BossBattle.invokeMethod("setDarkenSky", new Class[] {boolean.class}, new Object[] {darkenSky});
                 BossBattle.invokeMethod("setPlayMusic", new Class[] {boolean.class}, new Object[] {playMusic});
                 BossBattle.invokeMethod("setCreateFog", new Class[] {boolean.class}, new Object[] {createFog});
@@ -114,10 +114,10 @@ public final class EzBossBar implements BossBar{
                 BossBattle.invokeMethod("c", new Class[] {boolean.class}, new Object[] {createFog});
             }
 
-            if (ReflectionUtils.getVersion() >= 16) {
+            if (Ref.getVersion() >= 16) {
                 PacketPlayOutBoss.setInstance(PacketPlayOutBoss.invokeStaticMethod("createUpdatePropertiesPacket", new Class[] {BossBattle.getInstanceClass()}, new Object[] {BossBattle.getInstance()}));
             } else {
-                EzEnum Action = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutBoss$Action"));
+                EzEnum Action = new EzEnum(Ref.getNmsClass("PacketPlayOutBoss$Action"));
                 Action.newInstance("UPDATE_PROPERTIES");
                 PacketPlayOutBoss.setConstructor(Action.getInstanceEnum(), BossBattle.getInstanceClass());
                 PacketPlayOutBoss.newInstance(Action.getInstance(), BossBattle.getInstance());
@@ -154,8 +154,8 @@ public final class EzBossBar implements BossBar{
         if (getViewers().size() == 0) return;
         for (Player player : getViewers()) {
             if (!hasShown.contains(player)) continue;
-            EzClass PacketPlayOutBoss = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
-            EzClass BossBattle = new EzClass(ReflectionUtils.getNmsOrOld("world.BossBattle", "BossBattle"));
+            EzClass PacketPlayOutBoss = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
+            EzClass BossBattle = new EzClass(Ref.getNmsOrOld("world.BossBattle", "BossBattle"));
 
             EzEnum BarStyle = this.style.getNms();
 
@@ -163,10 +163,10 @@ public final class EzBossBar implements BossBar{
 
             BossBattle.invokeMethod("a", new Class[] {BarStyle.getInstanceEnum()}, new Object[] {BarStyle.getInstance()});
 
-            if (ReflectionUtils.getVersion() >= 16) {
+            if (Ref.getVersion() >= 16) {
                 PacketPlayOutBoss.setInstance(PacketPlayOutBoss.invokeStaticMethod("createUpdateStylePacket", new Class[] {BossBattle.getInstanceClass()}, new Object[] {BossBattle.getInstance()}));
             } else {
-                EzEnum Action = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutBoss$Action"));
+                EzEnum Action = new EzEnum(Ref.getNmsClass("PacketPlayOutBoss$Action"));
                 Action.newInstance("UPDATE_STYLE");
                 PacketPlayOutBoss.setConstructor(Action.getInstanceEnum(), BossBattle.getInstanceClass());
                 PacketPlayOutBoss.newInstance(Action.getInstance(), BossBattle.getInstance());
@@ -188,8 +188,8 @@ public final class EzBossBar implements BossBar{
         if (getViewers().size() == 0) return;
         for (Player player : getViewers()) {
             if (!hasShown.contains(player)) continue;
-            EzClass PacketPlayOutBoss = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
-            EzClass BossBattle = new EzClass(ReflectionUtils.getNmsOrOld("world.BossBattle", "BossBattle"));
+            EzClass PacketPlayOutBoss = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
+            EzClass BossBattle = new EzClass(Ref.getNmsOrOld("world.BossBattle", "BossBattle"));
 
             EzEnum BarColor = this.color.getNms();
 
@@ -197,10 +197,10 @@ public final class EzBossBar implements BossBar{
 
             BossBattle.invokeMethod("a", new Class[] {BarColor.getInstanceEnum()}, new Object[] {BarColor.getInstance()});
 
-            if (ReflectionUtils.getVersion() >= 16) {
+            if (Ref.getVersion() >= 16) {
                 PacketPlayOutBoss.setInstance(PacketPlayOutBoss.invokeStaticMethod("createUpdateStylePacket", new Class[] {BossBattle.getInstanceClass()}, new Object[] {BossBattle.getInstance()}));
             } else {
-                EzEnum Action = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutBoss$Action"));
+                EzEnum Action = new EzEnum(Ref.getNmsClass("PacketPlayOutBoss$Action"));
                 Action.newInstance("UPDATE_STYLE");
                 PacketPlayOutBoss.setConstructor(Action.getInstanceEnum(), BossBattle.getInstanceClass());
                 PacketPlayOutBoss.newInstance(Action.getInstance(), BossBattle.getInstance());
@@ -222,10 +222,10 @@ public final class EzBossBar implements BossBar{
         if (getViewers().size() == 0) return;
         for (Player player : getViewers()) {
             if (!hasShown.contains(player)) continue;
-            EzClass PacketPlayOutBoss = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
-            EzClass BossBattle = new EzClass(ReflectionUtils.getNmsOrOld("world.BossBattle", "BossBattle"));
-            EzClass IChatBaseComponent = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent"));
-            EzClass ChatMessage = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
+            EzClass PacketPlayOutBoss = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
+            EzClass BossBattle = new EzClass(Ref.getNmsOrOld("world.BossBattle", "BossBattle"));
+            EzClass IChatBaseComponent = new EzClass(Ref.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent"));
+            EzClass ChatMessage = new EzClass(Ref.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
 
             ChatMessage.setConstructor(String.class);
             ChatMessage.newInstance(this.title.getText(player));
@@ -234,10 +234,10 @@ public final class EzBossBar implements BossBar{
 
             BossBattle.invokeMethod("a", new Class[] {IChatBaseComponent.getInstanceClass()}, new Object[] {ChatMessage.getInstance()});
 
-            if (ReflectionUtils.getVersion() >= 16) {
+            if (Ref.getVersion() >= 16) {
                 PacketPlayOutBoss.setInstance(PacketPlayOutBoss.invokeStaticMethod("createUpdateNamePacket", new Class[] {BossBattle.getInstanceClass()}, new Object[] {BossBattle.getInstance()}));
             } else {
-                EzEnum Action = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutBoss$Action"));
+                EzEnum Action = new EzEnum(Ref.getNmsClass("PacketPlayOutBoss$Action"));
                 Action.newInstance("UPDATE_NAME");
                 PacketPlayOutBoss.setConstructor(Action.getInstanceEnum(), BossBattle.getInstanceClass());
                 PacketPlayOutBoss.newInstance(Action.getInstance(), BossBattle.getInstance());
@@ -250,11 +250,11 @@ public final class EzBossBar implements BossBar{
     public void addViewer(Player player) {
         if (isDropped()) return;
         if (!viewers.containsKey(player)) {
-            EzClass MinecraftKey = new EzClass(ReflectionUtils.getNmsOrOld("resources.MinecraftKey", "MinecraftKey"));
-            EzClass BossBattleCustom = new EzClass(ReflectionUtils.getNmsOrOld("world.BossBattleCustom", "BossBattleCustom"));
-            EzClass BossBattle = new EzClass(ReflectionUtils.getNmsOrOld("world.BossBattle", "BossBattle"));
-            EzClass IChatBaseComponent = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent"));
-            EzClass ChatMessage = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
+            EzClass MinecraftKey = new EzClass(Ref.getNmsOrOld("resources.MinecraftKey", "MinecraftKey"));
+            EzClass BossBattleCustom = new EzClass(Ref.getNmsOrOld("world.BossBattleCustom", "BossBattleCustom"));
+            EzClass BossBattle = new EzClass(Ref.getNmsOrOld("world.BossBattle", "BossBattle"));
+            EzClass IChatBaseComponent = new EzClass(Ref.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent"));
+            EzClass ChatMessage = new EzClass(Ref.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
 
             EzEnum BarColor = this.color.getNms();
             EzEnum BarStyle = this.style.getNms();
@@ -271,7 +271,7 @@ public final class EzBossBar implements BossBar{
 
             BossBattle.setInstance(BossBattleCustom.getInstance());
 
-            if (ReflectionUtils.getVersion() >= 16) {
+            if (Ref.getVersion() >= 16) {
                 BossBattle.invokeMethod("setProgress", new Class[] {float.class}, new Object[] {progress});
                 BossBattle.invokeMethod("setDarkenSky", new Class[] {boolean.class}, new Object[] {darkenSky});
                 BossBattle.invokeMethod("setPlayMusic", new Class[] {boolean.class}, new Object[] {playMusic});
@@ -326,13 +326,13 @@ public final class EzBossBar implements BossBar{
         if (!viewers.containsKey(player)) return;
         if (viewers.containsKey(player)) {
             if ((hasShown.contains(player) && !show) || (!hasShown.contains(player) && show)) {
-                EzClass PacketPlayOutBoss = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
-                EzClass BossBattle = new EzClass(ReflectionUtils.getNmsOrOld("world.BossBattle", "BossBattle"));
+                EzClass PacketPlayOutBoss = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutBoss", "PacketPlayOutBoss"));
+                EzClass BossBattle = new EzClass(Ref.getNmsOrOld("world.BossBattle", "BossBattle"));
                 BossBattle.setInstance(viewers.get(player).getInstance());
-                if (ReflectionUtils.getVersion() >= 16) {
+                if (Ref.getVersion() >= 16) {
                     PacketPlayOutBoss.setInstance(PacketPlayOutBoss.invokeStaticMethod(show ? "createAddPacket" : "createRemovePacket", new Class[]{BossBattle.getInstanceClass()}, new Object[]{BossBattle.getInstance()}));
                 } else {
-                    EzEnum Action = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutBoss$Action"));
+                    EzEnum Action = new EzEnum(Ref.getNmsClass("PacketPlayOutBoss$Action"));
                     Action.newInstance(show ? "ADD" : "REMOVE");
                     PacketPlayOutBoss.setConstructor(Action.getInstanceEnum(), BossBattle.getInstanceClass());
                     PacketPlayOutBoss.newInstance(Action.getInstance(), BossBattle.getInstance());

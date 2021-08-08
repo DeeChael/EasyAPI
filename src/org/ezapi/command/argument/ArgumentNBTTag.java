@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import org.ezapi.util.NBTUtils;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -46,11 +46,11 @@ public class ArgumentNBTTag implements Argument {
     }
 
     private static Class<?> ArgumentNBTTag() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentNBTTag");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentNBTTag");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentNBTTag");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentNBTTag");
         }
     }
 

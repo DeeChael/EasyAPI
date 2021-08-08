@@ -3,7 +3,7 @@ package org.ezapi.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.CommandNode;
 import org.bukkit.Bukkit;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -61,10 +61,10 @@ public final class EzCommandRegistered {
     }
 
     private static Class<?> nmsCommandDispatcher() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("CommandDispatcher");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("CommandDispatcher");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.CommandDispatcher");
+            return Ref.getClass("net.minecraft.commands.CommandDispatcher");
         }
     }
 
@@ -79,10 +79,10 @@ public final class EzCommandRegistered {
     }
 
     private static Class<?> MinecraftServer() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("MinecraftServer");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("MinecraftServer");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.server.MinecraftServer");
+            return Ref.getClass("net.minecraft.server.MinecraftServer");
         }
     }
 

@@ -3,7 +3,7 @@ package org.ezapi.command.argument;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import org.bukkit.Material;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -38,7 +38,7 @@ public final class ArgumentBlock implements Argument {
 
     public static Material nmsBlockToMaterial(Object object) {
         try {
-            return (Material) ReflectionUtils.getObcClass("util.CraftMagicNumbers").getMethod("getMaterial", Block()).invoke(null, object);
+            return (Material) Ref.getObcClass("util.CraftMagicNumbers").getMethod("getMaterial", Block()).invoke(null, object);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -55,20 +55,20 @@ public final class ArgumentBlock implements Argument {
     }
 
     private static Class<?> ArgumentTile() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentTile");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentTile");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentTile");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentTile");
         }
     }
 
     private static Class<?> Block() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("Block");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("Block");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.world.level.block.Block");
+            return Ref.getClass("net.minecraft.world.level.block.Block");
         }
     }
 

@@ -3,7 +3,7 @@ package org.ezapi.module.npc.fake;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.ezapi.reflect.EzClass;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -12,25 +12,25 @@ import java.util.List;
 public final class FakeVillager extends FakeEntity {
 
     public FakeVillager() {
-        super(ReflectionUtils.getNmsOrOld("world.entity.npc.EntityVillager", "EntityVillager"));
+        super(Ref.getNmsOrOld("world.entity.npc.EntityVillager", "EntityVillager"));
     }
 
     @Override
     public EzClass create(String name, Location location) {
-        EzClass EntityVillager = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.npc.EntityVillager", "EntityVillager"));
-        EzClass MinecraftServer = new EzClass(ReflectionUtils.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
-        EzClass World = new EzClass(ReflectionUtils.getNmsOrOld("world.level.World", "World"));
-        EzClass EntityTypes = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.EntityTypes", "EntityTypes"));
-        EzClass ChatMessage = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
+        EzClass EntityVillager = new EzClass(Ref.getNmsOrOld("world.entity.npc.EntityVillager", "EntityVillager"));
+        EzClass MinecraftServer = new EzClass(Ref.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
+        EzClass World = new EzClass(Ref.getNmsOrOld("world.level.World", "World"));
+        EzClass EntityTypes = new EzClass(Ref.getNmsOrOld("world.entity.EntityTypes", "EntityTypes"));
+        EzClass ChatMessage = new EzClass(Ref.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
         ChatMessage.setConstructor(String.class);
         ChatMessage.newInstance(name);
         try {
-            EzClass CraftServer = new EzClass(ReflectionUtils.getObcClass("CraftServer"));
+            EzClass CraftServer = new EzClass(Ref.getObcClass("CraftServer"));
             CraftServer.setInstance(Bukkit.getServer());
             MinecraftServer.setInstance(CraftServer.invokeMethod("getServer", new Class[0], new Object[0]));
             World.setInstance(location.getWorld().getClass().getMethod("getHandle").invoke(location.getWorld()));
-            if (ReflectionUtils.getVersion() >= 11) {
-                if (ReflectionUtils.getVersion() >= 16) {
+            if (Ref.getVersion() >= 11) {
+                if (Ref.getVersion() >= 16) {
                     EntityTypes.setInstance(EntityTypes.getStaticField("aV"));
                 } else {
                     EntityTypes.setInstance(EntityTypes.getStaticField("VILLAGER"));
@@ -41,9 +41,9 @@ public final class FakeVillager extends FakeEntity {
                 EntityVillager.setConstructor(World.getInstanceClass());
                 EntityVillager.newInstance(World.getInstance());
             }
-            EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
+            EzClass Entity = new EzClass(Ref.getNmsOrOld("world.entity.Entity", "Entity"));
             Entity.setInstance(EntityVillager.getInstance());
-            Entity.invokeMethod("setCustomName", new Class[]{ReflectionUtils.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent")}, new Object[]{ChatMessage.getInstance()});
+            Entity.invokeMethod("setCustomName", new Class[]{Ref.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent")}, new Object[]{ChatMessage.getInstance()});
             Entity.invokeMethod("setLocation", new Class[] {double.class, double.class, double.class, float.class, float.class}, new Object[] {location.getX(), location.getY(), location.getZ(), 0.0f, 0.0f});
             Entity.invokeMethod("setNoGravity", new Class[]{boolean.class}, new Object[]{true});
             Entity.invokeMethod("setCustomNameVisible", new Class[]{boolean.class}, new Object[]{true});
@@ -55,15 +55,15 @@ public final class FakeVillager extends FakeEntity {
 
     @Override
     public List<EzClass> packet(Object entity) {
-        EzClass EntityLiving = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.EntityLiving", "EntityLiving"));
-        EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
+        EzClass EntityLiving = new EzClass(Ref.getNmsOrOld("world.entity.EntityLiving", "EntityLiving"));
+        EzClass Entity = new EzClass(Ref.getNmsOrOld("world.entity.Entity", "Entity"));
         Entity.setInstance(entity);
         int id = (int) Entity.invokeMethod("getId", new Class[0], new Object[0]);
-        EzClass PacketPlayOutSpawnEntityLiving = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutSpawnEntityLiving", "PacketPlayOutSpawnEntityLiving"));
+        EzClass PacketPlayOutSpawnEntityLiving = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutSpawnEntityLiving", "PacketPlayOutSpawnEntityLiving"));
         PacketPlayOutSpawnEntityLiving.setConstructor(EntityLiving.getInstanceClass());
         PacketPlayOutSpawnEntityLiving.newInstance(entity);
-        EzClass PacketPlayOutEntityMetadata = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutEntityMetadata", "PacketPlayOutEntityMetadata"));
-        PacketPlayOutEntityMetadata.setConstructor(int.class, ReflectionUtils.getNmsOrOld("network.syncher.DataWatcher", "DataWatcher"), boolean.class);
+        EzClass PacketPlayOutEntityMetadata = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutEntityMetadata", "PacketPlayOutEntityMetadata"));
+        PacketPlayOutEntityMetadata.setConstructor(int.class, Ref.getNmsOrOld("network.syncher.DataWatcher", "DataWatcher"), boolean.class);
         PacketPlayOutEntityMetadata.newInstance(id, Entity.invokeMethod("getDataWatcher", new Class[0], new Object[0]), true);
         List<EzClass> list = new ArrayList<>();
         list.add(PacketPlayOutSpawnEntityLiving);
@@ -73,7 +73,7 @@ public final class FakeVillager extends FakeEntity {
 
     @Override
     public void data(Object entity, Object data) {
-        if (!(ReflectionUtils.getVersion() >= 11)) return;
+        if (!(Ref.getVersion() >= 11)) return;
         if (data instanceof VillagerData) {
 
         }
@@ -88,7 +88,7 @@ public final class FakeVillager extends FakeEntity {
         private final boolean isBaby;
 
         public VillagerData(VillagerProfession profession, VillagerType type, boolean isBaby) {
-            if (ReflectionUtils.getVersion() <= 10) throw new RuntimeException("Minecraft Server is less than 1.14 so cannot set villager data");
+            if (Ref.getVersion() <= 10) throw new RuntimeException("Minecraft Server is less than 1.14 so cannot set villager data");
             this.profession = profession;
             this.type = type;
             this.isBaby = isBaby;

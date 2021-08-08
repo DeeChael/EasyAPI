@@ -3,7 +3,7 @@ package org.ezapi.command.argument;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import org.bukkit.enchantments.Enchantment;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -36,7 +36,7 @@ public final class ArgumentEnchantment implements Argument {
 
     public static Enchantment nmsEnchantmentToBukkitEnchantment(Object nmsEnchantment) {
         try {
-            return (Enchantment) ReflectionUtils.getObcClass("enchantments.CraftEnchantment").getConstructor(Enchantment()).newInstance(nmsEnchantment);
+            return (Enchantment) Ref.getObcClass("enchantments.CraftEnchantment").getConstructor(Enchantment()).newInstance(nmsEnchantment);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
             e.printStackTrace();
         }
@@ -53,20 +53,20 @@ public final class ArgumentEnchantment implements Argument {
     }
 
     private static Class<?> ArgumentEnchantment() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentEnchantment");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentEnchantment");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentEnchantment");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentEnchantment");
         }
     }
 
     private static Class<?> Enchantment() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("Enchantment");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("Enchantment");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.world.item.enchantment.Enchantment");
+            return Ref.getClass("net.minecraft.world.item.enchantment.Enchantment");
         }
     }
 

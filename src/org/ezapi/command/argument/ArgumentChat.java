@@ -2,7 +2,7 @@ package org.ezapi.command.argument;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -52,11 +52,11 @@ public final class ArgumentChat implements Argument {
     }
 
     private static Class<?> ArgumentChat() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentChat");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentChat");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentChat");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentChat");
         }
     }
 

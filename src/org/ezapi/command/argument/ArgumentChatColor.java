@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import org.bukkit.Particle;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -37,9 +37,9 @@ public final class ArgumentChatColor implements Argument {
     }
 
     public static char getColorChar(Object enumChatFormat) {
-        EzClass EnumChatFormat = ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzClass(ReflectionUtils.getNmsClass("EnumChatFormat")) : new EzClass("net.minecraft.EnumChatFormat");
+        EzClass EnumChatFormat = Ref.getVersion() <= 15 && Ref.getVersion() >= 9 ? new EzClass(Ref.getNmsClass("EnumChatFormat")) : new EzClass("net.minecraft.EnumChatFormat");
         EnumChatFormat.setInstance(enumChatFormat);
-        return (char) (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? EnumChatFormat.getField("character") : EnumChatFormat.invokeMethod("a", new Class[0], new Object[0]));
+        return (char) (Ref.getVersion() <= 15 && Ref.getVersion() >= 9 ? EnumChatFormat.getField("character") : EnumChatFormat.invokeMethod("a", new Class[0], new Object[0]));
     }
 
     private static ArgumentType<Object> get() {
@@ -52,11 +52,11 @@ public final class ArgumentChatColor implements Argument {
     }
 
     private static Class<?> ArgumentChatFormat() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentChatFormat");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentChatFormat");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentChatFormat");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentChatFormat");
         }
     }
 

@@ -2,7 +2,7 @@ package org.ezapi.module.bossbar;
 
 import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.ArrayUtils;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 public enum BarStyle {
 
@@ -29,8 +29,8 @@ public enum BarStyle {
     }
 
     public EzEnum getNms() {
-        EzEnum BarStyle = new EzEnum(ReflectionUtils.getNmsOrOld("world.BossBattle$BarStyle", "BossBattle$BarStyle"));
-        if (ReflectionUtils.getVersion() < 16) {
+        EzEnum BarStyle = new EzEnum(Ref.getNmsOrOld("world.BossBattle$BarStyle", "BossBattle$BarStyle"));
+        if (Ref.getVersion() < 16) {
             BarStyle.newInstance(this.name());
         } else {
             char[] chars = new char[] {'a', 'b', 'c', 'd', 'e'};

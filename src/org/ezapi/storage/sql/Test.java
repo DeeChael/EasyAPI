@@ -3,7 +3,7 @@ package org.ezapi.storage.sql;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import org.ezapi.reflect.EzClass;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,13 +38,13 @@ final class Test {
         */
 
         //EzClass Reflection examples
-        EzClass ChatMessage = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
+        EzClass ChatMessage = new EzClass(Ref.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
         ChatMessage.setConstructor(String.class);
         ChatMessage.newInstance("Testing");
         Object chatMessageEz = ChatMessage.getInstance();
 
         //Java Original Reflection examples
-        Class<?> clazz = ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage");
+        Class<?> clazz = Ref.getNmsOrOld("network.chat.ChatMessage", "ChatMessage");
         if (clazz != null) {
             try {
                 Constructor<?> constructor = clazz.getDeclaredConstructor(String.class);

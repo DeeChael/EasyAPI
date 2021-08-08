@@ -3,7 +3,7 @@ package org.ezapi.command.argument;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -45,10 +45,10 @@ public final class ArgumentOfflinePlayer implements Argument {
     }
 
     private static Class<?> ArgumentProfile() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentProfile");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentProfile");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentProfile");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentProfile");
         }
     }
 

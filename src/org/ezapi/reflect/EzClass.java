@@ -1,7 +1,7 @@
 package org.ezapi.reflect;
 
 import org.apache.commons.lang.IllegalClassException;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.*;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ public final class EzClass {
     private boolean created = false;
 
     public EzClass(String className) {
-        this(ReflectionUtils.getClass(className));
+        this(Ref.getClass(className));
     }
 
     public EzClass(Class<?> clazz) {

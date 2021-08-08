@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.ezapi.EasyAPI;
 import org.ezapi.chat.ChatMessage;
 import org.ezapi.util.PlayerUtils;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -92,26 +92,26 @@ public final class EzSender {
     }
 
     private static Class<?> ChatMessage() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ChatMessage");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ChatMessage");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.network.chat.ChatMessage");
+            return Ref.getClass("net.minecraft.network.chat.ChatMessage");
         }
     }
 
     private static Class<?> IChatBaseComponent() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("IChatBaseComponent");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("IChatBaseComponent");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.network.chat.IChatBaseComponent");
+            return Ref.getClass("net.minecraft.network.chat.IChatBaseComponent");
         }
     }
 
     private static Class<?> CommandListenerWrapper() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("CommandListenerWrapper");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("CommandListenerWrapper");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.CommandListenerWrapper");
+            return Ref.getClass("net.minecraft.commands.CommandListenerWrapper");
         }
     }
 

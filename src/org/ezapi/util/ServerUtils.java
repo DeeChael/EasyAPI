@@ -18,16 +18,16 @@ import java.util.Base64;
 public class ServerUtils {
 
     public static double[] getTps() {
-        EzClass MinecraftServer = new EzClass(ReflectionUtils.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
-        EzClass CraftServer = new EzClass(ReflectionUtils.getObcClass("CraftServer"));
+        EzClass MinecraftServer = new EzClass(Ref.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
+        EzClass CraftServer = new EzClass(Ref.getObcClass("CraftServer"));
         CraftServer.setInstance(Bukkit.getServer());
         MinecraftServer.setInstance(CraftServer.invokeMethod("getServer", new Class[0], new Object[0]));
         return (double[]) MinecraftServer.getField("recentTps");
     }
 
     public static void setMotd(String motd) {
-        EzClass MinecraftServer = new EzClass(ReflectionUtils.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
-        EzClass CraftServer = new EzClass(ReflectionUtils.getObcClass("CraftServer"));
+        EzClass MinecraftServer = new EzClass(Ref.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
+        EzClass CraftServer = new EzClass(Ref.getObcClass("CraftServer"));
         CraftServer.setInstance(Bukkit.getServer());
         MinecraftServer.setInstance(CraftServer.invokeMethod("getServer", new Class[0], new Object[0]));
         MinecraftServer.invokeMethod("setMotd", new Class[] {String.class}, new Object[] {motd});
@@ -35,11 +35,11 @@ public class ServerUtils {
 
     public static void setFavicon(File file) {
         if (!file.isFile() && file.getName().endsWith(".png")) {
-            EzClass MinecraftServer = new EzClass(ReflectionUtils.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
-            EzClass CraftServer = new EzClass(ReflectionUtils.getObcClass("CraftServer"));
+            EzClass MinecraftServer = new EzClass(Ref.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
+            EzClass CraftServer = new EzClass(Ref.getObcClass("CraftServer"));
             CraftServer.setInstance(Bukkit.getServer());
             MinecraftServer.setInstance(CraftServer.invokeMethod("getServer", new Class[0], new Object[0]));
-            EzClass ServerPing = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.status.ServerPing", "ServerPing"));
+            EzClass ServerPing = new EzClass(Ref.getNmsOrOld("network.protocol.status.ServerPing", "ServerPing"));
             ServerPing.setInstance(MinecraftServer.invokeMethod("getServerPing", new Class[0], new Object[0]));
             ByteBuf bytebuf = Unpooled.buffer();
             try {

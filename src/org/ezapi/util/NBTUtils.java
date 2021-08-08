@@ -256,14 +256,14 @@ public final class NBTUtils {
         }
 
         public static Class<?> CraftItemStack() {
-            return ReflectionUtils.getObcClass("inventory.CraftItemStack");
+            return Ref.getObcClass("inventory.CraftItemStack");
         }
 
         public static Class<?> ItemStack() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("ItemStack");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("ItemStack");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.world.item.ItemStack");
+                return Ref.getClass("net.minecraft.world.item.ItemStack");
             }
         }
 
@@ -276,106 +276,106 @@ public final class NBTUtils {
         }
 
         public static Class<?> NBTTagCompound() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagCompound");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagCompound");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagCompound");
+                return Ref.getClass("net.minecraft.nbt.NBTTagCompound");
             }
         }
 
         public static Class<?> NBTTagString() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagString");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagString");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagString");
+                return Ref.getClass("net.minecraft.nbt.NBTTagString");
             }
         }
 
         public static Class<?> NBTTagInt() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagInt");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagInt");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagInt");
+                return Ref.getClass("net.minecraft.nbt.NBTTagInt");
             }
         }
 
         public static Class<?> NBTTagLong() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagLong");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagLong");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagLong");
+                return Ref.getClass("net.minecraft.nbt.NBTTagLong");
             }
         }
 
         public static Class<?> NBTTagShort() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagShort");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagShort");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagShort");
+                return Ref.getClass("net.minecraft.nbt.NBTTagShort");
             }
         }
 
         public static Class<?> NBTTagByte() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagByte");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagByte");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagByte");
+                return Ref.getClass("net.minecraft.nbt.NBTTagByte");
             }
         }
 
         public static Class<?> NBTTagFloat() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagFloat");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagFloat");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagFloat");
+                return Ref.getClass("net.minecraft.nbt.NBTTagFloat");
             }
         }
 
         public static Class<?> NBTTagDouble() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagDouble");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagDouble");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagDouble");
+                return Ref.getClass("net.minecraft.nbt.NBTTagDouble");
             }
         }
 
         public static Class<?> NBTTagIntArray() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagIntArray");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagIntArray");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagIntArray");
+                return Ref.getClass("net.minecraft.nbt.NBTTagIntArray");
             }
         }
 
         public static Class<?> NBTTagLongArray() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagLongArray");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagLongArray");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagLongArray");
+                return Ref.getClass("net.minecraft.nbt.NBTTagLongArray");
             }
         }
 
         public static Class<?> NBTTagByteArray() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagByteArray");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagByteArray");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagByteArray");
+                return Ref.getClass("net.minecraft.nbt.NBTTagByteArray");
             }
         }
 
         public static Class<?> NBTTagList() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTTagList");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTTagList");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTTagList");
+                return Ref.getClass("net.minecraft.nbt.NBTTagList");
             }
         }
 
         public static Class<?> NBTBase() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("NBTBase");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("NBTBase");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.nbt.NBTBase");
+                return Ref.getClass("net.minecraft.nbt.NBTBase");
             }
         }
 
@@ -388,10 +388,10 @@ public final class NBTUtils {
         }
 
         private static Class<?> EntityItem() {
-            if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-                return ReflectionUtils.getNmsClass("EntityItem");
+            if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+                return Ref.getNmsClass("EntityItem");
             } else {
-                return ReflectionUtils.getClass("net.minecraft.world.entity.item.EntityItem");
+                return Ref.getClass("net.minecraft.world.entity.item.EntityItem");
             }
         }
         

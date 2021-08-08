@@ -10,7 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 import org.ezapi.util.item.ItemUtils;
 
 import java.io.IOException;
@@ -19,7 +19,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,30 +26,30 @@ import java.util.UUID;
 public final class FakePlayer extends FakeEntity {
 
     public FakePlayer() {
-        super(ReflectionUtils.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
+        super(Ref.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
     }
 
     @Override
     public EzClass create(String name, Location location) {
-        EzClass EntityPlayer = new EzClass(ReflectionUtils.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
-        EzClass MinecraftServer = new EzClass(ReflectionUtils.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
-        EzClass WorldServer = new EzClass(ReflectionUtils.getNmsOrOld("server.level.WorldServer", "WorldServer"));
+        EzClass EntityPlayer = new EzClass(Ref.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
+        EzClass MinecraftServer = new EzClass(Ref.getNmsOrOld("server.MinecraftServer", "MinecraftServer"));
+        EzClass WorldServer = new EzClass(Ref.getNmsOrOld("server.level.WorldServer", "WorldServer"));
         try {
-            EzClass CraftServer = new EzClass(ReflectionUtils.getObcClass("CraftServer"));
+            EzClass CraftServer = new EzClass(Ref.getObcClass("CraftServer"));
             CraftServer.setInstance(Bukkit.getServer());
             MinecraftServer.setInstance(CraftServer.invokeMethod("getServer", new Class[0], new Object[0]));
             WorldServer.setInstance(location.getWorld().getClass().getMethod("getHandle").invoke(location.getWorld()));
-            if (ReflectionUtils.getVersion() >= 16) {
+            if (Ref.getVersion() >= 16) {
                 EntityPlayer.setConstructor(MinecraftServer.getInstanceClass(), WorldServer.getInstanceClass(), GameProfile.class);
                 EntityPlayer.newInstance(MinecraftServer.getInstance(), WorldServer.getInstance(), new GameProfile(UUID.randomUUID(), name));
             } else {
-                EzClass PlayerInteractManager = new EzClass(ReflectionUtils.getNmsClass("PlayerInteractManager"));
+                EzClass PlayerInteractManager = new EzClass(Ref.getNmsClass("PlayerInteractManager"));
                 PlayerInteractManager.setConstructor(WorldServer.getInstanceClass());
                 PlayerInteractManager.newInstance(WorldServer.getInstance());
                 EntityPlayer.setConstructor(MinecraftServer.getInstanceClass(), WorldServer.getInstanceClass(), GameProfile.class, PlayerInteractManager.getInstanceClass());
                 EntityPlayer.newInstance(MinecraftServer.getInstance(), WorldServer.getInstance(), new GameProfile(UUID.randomUUID(), name), PlayerInteractManager.getInstance());
             }
-            EzClass Entity = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.Entity", "Entity"));
+            EzClass Entity = new EzClass(Ref.getNmsOrOld("world.entity.Entity", "Entity"));
             Entity.setInstance(EntityPlayer.getInstance());
             Entity.invokeMethod("setLocation", new Class[] {double.class, double.class, double.class, float.class, float.class}, new Object[] {location.getX(), location.getY(), location.getZ(), 0.0f, 0.0f});
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -62,16 +61,16 @@ public final class FakePlayer extends FakeEntity {
 
     @Override
     public List<EzClass> packet(Object entity) {
-        EzClass Add = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutPlayerInfo", "PacketPlayOutPlayerInfo"));
-        EzClass Remove = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutPlayerInfo", "PacketPlayOutPlayerInfo"));
+        EzClass Add = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutPlayerInfo", "PacketPlayOutPlayerInfo"));
+        EzClass Remove = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutPlayerInfo", "PacketPlayOutPlayerInfo"));
         EzEnum EnumPlayerInfoAction = new EzEnum(Add.getInstanceClass().getName() + "$EnumPlayerInfoAction");
-        EzClass EntityPlayer = new EzClass(ReflectionUtils.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
+        EzClass EntityPlayer = new EzClass(Ref.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
         EntityPlayer.setInstance(entity);
-        Add.setConstructor(EnumPlayerInfoAction.getInstanceEnum(), ReflectionUtils.getArrayClassFromClass(EntityPlayer.getInstanceClass()));
-        Remove.setConstructor(EnumPlayerInfoAction.getInstanceEnum(), ReflectionUtils.getArrayClassFromClass(EntityPlayer.getInstanceClass()));
+        Add.setConstructor(EnumPlayerInfoAction.getInstanceEnum(), Ref.getArrayClass(EntityPlayer.getInstanceClass()));
+        Remove.setConstructor(EnumPlayerInfoAction.getInstanceEnum(), Ref.getArrayClass(EntityPlayer.getInstanceClass()));
         Object[] objects = (Object[]) Array.newInstance(EntityPlayer.getInstanceClass(), 1);
         objects[0] = entity;
-        if (ReflectionUtils.getVersion() >= 16) {
+        if (Ref.getVersion() >= 16) {
             Add.newInstance(EnumPlayerInfoAction.valueOf("a"), objects);
             Remove.newInstance(EnumPlayerInfoAction.valueOf("e"), objects);
         } else {
@@ -79,8 +78,8 @@ public final class FakePlayer extends FakeEntity {
             Remove.newInstance(EnumPlayerInfoAction.valueOf("REMOVE_PLAYER"), objects);
         }
 
-        EzClass PacketPlayOutNamedEntitySpawn = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutNamedEntitySpawn", "PacketPlayOutNamedEntitySpawn"));
-        EzClass EntityHuman = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.player.EntityHuman", "EntityHuman"));
+        EzClass PacketPlayOutNamedEntitySpawn = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutNamedEntitySpawn", "PacketPlayOutNamedEntitySpawn"));
+        EzClass EntityHuman = new EzClass(Ref.getNmsOrOld("world.entity.player.EntityHuman", "EntityHuman"));
         PacketPlayOutNamedEntitySpawn.setConstructor(EntityHuman.getInstanceClass());
         PacketPlayOutNamedEntitySpawn.newInstance(entity);
         List<EzClass> list = new ArrayList<>();
@@ -94,9 +93,9 @@ public final class FakePlayer extends FakeEntity {
     public void data(Object entity, Object owner) {
         if (!(owner instanceof String)) return;
         try {
-            EzClass EntityPlayer = new EzClass(ReflectionUtils.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
+            EzClass EntityPlayer = new EzClass(Ref.getNmsOrOld("server.level.EntityPlayer", "EntityPlayer"));
             EntityPlayer.setInstance(entity);
-            EzClass EntityHuman = new EzClass(ReflectionUtils.getNmsOrOld("world.entity.player.EntityHuman", "EntityHuman"));
+            EzClass EntityHuman = new EzClass(Ref.getNmsOrOld("world.entity.player.EntityHuman", "EntityHuman"));
             EntityHuman.setInstance(EntityPlayer.getInstance());
             GameProfile gameProfile = (GameProfile) EntityHuman.invokeMethod("getProfile", new Class[0], new Object[0]);
             URL getIdUrl = new URL("https://api.mojang.com/users/profiles/minecraft/" + ((String) owner).toLowerCase());

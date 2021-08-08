@@ -15,7 +15,7 @@ import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -118,7 +118,7 @@ public final class EzCommandManager implements Listener {
 
     private static void setDispatcher(Command vanillaListenerWrapper, Object nmsCommandDispatcher) {
         try {
-            Field field = ReflectionUtils.getObcClass("command.VanillaCommandWrapper").getDeclaredField("dispatcher");
+            Field field = Ref.getObcClass("command.VanillaCommandWrapper").getDeclaredField("dispatcher");
             field.setAccessible(true);
             field.set(vanillaListenerWrapper, nmsCommandDispatcher);
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -135,10 +135,10 @@ public final class EzCommandManager implements Listener {
     }
 
     private static Class<?> CommandListenerWrapper() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("CommandListenerWrapper");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("CommandListenerWrapper");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.CommandListenerWrapper");
+            return Ref.getClass("net.minecraft.commands.CommandListenerWrapper");
         }
     }
 
@@ -194,7 +194,7 @@ public final class EzCommandManager implements Listener {
 
     private static Command createVanillaCommandWrapper(Object nmsCommandDispatcher, CommandNode<Object> commandNode) {
         try {
-            return (Command) ReflectionUtils.getObcClass("command.VanillaCommandWrapper").getConstructor(nmsCommandDispatcher(), CommandNode.class).newInstance(nmsCommandDispatcher, commandNode);
+            return (Command) Ref.getObcClass("command.VanillaCommandWrapper").getConstructor(nmsCommandDispatcher(), CommandNode.class).newInstance(nmsCommandDispatcher, commandNode);
         } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -211,10 +211,10 @@ public final class EzCommandManager implements Listener {
     }
 
     private static Class<?> nmsCommandDispatcher() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("CommandDispatcher");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("CommandDispatcher");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.CommandDispatcher");
+            return Ref.getClass("net.minecraft.commands.CommandDispatcher");
         }
     }
 
@@ -239,10 +239,10 @@ public final class EzCommandManager implements Listener {
     }
 
     private static Class<?> MinecraftServer() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("MinecraftServer");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("MinecraftServer");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.server.MinecraftServer");
+            return Ref.getClass("net.minecraft.server.MinecraftServer");
         }
     }
 

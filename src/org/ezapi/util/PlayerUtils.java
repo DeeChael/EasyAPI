@@ -45,7 +45,7 @@ public final class PlayerUtils {
         if (hasOnlineAccount(player)) {
             skin(player, player.getName());
         } else {
-            EzClass craftPlayerClass = new EzClass(ReflectionUtils.getObcClass("entity.CraftPlayer"));
+            EzClass craftPlayerClass = new EzClass(Ref.getObcClass("entity.CraftPlayer"));
             craftPlayerClass.setInstance(player);
             GameProfile gameProfile = (GameProfile) craftPlayerClass.invokeMethod("getProfile", new Class[0], new Object[0]);
             if (gameProfile.getProperties().containsKey("textures")) {
@@ -75,7 +75,7 @@ public final class PlayerUtils {
     }
 
     public static void skin(Player player, String skinOwner) {
-        EzClass craftPlayerClass = new EzClass(ReflectionUtils.getObcClass("entity.CraftPlayer"));
+        EzClass craftPlayerClass = new EzClass(Ref.getObcClass("entity.CraftPlayer"));
         craftPlayerClass.setInstance(player);
         GameProfile gameProfile = (GameProfile) craftPlayerClass.invokeMethod("getProfile", new Class[0], new Object[0]);
         try {
@@ -305,7 +305,7 @@ public final class PlayerUtils {
     }
 
     public static void reloadCommands(Player player, Object nmsCommandDispatcher) {
-        EzClass craftPlayer = new EzClass(ReflectionUtils.getObcClass("entity.CraftPlayer"));
+        EzClass craftPlayer = new EzClass(Ref.getObcClass("entity.CraftPlayer"));
         craftPlayer.setInstance(player);
         Object entityPlayer = craftPlayer.invokeMethod("getHandle", new Class[0], new Object[0]);
         EzClass entityPlayerClass = new EzClass(entityPlayer.getClass());
@@ -326,14 +326,14 @@ public final class PlayerUtils {
     }
 
     public static void sendPacket(Player player, Object packet) {
-        EzClass packetClass = ReflectionUtils.getVersion() >= 9 && ReflectionUtils.getVersion() <= 15 ? new EzClass(ReflectionUtils.getNmsClass("Packet")) : new EzClass("net.minecraft.network.protocol.Packet");
+        EzClass packetClass = Ref.getVersion() >= 9 && Ref.getVersion() <= 15 ? new EzClass(Ref.getNmsClass("Packet")) : new EzClass("net.minecraft.network.protocol.Packet");
         if (!packetClass.isExtended(packet)) return;
         try {
             Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
-            EzClass entityPlayerClass = ReflectionUtils.getVersion() >= 9 && ReflectionUtils.getVersion() <= 15 ? new EzClass(ReflectionUtils.getNmsClass("EntityPlayer")) : new EzClass("net.minecraft.server.level.EntityPlayer");
+            EzClass entityPlayerClass = Ref.getVersion() >= 9 && Ref.getVersion() <= 15 ? new EzClass(Ref.getNmsClass("EntityPlayer")) : new EzClass("net.minecraft.server.level.EntityPlayer");
             entityPlayerClass.setInstance(entityPlayer);
-            EzClass playerConnectionClass = ReflectionUtils.getVersion() >= 9 && ReflectionUtils.getVersion() <= 15 ? new EzClass(ReflectionUtils.getNmsClass("PlayerConnection")) : new EzClass("net.minecraft.server.network.PlayerConnection");
-            Object playerConnection = entityPlayerClass.getField(ReflectionUtils.getVersion() >= 9 && ReflectionUtils.getVersion() <= 15 ? "playerConnection" : "b");
+            EzClass playerConnectionClass = Ref.getVersion() >= 9 && Ref.getVersion() <= 15 ? new EzClass(Ref.getNmsClass("PlayerConnection")) : new EzClass("net.minecraft.server.network.PlayerConnection");
+            Object playerConnection = entityPlayerClass.getField(Ref.getVersion() >= 9 && Ref.getVersion() <= 15 ? "playerConnection" : "b");
             playerConnectionClass.setInstance(playerConnection);
             playerConnectionClass.invokeMethod("sendPacket", new Class[] {packetClass.getInstanceClass()}, new Object[] {packet});
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -378,7 +378,7 @@ public final class PlayerUtils {
                     helmetItemStack.getType().equals(Material.GOLDEN_HELMET) ||
                     helmetItemStack.getType().equals(Material.DIAMOND_HELMET) ||
                     helmetItemStack.getType().equals(Material.TURTLE_HELMET);
-            if (!helmet && ReflectionUtils.getVersion() >= 13) {
+            if (!helmet && Ref.getVersion() >= 13) {
                 helmet = helmetItemStack.getType().equals(Material.valueOf("NETHERITE_HELMET"));
             }
         }
@@ -390,7 +390,7 @@ public final class PlayerUtils {
                     chestplateItemStack.getType().equals(Material.IRON_CHESTPLATE) ||
                     chestplateItemStack.getType().equals(Material.GOLDEN_CHESTPLATE) ||
                     chestplateItemStack.getType().equals(Material.DIAMOND_CHESTPLATE);
-            if (!chestplate && ReflectionUtils.getVersion() >= 13) {
+            if (!chestplate && Ref.getVersion() >= 13) {
                 chestplate = chestplateItemStack.getType().equals(Material.valueOf("NETHERITE_CHESTPLATE"));
             }
         }
@@ -402,7 +402,7 @@ public final class PlayerUtils {
                     leggingsItemStack.getType().equals(Material.IRON_LEGGINGS) ||
                     leggingsItemStack.getType().equals(Material.GOLDEN_LEGGINGS) ||
                     leggingsItemStack.getType().equals(Material.DIAMOND_LEGGINGS);
-            if (!leggings && ReflectionUtils.getVersion() >= 13) {
+            if (!leggings && Ref.getVersion() >= 13) {
                 leggings = leggingsItemStack.getType().equals(Material.valueOf("NETHERITE_LEGGINGS"));
             }
         }
@@ -414,7 +414,7 @@ public final class PlayerUtils {
                     bootsItemStack.getType().equals(Material.IRON_BOOTS) ||
                     bootsItemStack.getType().equals(Material.GOLDEN_BOOTS) ||
                     bootsItemStack.getType().equals(Material.DIAMOND_BOOTS);
-            if (!boots && ReflectionUtils.getVersion() >= 13) {
+            if (!boots && Ref.getVersion() >= 13) {
                 boots = bootsItemStack.getType().equals(Material.valueOf("NETHERITE_BOOTS"));
             }
         }
@@ -439,18 +439,18 @@ public final class PlayerUtils {
     }
 
     private static Object createPacketPlayOutPlayerInfoAddPlayer(Player player) {
-        EzClass packetPlayerOutPlayerInfo = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo") : new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutPlayerInfo"));
+        EzClass packetPlayerOutPlayerInfo = Ref.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo") : new EzClass(Ref.getNmsClass("PacketPlayOutPlayerInfo"));
         EzEnum enumPlayerInfoAction = new EzEnum(packetPlayerOutPlayerInfo.getInstanceClass().getName() + "$EnumPlayerInfoAction");
-        if (ReflectionUtils.getVersion() >= 16) {
+        if (Ref.getVersion() >= 16) {
             enumPlayerInfoAction.newInstance("a");
         } else {
             enumPlayerInfoAction.newInstance("ADD_PLAYER");
         }
         try {
             Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
-            EzClass entityPlayerClass = ReflectionUtils.getVersion() >= 9 && ReflectionUtils.getVersion() <= 15 ? new EzClass(ReflectionUtils.getNmsClass("EntityPlayer")) : new EzClass("net.minecraft.server.level.EntityPlayer");
+            EzClass entityPlayerClass = Ref.getVersion() >= 9 && Ref.getVersion() <= 15 ? new EzClass(Ref.getNmsClass("EntityPlayer")) : new EzClass("net.minecraft.server.level.EntityPlayer");
             entityPlayerClass.setInstance(entityPlayer);
-            packetPlayerOutPlayerInfo.setConstructor(enumPlayerInfoAction.getInstanceEnum(), ReflectionUtils.getArrayClassFromClass(entityPlayerClass.getInstanceClass()));
+            packetPlayerOutPlayerInfo.setConstructor(enumPlayerInfoAction.getInstanceEnum(), Ref.getArrayClass(entityPlayerClass.getInstanceClass()));
             Object[] objects = (Object[]) Array.newInstance(entityPlayerClass.getInstanceClass(), 1);
             objects[0] = entityPlayer;
             packetPlayerOutPlayerInfo.newInstance(enumPlayerInfoAction.getInstance(), objects);
@@ -460,18 +460,18 @@ public final class PlayerUtils {
     }
 
     private static Object createPacketPlayOutPlayerInfoRemovePlayer(Player player) {
-        EzClass packetPlayerOutPlayerInfo = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo") : new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutPlayerInfo"));
+        EzClass packetPlayerOutPlayerInfo = Ref.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo") : new EzClass(Ref.getNmsClass("PacketPlayOutPlayerInfo"));
         EzEnum enumPlayerInfoAction = new EzEnum(packetPlayerOutPlayerInfo.getInstanceClass().getName() + "$EnumPlayerInfoAction");
-        if (ReflectionUtils.getVersion() >= 16) {
+        if (Ref.getVersion() >= 16) {
             enumPlayerInfoAction.newInstance("e");
         } else {
             enumPlayerInfoAction.newInstance("REMOVE_PLAYER");
         }
         try {
             Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
-            EzClass entityPlayerClass = ReflectionUtils.getVersion() >= 9 && ReflectionUtils.getVersion() <= 15 ? new EzClass(ReflectionUtils.getNmsClass("EntityPlayer")) : new EzClass("net.minecraft.server.level.EntityPlayer");
+            EzClass entityPlayerClass = Ref.getVersion() >= 9 && Ref.getVersion() <= 15 ? new EzClass(Ref.getNmsClass("EntityPlayer")) : new EzClass("net.minecraft.server.level.EntityPlayer");
             entityPlayerClass.setInstance(entityPlayer);
-            packetPlayerOutPlayerInfo.setConstructor(enumPlayerInfoAction.getInstanceEnum(), ReflectionUtils.getArrayClassFromClass(entityPlayerClass.getInstanceClass()));
+            packetPlayerOutPlayerInfo.setConstructor(enumPlayerInfoAction.getInstanceEnum(), Ref.getArrayClass(entityPlayerClass.getInstanceClass()));
             Object[] objects = (Object[]) Array.newInstance(entityPlayerClass.getInstanceClass(), 1);
             objects[0] = entityPlayer;
             packetPlayerOutPlayerInfo.newInstance(enumPlayerInfoAction.getInstance(), objects);
@@ -481,8 +481,8 @@ public final class PlayerUtils {
     }
 
     private static Object createPacketPlayOutNamedEntitySpawn(Player player) {
-        EzClass PacketPlayOutNamedEntitySpawn = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.PacketPlayOutNamedEntitySpawn") : new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutNamedEntitySpawn"));
-        EzClass EntityHuman = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.world.entity.player.EntityHuman") : new EzClass(ReflectionUtils.getNmsClass("EntityHuman"));
+        EzClass PacketPlayOutNamedEntitySpawn = Ref.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.PacketPlayOutNamedEntitySpawn") : new EzClass(Ref.getNmsClass("PacketPlayOutNamedEntitySpawn"));
+        EzClass EntityHuman = Ref.getVersion() >= 16 ? new EzClass("net.minecraft.world.entity.player.EntityHuman") : new EzClass(Ref.getNmsClass("EntityHuman"));
         try {
             Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
             PacketPlayOutNamedEntitySpawn.setConstructor(EntityHuman.getInstanceClass());
@@ -511,34 +511,34 @@ public final class PlayerUtils {
     }
 
     private static Class<?> PacketPlayOutEntityDestroy() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("PacketPlayOutEntityDestroy");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("PacketPlayOutEntityDestroy");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy");
+            return Ref.getClass("net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy");
         }
     }
 
     private static Object createTimesPacket(int fadeIn, int stay, int fadeOut) {
-        EzClass packetCreator = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket") : new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutTitle"));
+        EzClass packetCreator = Ref.getVersion() >= 16 ? new EzClass("net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket") : new EzClass(Ref.getNmsClass("PacketPlayOutTitle"));
         packetCreator.setConstructor(int.class, int.class, int.class);
         packetCreator.newInstance(fadeIn, stay, fadeOut);
         return packetCreator.getInstance();
     }
 
     private static Object createTitlePacket(String text) {
-        EzClass chatMessageClass = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.chat.ChatMessage") : new EzClass(ReflectionUtils.getNmsClass("ChatMessage"));
+        EzClass chatMessageClass = Ref.getVersion() >= 16 ? new EzClass("net.minecraft.network.chat.ChatMessage") : new EzClass(Ref.getNmsClass("ChatMessage"));
         chatMessageClass.setConstructor(String.class);
         chatMessageClass.newInstance(text);
         Object chatMessage = chatMessageClass.getInstance();
-        if (ReflectionUtils.getVersion() >= 16) {
+        if (Ref.getVersion() >= 16) {
             EzClass packetCreator = new EzClass("net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket");
             packetCreator.setConstructor(IChatBaseComponent());
             packetCreator.newInstance(chatMessage);
             return packetCreator.getInstance();
         } else {
-            EzEnum EnumTitleActionClass = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutTitle$EnumTitleAction"));
+            EzEnum EnumTitleActionClass = new EzEnum(Ref.getNmsClass("PacketPlayOutTitle$EnumTitleAction"));
             EnumTitleActionClass.newInstance("TITLE");
-            EzClass packetCreator = new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutTitle"));
+            EzClass packetCreator = new EzClass(Ref.getNmsClass("PacketPlayOutTitle"));
             packetCreator.setConstructor(EnumTitleActionClass.getInstanceEnum(), IChatBaseComponent());
             packetCreator.newInstance(EnumTitleActionClass.getInstance(), chatMessage);
             return packetCreator.getInstance();
@@ -546,19 +546,19 @@ public final class PlayerUtils {
     }
 
     private static Object createSubtitlePacket(String text) {
-        EzClass chatMessageClass = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.chat.ChatMessage") : new EzClass(ReflectionUtils.getNmsClass("ChatMessage"));
+        EzClass chatMessageClass = Ref.getVersion() >= 16 ? new EzClass("net.minecraft.network.chat.ChatMessage") : new EzClass(Ref.getNmsClass("ChatMessage"));
         chatMessageClass.setConstructor(String.class);
         chatMessageClass.newInstance(text);
         Object chatMessage = chatMessageClass.getInstance();
-        if (ReflectionUtils.getVersion() >= 16) {
+        if (Ref.getVersion() >= 16) {
             EzClass packetCreator = new EzClass("net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket");
             packetCreator.setConstructor(IChatBaseComponent());
             packetCreator.newInstance(chatMessage);
             return packetCreator.getInstance();
         } else {
-            EzEnum EnumTitleActionClass = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutTitle$EnumTitleAction"));
+            EzEnum EnumTitleActionClass = new EzEnum(Ref.getNmsClass("PacketPlayOutTitle$EnumTitleAction"));
             EnumTitleActionClass.newInstance("SUBTITLE");
-            EzClass packetCreator = new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutTitle"));
+            EzClass packetCreator = new EzClass(Ref.getNmsClass("PacketPlayOutTitle"));
             packetCreator.setConstructor(EnumTitleActionClass.getInstanceEnum(), IChatBaseComponent());
             packetCreator.newInstance(EnumTitleActionClass.getInstance(), chatMessage);
             return packetCreator.getInstance();
@@ -566,19 +566,19 @@ public final class PlayerUtils {
     }
 
     private static Object createActionbarPacket(String text) {
-        EzClass chatMessageClass = ReflectionUtils.getVersion() >= 16 ? new EzClass("net.minecraft.network.chat.ChatMessage") : new EzClass(ReflectionUtils.getNmsClass("ChatMessage"));
+        EzClass chatMessageClass = Ref.getVersion() >= 16 ? new EzClass("net.minecraft.network.chat.ChatMessage") : new EzClass(Ref.getNmsClass("ChatMessage"));
         chatMessageClass.setConstructor(String.class);
         chatMessageClass.newInstance(text);
         Object chatMessage = chatMessageClass.getInstance();
-        if (ReflectionUtils.getVersion() >= 16) {
+        if (Ref.getVersion() >= 16) {
             EzClass packetCreator = new EzClass("net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket");
             packetCreator.setConstructor(IChatBaseComponent());
             packetCreator.newInstance(chatMessage);
             return packetCreator.getInstance();
         } else {
-            EzEnum EnumTitleActionClass = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutTitle$EnumTitleAction"));
+            EzEnum EnumTitleActionClass = new EzEnum(Ref.getNmsClass("PacketPlayOutTitle$EnumTitleAction"));
             EnumTitleActionClass.newInstance("ACTIONBAR");
-            EzClass packetCreator = new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutTitle"));
+            EzClass packetCreator = new EzClass(Ref.getNmsClass("PacketPlayOutTitle"));
             packetCreator.setConstructor(EnumTitleActionClass.getInstanceEnum(), IChatBaseComponent());
             packetCreator.newInstance(EnumTitleActionClass.getInstance(), chatMessage);
             return packetCreator.getInstance();
@@ -586,15 +586,15 @@ public final class PlayerUtils {
     }
 
     private static Object createClearPacket() {
-        if (ReflectionUtils.getVersion() >= 16) {
+        if (Ref.getVersion() >= 16) {
             EzClass packetCreator = new EzClass("net.minecraft.network.protocol.game.ClientboundClearTitlesPacket");
             packetCreator.setConstructor(boolean.class);
             packetCreator.newInstance(false);
             return packetCreator.getInstance();
         } else {
-            EzEnum EnumTitleActionClass = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutTitle$EnumTitleAction"));
+            EzEnum EnumTitleActionClass = new EzEnum(Ref.getNmsClass("PacketPlayOutTitle$EnumTitleAction"));
             EnumTitleActionClass.newInstance("CLEAR");
-            EzClass packetCreator = new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutTitle"));
+            EzClass packetCreator = new EzClass(Ref.getNmsClass("PacketPlayOutTitle"));
             packetCreator.setConstructor(EnumTitleActionClass.getInstanceEnum(), IChatBaseComponent());
             packetCreator.newInstance(EnumTitleActionClass.getInstance(), null);
             return packetCreator.getInstance();
@@ -602,15 +602,15 @@ public final class PlayerUtils {
     }
 
     private static Object createResetPacket() {
-        if (ReflectionUtils.getVersion() >= 16) {
+        if (Ref.getVersion() >= 16) {
             EzClass packetCreator = new EzClass("net.minecraft.network.protocol.game.ClientboundClearTitlesPacket");
             packetCreator.setConstructor(boolean.class);
             packetCreator.newInstance(true);
             return packetCreator.getInstance();
         } else {
-            EzEnum EnumTitleActionClass = new EzEnum(ReflectionUtils.getNmsClass("PacketPlayOutTitle$EnumTitleAction"));
+            EzEnum EnumTitleActionClass = new EzEnum(Ref.getNmsClass("PacketPlayOutTitle$EnumTitleAction"));
             EnumTitleActionClass.newInstance("RESET");
-            EzClass packetCreator = new EzClass(ReflectionUtils.getNmsClass("PacketPlayOutTitle"));
+            EzClass packetCreator = new EzClass(Ref.getNmsClass("PacketPlayOutTitle"));
             packetCreator.setConstructor(EnumTitleActionClass.getInstanceEnum(), IChatBaseComponent());
             packetCreator.newInstance(EnumTitleActionClass.getInstance(), null);
             return packetCreator.getInstance();
@@ -625,21 +625,21 @@ public final class PlayerUtils {
     }
 
     private static Class<?> IChatBaseComponent() {
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("IChatBaseComponent");
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("IChatBaseComponent");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.network.chat.IChatBaseComponent");
+            return Ref.getClass("net.minecraft.network.chat.IChatBaseComponent");
         }
     }
 
     private static final UUID uuid = new UUID(0L, 0L);
 
     private static EzEnum ChatMessageType() {
-        return ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzEnum(Objects.requireNonNull(ReflectionUtils.getNmsClass("ChatMessageType"))) : new EzEnum("net.minecraft.network.chat.ChatMessageType");
+        return Ref.getVersion() <= 15 && Ref.getVersion() >= 9 ? new EzEnum(Objects.requireNonNull(Ref.getNmsClass("ChatMessageType"))) : new EzEnum("net.minecraft.network.chat.ChatMessageType");
     }
 
     private static EzClass PacketPlayOutChat() {
-        return ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9 ? new EzClass(Objects.requireNonNull(ReflectionUtils.getNmsClass("PacketPlayOutChat"))) : new EzClass("net.minecraft.network.protocol.game.PacketPlayOutChat");
+        return Ref.getVersion() <= 15 && Ref.getVersion() >= 9 ? new EzClass(Objects.requireNonNull(Ref.getNmsClass("PacketPlayOutChat"))) : new EzClass("net.minecraft.network.protocol.game.PacketPlayOutChat");
     }
 
 }

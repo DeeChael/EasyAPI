@@ -3,7 +3,7 @@ package org.ezapi.command.argument;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import org.bukkit.World;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -53,11 +53,11 @@ public final class ArgumentWorld implements Argument {
     }
 
     private static Class<?> ArgumentDimension() {
-        if (ReflectionUtils.getVersion() < 9) return null;
-        if (ReflectionUtils.getVersion() <= 15 && ReflectionUtils.getVersion() >= 9) {
-            return ReflectionUtils.getNmsClass("ArgumentDimension");
+        if (Ref.getVersion() < 9) return null;
+        if (Ref.getVersion() <= 15 && Ref.getVersion() >= 9) {
+            return Ref.getNmsClass("ArgumentDimension");
         } else {
-            return ReflectionUtils.getClass("net.minecraft.commands.arguments.ArgumentDimension");
+            return Ref.getClass("net.minecraft.commands.arguments.ArgumentDimension");
         }
     }
 

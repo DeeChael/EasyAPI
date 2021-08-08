@@ -7,7 +7,7 @@ import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.ColorUtils;
 import org.ezapi.util.PlayerUtils;
-import org.ezapi.util.ReflectionUtils;
+import org.ezapi.util.Ref;
 import org.ezapi.util.StringUtils;
 
 import java.util.*;
@@ -64,9 +64,9 @@ public final class EzScoreboard implements Scoreboard {
         }
         for (Player player : getViewers()) {
             String id = (String) this.viewers.get(player).get(0).getInstance();
-            EzClass PacketPlayOutScoreboardScore = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardScore", "PacketPlayOutScoreboardScore"));
-            EzEnum Action = new EzEnum(ReflectionUtils.getNmsOrOld("server.ScoreboardServer$Action", "ScoreboardServer$Action"));
-            if (ReflectionUtils.getVersion() >= 16) {
+            EzClass PacketPlayOutScoreboardScore = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardScore", "PacketPlayOutScoreboardScore"));
+            EzEnum Action = new EzEnum(Ref.getNmsOrOld("server.ScoreboardServer$Action", "ScoreboardServer$Action"));
+            if (Ref.getVersion() >= 16) {
                 Action.newInstance("a");
             } else {
                 Action.newInstance("CHANGE");
@@ -83,9 +83,9 @@ public final class EzScoreboard implements Scoreboard {
         if (!texts.containsKey(line)) return;
         for (Player player : getViewers()) {
             String id = (String) this.viewers.get(player).get(0).getInstance();
-            EzClass PacketPlayOutScoreboardScore = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardScore", "PacketPlayOutScoreboardScore"));
-            EzEnum Action = new EzEnum(ReflectionUtils.getNmsOrOld("server.ScoreboardServer$Action", "ScoreboardServer$Action"));
-            if (ReflectionUtils.getVersion() >= 16) {
+            EzClass PacketPlayOutScoreboardScore = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardScore", "PacketPlayOutScoreboardScore"));
+            EzEnum Action = new EzEnum(Ref.getNmsOrOld("server.ScoreboardServer$Action", "ScoreboardServer$Action"));
+            if (Ref.getVersion() >= 16) {
                 Action.newInstance("b");
             } else {
                 Action.newInstance("REMOVE");
@@ -116,10 +116,10 @@ public final class EzScoreboard implements Scoreboard {
         if (isDropped()) return;
         this.title = title;
         for (Player player : getViewers()) {
-            EzClass PacketPlayOutScoreboardObjective = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardObjective", "PacketPlayOutScoreboardObjective"));
+            EzClass PacketPlayOutScoreboardObjective = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardObjective", "PacketPlayOutScoreboardObjective"));
             EzClass ScoreboardObjective = viewers.get(player).get(2);
-            EzClass IChatBaseComponent = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent"));
-            EzClass ChatMessage = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
+            EzClass IChatBaseComponent = new EzClass(Ref.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent"));
+            EzClass ChatMessage = new EzClass(Ref.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
             ChatMessage.setConstructor(String.class);
             ChatMessage.newInstance(this.title.getText(player).substring(0, 40));
             ScoreboardObjective.invokeMethod("setDisplayName", new Class[] {IChatBaseComponent.getInstanceClass()}, new Object[] {ChatMessage.getInstance()});
@@ -134,22 +134,22 @@ public final class EzScoreboard implements Scoreboard {
         if (isDropped()) return;
         if (!viewers.containsKey(player)) {
             String id = player.getName().toLowerCase().substring(0, Math.min(10, player.getName().length())) + getNextInt();
-            EzClass Scoreboard = new EzClass(ReflectionUtils.getNmsOrOld("world.scores.Scoreboard", "Scoreboard"));
-            EzClass ScoreboardObjective = new EzClass(ReflectionUtils.getNmsOrOld("world.scores.ScoreboardObjective", "ScoreboardObjective"));
-            EzClass IScoreboardCriteria = new EzClass(ReflectionUtils.getNmsOrOld("world.scores.criteria.IScoreboardCriteria", "IScoreboardCriteria"));
-            EzEnum EnumScoreboardHealthDisplay = new EzEnum(ReflectionUtils.getNmsOrOld("world.scores.criteria.IScoreboardCriteria$EnumScoreboardHealthDisplay", "IScoreboardCriteria$EnumScoreboardHealthDisplay"));
-            EzClass IChatBaseComponent = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent"));
-            EzClass ChatMessage = new EzClass(ReflectionUtils.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
-            EzClass ScoreboardTeam = new EzClass(ReflectionUtils.getNmsOrOld("world.scores.ScoreboardTeam", "ScoreboardTeam"));
+            EzClass Scoreboard = new EzClass(Ref.getNmsOrOld("world.scores.Scoreboard", "Scoreboard"));
+            EzClass ScoreboardObjective = new EzClass(Ref.getNmsOrOld("world.scores.ScoreboardObjective", "ScoreboardObjective"));
+            EzClass IScoreboardCriteria = new EzClass(Ref.getNmsOrOld("world.scores.criteria.IScoreboardCriteria", "IScoreboardCriteria"));
+            EzEnum EnumScoreboardHealthDisplay = new EzEnum(Ref.getNmsOrOld("world.scores.criteria.IScoreboardCriteria$EnumScoreboardHealthDisplay", "IScoreboardCriteria$EnumScoreboardHealthDisplay"));
+            EzClass IChatBaseComponent = new EzClass(Ref.getNmsOrOld("network.chat.IChatBaseComponent", "IChatBaseComponent"));
+            EzClass ChatMessage = new EzClass(Ref.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));
+            EzClass ScoreboardTeam = new EzClass(Ref.getNmsOrOld("world.scores.ScoreboardTeam", "ScoreboardTeam"));
             ChatMessage.setConstructor(String.class);
             ChatMessage.newInstance(this.title.getText(player).substring(0, 40));
-            if (ReflectionUtils.getVersion() == 9 || ReflectionUtils.getVersion() == 10) {
+            if (Ref.getVersion() == 9 || Ref.getVersion() == 10) {
                 IScoreboardCriteria.setInstance(IScoreboardCriteria.getStaticField("b"));
                 EnumScoreboardHealthDisplay.newInstance("INTEGER");
-            } else if (ReflectionUtils.getVersion() >= 11 && ReflectionUtils.getVersion() <= 15) {
+            } else if (Ref.getVersion() >= 11 && Ref.getVersion() <= 15) {
                 IScoreboardCriteria.setInstance(IScoreboardCriteria.getStaticField("DUMMY"));
                 EnumScoreboardHealthDisplay.newInstance("INTEGER");
-            } else if (ReflectionUtils.getVersion() >= 16) {
+            } else if (Ref.getVersion() >= 16) {
                 IScoreboardCriteria.setInstance(IScoreboardCriteria.getStaticField("a"));
                 EnumScoreboardHealthDisplay.newInstance("a");
             } else {
@@ -161,16 +161,16 @@ public final class EzScoreboard implements Scoreboard {
             ScoreboardTeam.setConstructor(Scoreboard.getInstanceClass(), String.class);
             ScoreboardTeam.newInstance(Scoreboard.getInstance(), id);
 
-            EzClass PacketPlayOutScoreboardObjective = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardObjective", "PacketPlayOutScoreboardObjective"));
+            EzClass PacketPlayOutScoreboardObjective = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardObjective", "PacketPlayOutScoreboardObjective"));
             PacketPlayOutScoreboardObjective.setConstructor(ScoreboardObjective.getInstanceClass(), int.class);
             PacketPlayOutScoreboardObjective.newInstance(ScoreboardObjective.getInstance(), 0);
 
-            EzClass PacketPlayOutScoreboardDisplayObjective = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardDisplayObjective", "PacketPlayOutScoreboardDisplayObjective"));
+            EzClass PacketPlayOutScoreboardDisplayObjective = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardDisplayObjective", "PacketPlayOutScoreboardDisplayObjective"));
             PacketPlayOutScoreboardDisplayObjective.setConstructor(int.class, ScoreboardObjective.getInstanceClass());
             PacketPlayOutScoreboardDisplayObjective.newInstance(1, ScoreboardObjective.getInstance());
 
-            EzClass PacketPlayOutScoreboardTeam = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam"));
-            if (ReflectionUtils.getVersion() >= 16) {
+            EzClass PacketPlayOutScoreboardTeam = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam"));
+            if (Ref.getVersion() >= 16) {
                 PacketPlayOutScoreboardTeam.setConstructor(String.class, int.class, Optional.class, Collection.class);
                 PacketPlayOutScoreboardTeam.newInstance(id, 0, Optional.empty(), ImmutableList.of());
             } else {
@@ -183,9 +183,9 @@ public final class EzScoreboard implements Scoreboard {
             PlayerUtils.sendPacket(player, PacketPlayOutScoreboardTeam.getInstance());
 
             for (int line : this.texts.keySet()) {
-                EzClass PacketPlayOutScoreboardScore = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardScore", "PacketPlayOutScoreboardScore"));
-                EzEnum Action = new EzEnum(ReflectionUtils.getNmsOrOld("server.ScoreboardServer$Action", "ScoreboardServer$Action"));
-                if (ReflectionUtils.getVersion() >= 16) {
+                EzClass PacketPlayOutScoreboardScore = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardScore", "PacketPlayOutScoreboardScore"));
+                EzEnum Action = new EzEnum(Ref.getNmsOrOld("server.ScoreboardServer$Action", "ScoreboardServer$Action"));
+                if (Ref.getVersion() >= 16) {
                     Action.newInstance("a");
                 } else {
                     Action.newInstance("CHANGE");
@@ -215,8 +215,8 @@ public final class EzScoreboard implements Scoreboard {
             EzClass ScoreboardObjective = viewers.get(player).get(2);
             EzClass ScoreboardTeam = viewers.get(player).get(3);
 
-            EzClass PacketPlayOutScoreboardTeam = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam"));
-            if (ReflectionUtils.getVersion() >= 16) {
+            EzClass PacketPlayOutScoreboardTeam = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardTeam", "PacketPlayOutScoreboardTeam"));
+            if (Ref.getVersion() >= 16) {
                 PacketPlayOutScoreboardTeam.setConstructor(String.class, int.class, Optional.class, Collection.class);
                 PacketPlayOutScoreboardTeam.newInstance(id, 1, Optional.empty(), ImmutableList.of());
             } else {
@@ -224,7 +224,7 @@ public final class EzScoreboard implements Scoreboard {
                 PacketPlayOutScoreboardTeam.newInstance(ScoreboardObjective.getInstance(), 1);
             }
 
-            EzClass PacketPlayOutScoreboardObjective = new EzClass(ReflectionUtils.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardObjective", "PacketPlayOutScoreboardObjective"));
+            EzClass PacketPlayOutScoreboardObjective = new EzClass(Ref.getNmsOrOld("network.protocol.game.PacketPlayOutScoreboardObjective", "PacketPlayOutScoreboardObjective"));
             PacketPlayOutScoreboardObjective.setConstructor(ScoreboardObjective.getInstanceClass(), int.class);
             PacketPlayOutScoreboardObjective.newInstance(ScoreboardObjective.getInstance(), 1);
 
