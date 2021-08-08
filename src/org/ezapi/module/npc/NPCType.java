@@ -73,19 +73,21 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakeZoglin> ZOGLIN = new NPCType<>(new FakeZoglin(), "zoglin");
 
-    public final static NPCType<FakeZombie> ZOMBIE = new NPCType<>(new FakeZombie(), "FakeZombie");
+    public final static NPCType<FakeZombie> ZOMBIE = new NPCType<>(new FakeZombie(), "zombie");
 
     public final static NPCType<FakeHusk> HUSK = new NPCType<>(new FakeHusk(), "husk");
 
     public final static NPCType<FakeZombieVillager> ZOMBIE_VILLAGER = new NPCType<>(new FakeZombieVillager(), "zombie_villager");
+
+    public final static NPCType<FakeHoglin> HOGLIN = new NPCType<>(new FakeHoglin(), "hoglin");
 
     private final static NPCType<?>[] VALUES = new NPCType<?>[] {
             PLAYER, VILLAGER, BLAZE, CAVE_SPIDER, CREEPER, DROWNED, ENDERMAN,
             ELDER_GUARDIAN, EVOKER, GHAST, GIANT, GUARDIAN, ILLUSIONER,
             MAGMA_CUBE, PHANTOM, WANDERING_TRADER, ZOMBIFIED_PIGLIN, PILLAGER,
             RAVAGER, SHULKER, SILVERFISH, SKELETON, STRAY, WITHER_SKELETON, SLIME,
-            SPIDER, STRIDER, VEX, VINDICATOR, ZOGLIN, ZOMBIE, HUSK, ZOMBIE_VILLAGER,
-            WITCH
+            SPIDER, STRIDER, VEX, VINDICATOR, WITCH, ZOGLIN, ZOMBIE, HUSK, ZOMBIE_VILLAGER,
+            HOGLIN
     };
 
     private final BiFunction<String, Location, EzClass> create;
