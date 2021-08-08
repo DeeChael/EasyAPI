@@ -44,8 +44,8 @@ public final class FakeVillager extends FakeLiving {
 
         public VillagerData(VillagerProfession profession, VillagerType type, boolean isBaby) {
             if (Ref.getVersion() <= 10) throw new RuntimeException("Minecraft Server is less than 1.14 so cannot set villager data");
-            this.profession = profession;
-            this.type = type;
+            this.profession = profession != null ? profession : VillagerProfession.NONE;
+            this.type = type != null ? type : VillagerType.PLAINS;
             this.isBaby = isBaby;
         }
 
