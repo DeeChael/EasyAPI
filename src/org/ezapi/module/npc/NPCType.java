@@ -61,6 +61,8 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakeSlime> SLIME = new NPCType<>(new FakeSlime(), "slime");
 
+    public final static NPCType<FakeSpider> SPIDER = new NPCType<>(new FakeSpider(), "spider");
+
     private final static NPCType<?>[] VALUES = new NPCType<?>[] {
             PLAYER, VILLAGER, BLAZE, CAVE_SPIDER, CREEPER, DROWNED, ENDERMAN,
             ELDER_GUARDIAN, EVOKER, GHAST, GIANT, GUARDIAN, ILLUSIONER,

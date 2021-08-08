@@ -293,7 +293,7 @@ public final class EzNPC implements NPC {
                     }
                     if (look) {
                         if (hasShown.contains(player)) {
-                            lookAt(player, player.getLocation());
+                            lookAt(player, player.getLocation().clone().add(0.0, 1.0, 0.0));
                         }
                     }
                 }
