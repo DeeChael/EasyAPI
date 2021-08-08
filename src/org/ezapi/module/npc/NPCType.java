@@ -35,6 +35,12 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakeGuardian> GUARDIAN = new NPCType<>(new FakeGuardian());
 
+    public final static NPCType<FakeIllusioner> ILLUSIONER = new NPCType<>(new FakeIllusioner());
+
+    public final static NPCType<FakeMagmaCube> MAGMA_CUBE = new NPCType<>(new FakeMagmaCube());
+
+    public final static NPCType<FakePhantom> PHANTOM = new NPCType<>(new FakePhantom());
+
     private final BiFunction<String, Location, EzClass> create;
 
     private final Function<Object, List<EzClass>> packet;
