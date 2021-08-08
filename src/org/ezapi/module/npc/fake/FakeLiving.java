@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class FakeLiving extends FakeEntity {
 
     protected final EzClass create(Class<?> entityType, String typeOldName, String typeNewName, String name, Location location) {
-        EzClass EntityIDontKnow = new EzClass(Ref.getNmsOrOld("world.entity.monster.EntityBlaze", "EntityBlaze"));
+        EzClass EntityIDontKnow = new EzClass(entityType);
         EzClass World = new EzClass(Ref.getNmsOrOld("world.level.World", "World"));
         EzClass EntityTypes = new EzClass(Ref.getNmsOrOld("world.entity.EntityTypes", "EntityTypes"));
         EzClass ChatMessage = new EzClass(Ref.getNmsOrOld("network.chat.ChatMessage", "ChatMessage"));

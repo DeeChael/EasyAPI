@@ -11,55 +11,62 @@ import java.util.function.Function;
 
 public final class NPCType<T extends FakeEntity> {
 
-    public final static NPCType<FakePlayer> PLAYER = new NPCType<>(new FakePlayer());
+    public final static NPCType<FakePlayer> PLAYER = new NPCType<>(new FakePlayer(), "player");
 
-    public final static NPCType<FakeVillager> VILLAGER = new NPCType<>(new FakeVillager());
+    public final static NPCType<FakeVillager> VILLAGER = new NPCType<>(new FakeVillager(), "villager");
 
-    public final static NPCType<FakeBlaze> BLAZE = new NPCType<>(new FakeBlaze());
+    public final static NPCType<FakeBlaze> BLAZE = new NPCType<>(new FakeBlaze(), "blaze");
 
-    public final static NPCType<FakeCaveSpider> CAVE_SPIDER = new NPCType<>(new FakeCaveSpider());
+    public final static NPCType<FakeCaveSpider> CAVE_SPIDER = new NPCType<>(new FakeCaveSpider(), "cave_spider");
 
-    public final static NPCType<FakeCreeper> CREEPER = new NPCType<>(new FakeCreeper());
+    public final static NPCType<FakeCreeper> CREEPER = new NPCType<>(new FakeCreeper(), "creeper");
 
-    public final static NPCType<FakeDrowned> DROWNED = new NPCType<>(new FakeDrowned());
+    public final static NPCType<FakeDrowned> DROWNED = new NPCType<>(new FakeDrowned(), "drowned");
 
-    public final static NPCType<FakeEnderman> ENDERMAN = new NPCType<>(new FakeEnderman());
+    public final static NPCType<FakeEnderman> ENDERMAN = new NPCType<>(new FakeEnderman(), "enderman");
 
-    public final static NPCType<FakeElderGuardian> ELDER_GUARDIAN = new NPCType<>(new FakeElderGuardian());
+    public final static NPCType<FakeElderGuardian> ELDER_GUARDIAN = new NPCType<>(new FakeElderGuardian(), "elder_guardian");
 
-    public final static NPCType<FakeEvoker> EVOKER = new NPCType<>(new FakeEvoker());
+    public final static NPCType<FakeEvoker> EVOKER = new NPCType<>(new FakeEvoker(), "evoker");
 
-    public final static NPCType<FakeGhast> GHAST = new NPCType<>(new FakeGhast());
+    public final static NPCType<FakeGhast> GHAST = new NPCType<>(new FakeGhast(), "ghast");
 
-    public final static NPCType<FakeGiant> GIANT = new NPCType<>(new FakeGiant());
+    public final static NPCType<FakeGiant> GIANT = new NPCType<>(new FakeGiant(), "giant");
 
-    public final static NPCType<FakeGuardian> GUARDIAN = new NPCType<>(new FakeGuardian());
+    public final static NPCType<FakeGuardian> GUARDIAN = new NPCType<>(new FakeGuardian(), "guardian");
 
-    public final static NPCType<FakeIllusioner> ILLUSIONER = new NPCType<>(new FakeIllusioner());
+    public final static NPCType<FakeIllusioner> ILLUSIONER = new NPCType<>(new FakeIllusioner(), "illusioner");
 
-    public final static NPCType<FakeMagmaCube> MAGMA_CUBE = new NPCType<>(new FakeMagmaCube());
+    public final static NPCType<FakeMagmaCube> MAGMA_CUBE = new NPCType<>(new FakeMagmaCube(), "magma_cube");
 
-    public final static NPCType<FakePhantom> PHANTOM = new NPCType<>(new FakePhantom());
+    public final static NPCType<FakePhantom> PHANTOM = new NPCType<>(new FakePhantom(), "phantom");
 
-    public final static NPCType<FakeWanderingTrader> WANDERING_TRADER = new NPCType<>(new FakeWanderingTrader());
+    public final static NPCType<FakeWanderingTrader> WANDERING_TRADER = new NPCType<>(new FakeWanderingTrader(), "wandering_trader");
 
-    public final static NPCType<FakePigZombie> ZOMBIE_PIGMAN = new NPCType<>(new FakePigZombie());
+    public final static NPCType<FakePigZombie> ZOMBIFIED_PIGLIN = new NPCType<>(new FakePigZombie(), "zombified_piglin");
 
-    public final static NPCType<FakePigZombie> ZOMBIFIED_PIGLIN = new NPCType<>(new FakePigZombie());
+    public final static NPCType<FakePillager> PILLAGER = new NPCType<>(new FakePillager(), "pillager");
 
-    public final static NPCType<FakePillager> PILLAGER = new NPCType<>(new FakePillager());
+    public final static NPCType<FakeRavager> RAVAGER = new NPCType<>(new FakeRavager(), "raveger");
 
-    public final static NPCType<FakeRavager> RAVAGER = new NPCType<>(new FakeRavager());
+    public final static NPCType<FakeShulker> SHULKER = new NPCType<>(new FakeShulker(), "shulker");
 
-    public final static NPCType<FakeShulker> SHULKER = new NPCType<>(new FakeShulker());
+    public final static NPCType<FakeSilverfish> SILVERFISH = new NPCType<>(new FakeSilverfish(), "silverfish");
 
-    public final static NPCType<FakeSilverfish> SILVERFISH = new NPCType<>(new FakeSilverfish());
+    public final static NPCType<FakeSkeleton> SKELETON = new NPCType<>(new FakeSkeleton(), "skeleton");
 
-    public final static NPCType<FakeSkeleton> SKELETON = new NPCType<>(new FakeSkeleton());
+    public final static NPCType<FakeStray> STRAY = new NPCType<>(new FakeStray(), "stray");
 
-    public final static NPCType<FakeStray> STRAY = new NPCType<>(new FakeStray());
+    public final static NPCType<FakeWitherSkeleton> WITHER_SKELETON = new NPCType<>(new FakeWitherSkeleton(), "wither_skeleton");
 
-    public final static NPCType<FakeWitherSkeleton> WITHER_SKELETON = new NPCType<>(new FakeWitherSkeleton());
+    public final static NPCType<FakeSlime> SLIME = new NPCType<>(new FakeSlime(), "slime");
+
+    private final static NPCType<?>[] VALUES = new NPCType<?>[] {
+            PLAYER, VILLAGER, BLAZE, CAVE_SPIDER, CREEPER, DROWNED, ENDERMAN,
+            ELDER_GUARDIAN, EVOKER, GHAST, GIANT, GUARDIAN, ILLUSIONER,
+            MAGMA_CUBE, PHANTOM, WANDERING_TRADER, ZOMBIFIED_PIGLIN, PILLAGER,
+            RAVAGER, SHULKER, SILVERFISH, SKELETON, STRAY, WITHER_SKELETON, SLIME
+    };
 
     private final BiFunction<String, Location, EzClass> create;
 
@@ -67,10 +74,17 @@ public final class NPCType<T extends FakeEntity> {
 
     private final NonReturnWithTwo<Object, Object> data;
 
-    private NPCType(T entity) {
+    private final String name;
+
+    private NPCType(T entity, String name) {
         this.create = entity::create;
         this.packet = entity::packet;
         this.data = entity::data;
+        this.name = name;
+    }
+
+    public String name() {
+        return name;
     }
 
     public EzClass createNPCEntity(String name, Location location) {
@@ -83,6 +97,10 @@ public final class NPCType<T extends FakeEntity> {
 
     public void setSpecialData(Object nmsEntity, Object data) {
         this.data.apply(nmsEntity, data);
+    }
+
+    public static NPCType<?>[] values() {
+        return VALUES;
     }
 
 }

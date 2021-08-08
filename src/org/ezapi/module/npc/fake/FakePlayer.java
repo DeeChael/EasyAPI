@@ -6,14 +6,9 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.ezapi.module.npc.NPCType;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.Ref;
-import org.ezapi.util.item.ItemUtils;
-import sun.reflect.Reflection;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,9 +23,6 @@ import java.util.UUID;
 public final class FakePlayer extends FakeEntity {
 
     public FakePlayer() {
-        if (Reflection.getCallerClass() != NPCType.class) {
-            throw new RuntimeException("You cannot call this class without NPCType class!!");
-        }
     }
 
     @Override

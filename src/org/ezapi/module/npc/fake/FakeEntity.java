@@ -2,7 +2,6 @@ package org.ezapi.module.npc.fake;
 
 import org.bukkit.Location;
 import org.ezapi.reflect.EzClass;
-import org.ezapi.util.Ref;
 
 import java.util.List;
 

@@ -129,36 +129,31 @@ final class NPCCommand {
                         )
                 )
         );
+        EzArgument typeNameArgument = new EzArgument(BaseArguments.string(), "name");
+        typeNameArgument.suggest((sender, suggestion) -> {
+            npcs.keySet().forEach(suggestion::suggest);
+            return suggestion.buildFuture();
+        });
+        for (NPCType<?> npcType : NPCType.values()) {
+            typeNameArgument.then(new EzCommand(npcType.name())
+                    .executes(((sender, argument) -> {
+                        String name = argument.getAsString("name");
+                        if (npcs.containsKey(name)) {
+                            if (this.npcs.get(name).getType() != npcType) {
+                                try {
+                                    this.npcs.get(name).setType(npcType);
+                                } catch (Exception e) {
+                                    e.printStackTrace(System.out);
+                                }
+                            }
+                            return 1;
+                        }
+                        return 0;
+                    }))
+            );
+        }
         ezCommand.then(new EzCommand("type")
-                .then(new EzArgument(BaseArguments.string(), "name")
-                        .suggest((sender, suggestion) -> {
-                            npcs.keySet().forEach(suggestion::suggest);
-                            return suggestion.buildFuture();
-                        })
-                        .then(new EzCommand("player")
-                                .executes(((sender, argument) -> {
-                                    String name = argument.getAsString("name");
-                                    if (npcs.containsKey(name)) {
-                                        if (this.npcs.get(name).getType() != NPCType.PLAYER) {
-                                            this.npcs.get(name).setType(NPCType.PLAYER);
-                                        }
-                                        return 1;
-                                    }
-                                    return 0;
-                                }))
-                        )
-                        .then(new EzCommand("villager")
-                                .executes(((sender, argument) -> {
-                                    String name = argument.getAsString("name");
-                                    if (npcs.containsKey(name)) {
-                                        if (this.npcs.get(name).getType() != NPCType.VILLAGER) {
-                                            this.npcs.get(name).setType(NPCType.VILLAGER);
-                                        }
-                                        return 1;
-                                    }
-                                    return 0;
-                                }))
-                        )
+                .then(typeNameArgument
                 )
         );
         ezCommand.then(new EzCommand("location")

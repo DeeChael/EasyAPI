@@ -2,17 +2,9 @@ package org.ezapi;
 
 import org.bukkit.Bukkit;
 
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.ezapi.command.EzCommand;
 import org.ezapi.command.EzCommandManager;
-import org.ezapi.configuration.AutoReloadFile;
 import org.ezapi.configuration.LanguageManager;
-import org.ezapi.inventory.*;
 import org.ezapi.plugin.EasyPlugin;
 import org.ezapi.util.Ref;
 

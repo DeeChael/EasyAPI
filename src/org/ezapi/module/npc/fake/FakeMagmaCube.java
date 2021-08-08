@@ -1,17 +1,12 @@
 package org.ezapi.module.npc.fake;
 
 import org.bukkit.Location;
-import org.ezapi.module.npc.NPCType;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.util.Ref;
-import sun.reflect.Reflection;
 
 public final class FakeMagmaCube extends FakeLiving {
 
     public FakeMagmaCube() {
-        if (Reflection.getCallerClass() != NPCType.class) {
-            throw new RuntimeException("You cannot call this class without NPCType class!!");
-        }
     }
 
     @Override
