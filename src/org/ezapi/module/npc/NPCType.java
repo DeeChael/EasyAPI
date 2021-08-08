@@ -65,14 +65,16 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakeStrider> STRIDER = new NPCType<>(new FakeStrider(), "strider");
 
-    
+    public final static NPCType<FakeVex> VEX = new NPCType<>(new FakeVex(), "vex");
+
+
 
     private final static NPCType<?>[] VALUES = new NPCType<?>[] {
             PLAYER, VILLAGER, BLAZE, CAVE_SPIDER, CREEPER, DROWNED, ENDERMAN,
             ELDER_GUARDIAN, EVOKER, GHAST, GIANT, GUARDIAN, ILLUSIONER,
             MAGMA_CUBE, PHANTOM, WANDERING_TRADER, ZOMBIFIED_PIGLIN, PILLAGER,
             RAVAGER, SHULKER, SILVERFISH, SKELETON, STRAY, WITHER_SKELETON, SLIME,
-            SPIDER, STRIDER
+            SPIDER, STRIDER, VEX
     };
 
     private final BiFunction<String, Location, EzClass> create;
