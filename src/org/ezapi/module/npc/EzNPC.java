@@ -216,7 +216,8 @@ public final class EzNPC implements NPC {
         if (isDropped()) return;
         EzClass Entity = new EzClass(Ref.getNmsOrOld("world.entity.Entity", "Entity"));
         Entity.setInstance(viewers.get(player).getInstance());
-        Location loc = location.clone();
+        float height = (float) (Ref.getVersion() <= 10 ? Entity.getField("length") : Entity.invokeMethod("getHeight", new Class[0], new Object[0]));
+        Location loc = location.clone().add(0.0, Math.floor(height), 0.0);
         loc.setDirection(target.clone().subtract(loc).toVector());
         float yaw = loc.getYaw();
         float pitch = loc.getPitch();
