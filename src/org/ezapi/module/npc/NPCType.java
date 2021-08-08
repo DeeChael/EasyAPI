@@ -47,6 +47,8 @@ public final class NPCType<T extends FakeEntity> {
 
     public final static NPCType<FakePigZombie> ZOMBIFIED_PIGLIN = new NPCType<>(new FakePigZombie());
 
+    public final static NPCType<FakePillager> PILLAGER = new NPCType<>(new FakePillager());
+
     private final BiFunction<String, Location, EzClass> create;
 
     private final Function<Object, List<EzClass>> packet;
