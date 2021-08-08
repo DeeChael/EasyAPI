@@ -1,18 +1,15 @@
 package org.ezapi.util;
 
 import org.bukkit.Bukkit;
-import org.ezapi.EasyAPI;
 import sun.misc.Unsafe;
 
 import javax.tools.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Collections;
 
 public final class Ref {

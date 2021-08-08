@@ -12,7 +12,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.ezapi.util.Ref;
-import org.ezapi.util.Ref;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
