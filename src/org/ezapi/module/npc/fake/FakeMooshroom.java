@@ -5,14 +5,14 @@ import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.Ref;
 
-public final class FakeFox extends FakeLiving {
+public final class FakeMooshroom extends FakeLiving {
 
-    public FakeFox() {
+    public FakeMooshroom() {
     }
 
     @Override
     public EzClass create(String name, Location location) {
-        return this.create(Ref.getNmsOrOld("world.entity.animal.EntityFox", "EntityFox"), "FOX", "E", name, location);
+        return this.create(Ref.getNmsOrOld("world.entity.animal.EntityMushroomCow", "EntityMushroomCow"), "MOOSHROOM", "ah", name, location);
     }
 
     @Override
@@ -20,15 +20,19 @@ public final class FakeFox extends FakeLiving {
         if (data instanceof boolean[]) {
             boolean[] bools = (boolean[]) data;
             if (bools.length >= 1) {
-                EzClass EntityFox = new EzClass(Ref.getNmsOrOld("world.entity.animal.EntityFox", "EntityFox"));
+                EzClass EntityFox = new EzClass(Ref.getNmsOrOld("world.entity.animal.EntityMushroomCow", "EntityMushroomCow"));
                 EntityFox.setInstance(entity);
                 EzEnum Type = new EzEnum(Ref.getInnerClass(EntityFox.getInstanceClass(), "Type"));
                 if (bools[0]) {
-                    Type.newInstance(Ref.getVersion() >= 16 ? "b" : "SNOW");
+                    Type.newInstance(Ref.getVersion() >= 16 ? "b" : "BROWN");
                 } else {
                     Type.newInstance(Ref.getVersion() >= 16 ? "a" : "RED");
                 }
-                EntityFox.invokeMethod("setFoxType", new Class[] {Type.getInstanceEnum()}, new Object[] {Type.getInstance()});
+                if (Ref.getVersion() == 11) {
+                    EntityFox.invokeMethod("a", new Class[]{Type.getInstanceEnum()}, new Object[]{Type.getInstance()});
+                } else {
+                    EntityFox.invokeMethod("setVariant", new Class[]{Type.getInstanceEnum()}, new Object[]{Type.getInstance()});
+                }
                 if (bools.length >= 2) {
                     EzClass EntityAgeable = new EzClass(Ref.getNmsOrOld("world.entity.EntityAgeable", "EntityAgeable"));
                     EntityAgeable.setInstance(entity);

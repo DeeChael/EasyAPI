@@ -15,6 +15,13 @@ public final class FakeChicken extends FakeLiving {
     }
 
     @Override
-    public void data(Object entity, Object data) {}
+    public void data(Object entity, Object data) {
+        if (data instanceof Boolean) {
+            boolean isBaby = (boolean) data;
+            EzClass EntityAgeable = new EzClass(Ref.getNmsOrOld("world.entity.EntityAgeable", "EntityAgeable"));
+            EntityAgeable.setInstance(entity);
+            EntityAgeable.invokeMethod("setBaby", new Class[] {boolean.class}, new Object[] {isBaby});
+        }
+    }
 
 }
