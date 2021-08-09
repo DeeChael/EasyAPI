@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.ezapi.reflect.EzClass;
 import org.ezapi.util.Ref;
 
-public class FakeCat extends FakeLiving {
+public final class FakeCat extends FakeLiving {
 
     public FakeCat() {
     }
