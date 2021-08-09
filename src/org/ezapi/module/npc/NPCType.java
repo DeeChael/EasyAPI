@@ -61,6 +61,7 @@ public final class NPCType<T extends FakeEntity> {
     public final static NPCType<FakeChicken> CHICKEN = new NPCType<>(new FakeChicken(), "chicken");
     public final static NPCType<FakeCod> COD = new NPCType<>(new FakeCod(), "cod");
     public final static NPCType<FakeCow> COW = new NPCType<>(new FakeCow(), "cow");
+    public final static NPCType<FakeDolphin> DOLPHIN = new NPCType<>(new FakeDolphin(), "dolphin");
 
     private final static NPCType<?>[] VALUES = new NPCType<?>[] {
             PLAYER, VILLAGER, BLAZE, CAVE_SPIDER, CREEPER, DROWNED, ENDERMAN,
@@ -69,7 +70,7 @@ public final class NPCType<T extends FakeEntity> {
             RAVAGER, SHULKER, SILVERFISH, SKELETON, STRAY, WITHER_SKELETON,
             SLIME, SPIDER, STRIDER, VEX, VINDICATOR, WITCH, ZOGLIN, ZOMBIE,
             HUSK, ZOMBIE_VILLAGER, HOGLIN, PIGLIN, PIGLIN_BRUTE, SHEEP, CAT,
-            CHICKEN, COD, COW
+            CHICKEN, COD, COW, DOLPHIN
     };
 
     private final BiFunction<String, Location, EzClass> create;
