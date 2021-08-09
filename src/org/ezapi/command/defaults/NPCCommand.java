@@ -77,9 +77,7 @@ final class NPCCommand {
                                 .executes(((sender, argument) -> {
                                     String name = argument.getAsString("name");
                                     if (npcs.containsKey(name)) {
-                                        for (Player player : npcs.get(name).getViewers()) {
-                                            this.npcs.get(name).moveTo(player, argument.getAsLocation("position"));
-                                        }
+                                        this.npcs.get(name).move(argument.getAsLocation("position"));
                                         return 1;
                                     }
                                     return 0;
