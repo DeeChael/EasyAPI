@@ -1,12 +1,33 @@
 package org.ezapi.module.npc.fake;
 
 import org.bukkit.DyeColor;
+import org.bukkit.Location;
+import org.ezapi.reflect.EzClass;
 import org.ezapi.reflect.EzEnum;
 import org.ezapi.util.Ref;
 
-public class FakeSheep {
+public final class FakeSheep extends FakeLiving {
 
     public FakeSheep() {
+    }
+
+    @Override
+    public EzClass create(String name, Location location) {
+        return this.create(Ref.getNmsOrOld("world.entity.animal.EntitySheep", "EntitySheep"), "SHEEP", "ax", name, location);
+    }
+
+    @Override
+    public void data(Object entity, Object data) {
+        if (data instanceof SheepData) {
+            SheepData sheepData = (SheepData) data;
+            EzEnum EnumColor = sheepData.getNms();
+            EzClass EntitySheep = new EzClass(Ref.getNmsOrOld("world.entity.animal.EntitySheep", "EntitySheep"));
+            EntitySheep.setInstance(entity);
+            EntitySheep.invokeMethod("setColor", new Class[] {EnumColor.getInstanceEnum()}, new Object[] {EnumColor.getInstance()});
+            EzClass EntityAgeable = new EzClass(Ref.getNmsOrOld("world.entity.EntityAgeable", "EntityAgeable"));
+            EntityAgeable.setInstance(entity);
+            EntityAgeable.invokeMethod("setBaby", new Class[] {boolean.class}, new Object[] {sheepData.isBaby()});
+        }
     }
 
     public static class SheepData {

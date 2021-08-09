@@ -20,12 +20,12 @@ public final class FakeZombieVillager extends FakeLiving {
         if (data instanceof FakeVillager.VillagerData) {
             FakeVillager.VillagerData villagerData = (FakeVillager.VillagerData) data;
             EzClass VillagerData = villagerData.getNms();
-            EzClass EntityVillager = new EzClass(Ref.getNmsOrOld("world.entity.monster.EntityZombieVillager", "EntityZombieVillager"));
-            EntityVillager.setInstance(entity);
+            EzClass EntityZombieVillager = new EzClass(Ref.getNmsOrOld("world.entity.monster.EntityZombieVillager", "EntityZombieVillager"));
+            EntityZombieVillager.setInstance(entity);
+            EntityZombieVillager.invokeMethod("setVillagerData", new Class[] {VillagerData.getInstanceClass()}, new Object[] {VillagerData.getInstance()});
             EzClass EntityZombie = new EzClass(Ref.getNmsOrOld("world.entity.monster.EntityZombie", "EntityZombie"));
             EntityZombie.setInstance(entity);
             EntityZombie.invokeMethod("setBaby", new Class[] {boolean.class}, new Object[] {villagerData.isBaby()});
-            EntityVillager.invokeMethod("setVillagerData", new Class[] {VillagerData.getInstanceClass()}, new Object[] {VillagerData.getInstance()});
         }
     }
 

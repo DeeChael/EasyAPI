@@ -54,6 +54,9 @@ public final class NPCType<T extends FakeEntity> {
     public final static NPCType<FakePiglin> PIGLIN = new NPCType<>(new FakePiglin(), "piglin");
     public final static NPCType<FakePiglinBrute> PIGLIN_BRUTE = new NPCType<>(new FakePiglinBrute(), "piglin_brute");
 
+    //Animal Types
+    public final static NPCType<FakeSheep> SHEEP = new NPCType<>(new FakeSheep(), "sheep");
+
     private final static NPCType<?>[] VALUES = new NPCType<?>[] {
             PLAYER, VILLAGER, BLAZE, CAVE_SPIDER, CREEPER, DROWNED, ENDERMAN,
             ELDER_GUARDIAN, EVOKER, GHAST, GIANT, GUARDIAN, ILLUSIONER,
