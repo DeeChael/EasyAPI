@@ -75,7 +75,8 @@ public final class NPCType<T extends FakeEntity> {
             RAVAGER, SHULKER, SILVERFISH, SKELETON, STRAY, WITHER_SKELETON,
             SLIME, SPIDER, STRIDER, VEX, VINDICATOR, WITCH, ZOGLIN, ZOMBIE,
             HUSK, ZOMBIE_VILLAGER, HOGLIN, PIGLIN, PIGLIN_BRUTE, SHEEP, CAT,
-            CHICKEN, COD, COW, DOLPHIN, FOX, IRON_GOLEM, MOOSHROOM, OCELOT
+            CHICKEN, COD, COW, DOLPHIN, FOX, IRON_GOLEM, MOOSHROOM, OCELOT,
+            PANDA
     };
 
     private final BiFunction<String, Location, EzClass> create;
