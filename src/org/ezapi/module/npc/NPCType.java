@@ -66,6 +66,7 @@ public final class NPCType<T extends FakeEntity> {
     public final static NPCType<FakeIronGolem> IRON_GOLEM = new NPCType<>(new FakeIronGolem(), "iron_golem");
     public final static NPCType<FakeMooshroom> MOOSHROOM = new NPCType<>(new FakeMooshroom(), "mooshroom");
     public final static NPCType<FakeOcelot> OCELOT = new NPCType<>(new FakeOcelot(), "ocelot");
+    public final static NPCType<FakePanda> PANDA = new NPCType<>(new FakePanda(), "panda");
 
     private final static NPCType<?>[] VALUES = new NPCType<?>[] {
             PLAYER, VILLAGER, BLAZE, CAVE_SPIDER, CREEPER, DROWNED, ENDERMAN,
