@@ -57,6 +57,7 @@ public final class NPCType<T extends FakeEntity> {
     //Animal Types
     public final static NPCType<FakeSheep> SHEEP = new NPCType<>(new FakeSheep(), "sheep");
     public final static NPCType<FakeBee> BEE = new NPCType<>(new FakeBee(), "bee");
+    public final static NPCType<FakeCat> CAT = new NPCType<>(new FakeCat(), "cat");
 
     private final static NPCType<?>[] VALUES = new NPCType<?>[] {
             PLAYER, VILLAGER, BLAZE, CAVE_SPIDER, CREEPER, DROWNED, ENDERMAN,
@@ -64,7 +65,7 @@ public final class NPCType<T extends FakeEntity> {
             MAGMA_CUBE, PHANTOM, WANDERING_TRADER, ZOMBIFIED_PIGLIN, PILLAGER,
             RAVAGER, SHULKER, SILVERFISH, SKELETON, STRAY, WITHER_SKELETON, SLIME,
             SPIDER, STRIDER, VEX, VINDICATOR, WITCH, ZOGLIN, ZOMBIE, HUSK, ZOMBIE_VILLAGER,
-            HOGLIN, PIGLIN, PIGLIN_BRUTE, SHEEP, BEE
+            HOGLIN, PIGLIN, PIGLIN_BRUTE, SHEEP, BEE, CAT
     };
 
     private final BiFunction<String, Location, EzClass> create;
