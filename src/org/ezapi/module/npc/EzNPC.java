@@ -2,7 +2,6 @@ package org.ezapi.module.npc;
 
 import com.mojang.datafixers.util.Pair;
 import io.netty.channel.Channel;
-import net.minecraft.server.v1_16_R3.EntityPlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -184,6 +183,24 @@ public final class EzNPC implements NPC {
         reload();
     }
 
+    public void move(Location location) {
+        Location original = this.location.clone();
+        this.location = location;
+        Location loc = location.clone().subtract(original.clone());
+        if (loc.getX() <= 8.0 && loc.getY() <= 8.0 && loc.getZ() <= 8.0) {
+            for (Player player : getViewers()) {
+                /*
+                Entity entity = (Entity) viewers.get(player).getInstance();
+                entity.setPosition(location.getX(), location.getY(), location.getZ());
+                PacketPlayOutEntity packetPlayOutEntity = new PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook(entity.getId(), (short) ((x) * 4096), (short) (y * 4096), (short) (z * 4096), ((byte) ((loc.getYaw() % 360) * 256 / 360)), ((byte) ((loc.getPitch() % 360) * 256 / 360)), true);
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutEntity);
+                */
+            }
+        } else {
+
+        }
+    }
+
     @Override
     public NPCType<?> getType() {
         return type;
@@ -193,6 +210,11 @@ public final class EzNPC implements NPC {
     public void setData(Object data) {
         if (isDropped()) return;
         this.data = data;
+    }
+
+    @Override
+    public Object getData() {
+        return data;
     }
 
     public void reloadData(Player player) {

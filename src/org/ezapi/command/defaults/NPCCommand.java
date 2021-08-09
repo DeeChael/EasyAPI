@@ -24,6 +24,7 @@ final class NPCCommand {
 
     private final Map<String, EzNPC> npcs = new HashMap<>();
 
+    //public private
     private NPCCommand() {
         this.ezCommand = new EzCommand("npc");
         ezCommand.then(new EzCommand("create")
@@ -66,7 +67,6 @@ final class NPCCommand {
                         )
                 )
         );
-        /*
         ezCommand.then(new EzCommand("move")
                 .then(new EzArgument(BaseArguments.string(), "name")
                         .suggest((sender, suggestion) -> {
@@ -87,7 +87,6 @@ final class NPCCommand {
                         )
                 )
         );
-        */
         ezCommand.then(new EzCommand("skin")
                 .then(new EzArgument(BaseArguments.string(), "name")
                         .suggest((sender, suggestion) -> {
