@@ -10,7 +10,7 @@ import org.ezapi.util.Ref;
 
 public final class EasyAPI extends EasyPlugin {
 
-    public static final int VERSION = 1003000;
+    public static final int VERSION = 1003001;
 
     /*
     private final Map<Player, BukkitTask> started = new HashMap<>();

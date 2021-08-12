@@ -1,0 +1,5 @@
+name: ExamplePlugin
+main: ezapi.example.ExamplePlugin
+version: 1.0.0
+author: DeeChael
+depend: [EasyAPI]

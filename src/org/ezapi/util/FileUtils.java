@@ -5,6 +5,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -52,6 +53,19 @@ public final class FileUtils {
             fileWriter.close();
         } catch (IOException ignored) {
         }
+    }
+
+    public static List<File> listFiles(File directory) {
+        List<File> files = new ArrayList<>();
+        if (directory.exists() && directory.isDirectory()) {
+            File[] listed = directory.listFiles();
+            if (listed != null) {
+                if (listed.length > 0) {
+                    files.addAll(Arrays.asList(listed));
+                }
+            }
+        }
+        return files;
     }
 
     public static List<Class<?>> getClasses(Plugin plugin, String[] ignore) {
